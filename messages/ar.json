@@ -1,0 +1,38 @@
+{
+  "common": {
+    "appName": "رفيقي"
+  },
+  "shell": {
+    "searchPlaceholder": "ابحث في التنقل",
+    "notifications": "الإشعارات",
+    "teacher": "المعلم",
+    "student": "الطالب",
+    "teacherRole": "مساحة المعلم",
+    "studentRole": "مساحة الطالب",
+    "switchToEnglish": "التبديل إلى الإنجليزية",
+    "switchToArabic": "التبديل إلى العربية",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة"
+  },
+  "navigation": {
+    "today": "اليوم",
+    "schedule": "الجدول",
+    "teaching": "التدريس",
+    "students": "الطلاب",
+    "resources": "المصادر",
+    "connect": "تواصل",
+    "insights": "الإحصاءات",
+    "rafiqi": "رفيقي",
+    "courses": "التطوير المهني",
+    "learn": "التعلّم",
+    "homework": "الواجبات",
+    "progress": "تقدّمي",
+    "myRafiqi": "رفيقي",
+    "more": "المزيد"
+  },
+  "accessibility": {
+    "skipToContent": "الانتقال إلى المحتوى",
+    "primaryNavigation": "التنقل الرئيسي",
+    "mobileNavigation": "التنقل على الهاتف"
+  }
+}

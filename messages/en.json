@@ -1,0 +1,38 @@
+{
+  "common": {
+    "appName": "Rafiqi"
+  },
+  "shell": {
+    "searchPlaceholder": "Search navigation",
+    "notifications": "Notifications",
+    "teacher": "Teacher",
+    "student": "Student",
+    "teacherRole": "Teacher workspace",
+    "studentRole": "Student workspace",
+    "switchToEnglish": "Switch to English",
+    "switchToArabic": "Switch to Arabic",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "navigation": {
+    "today": "Today",
+    "schedule": "Schedule",
+    "teaching": "Teaching",
+    "students": "Students",
+    "resources": "Resources",
+    "connect": "Connect",
+    "insights": "Insights",
+    "rafiqi": "Rafiqi",
+    "courses": "Professional learning",
+    "learn": "Learn",
+    "homework": "Homework",
+    "progress": "My progress",
+    "myRafiqi": "My Rafiqi",
+    "more": "More"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to content",
+    "primaryNavigation": "Primary navigation",
+    "mobileNavigation": "Mobile navigation"
+  }
+}
