@@ -49,6 +49,7 @@ const navigation: Record<Role, Item[]> = {
   student: [
     { path: "today", label: "today", icon: Home },
     { path: "learn", label: "learn", icon: BookOpen },
+    { path: "study-cave", label: "studyCave", icon: Sparkles },
     { path: "homework", label: "homework", icon: CalendarDays },
     { path: "progress", label: "progress", icon: ChartNoAxesCombined },
     { path: "resources", label: "resources", icon: LibraryBig },
