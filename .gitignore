@@ -43,3 +43,5 @@ next-env.d.ts
 .playwright-cli/
 verification/
 verification/ar-teacher-mobile.png
+verification/ar-student-mobile.png
+verification/en-student-menu.png
