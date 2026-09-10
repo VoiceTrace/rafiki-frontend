@@ -3,16 +3,19 @@
     "appName": "Rafiqi"
   },
   "shell": {
-    "searchPlaceholder": "Search navigation",
+    "searchPlaceholder": "Search Rafiqi…",
     "notifications": "Notifications",
-    "teacher": "Teacher",
-    "student": "Student",
-    "teacherRole": "Teacher workspace",
-    "studentRole": "Student workspace",
+    "teacher": "Mr. Adel",
+    "student": "Ahmed",
+    "teacherRole": "Teacher",
+    "studentRole": "Grade 10",
     "switchToEnglish": "Switch to English",
     "switchToArabic": "Switch to Arabic",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "openSearch": "Open search",
+    "navigationResults": "Pages",
+    "noResults": "No matching pages"
   },
   "navigation": {
     "today": "Today",
@@ -28,11 +31,602 @@
     "homework": "Homework",
     "progress": "My progress",
     "myRafiqi": "My Rafiqi",
-    "more": "More"
+    "more": "More",
+    "settings": "Settings",
+    "help": "Help"
   },
   "accessibility": {
     "skipToContent": "Skip to content",
     "primaryNavigation": "Primary navigation",
-    "mobileNavigation": "Mobile navigation"
+    "mobileNavigation": "Mobile navigation",
+    "utilityNavigation": "Help and settings"
+  },
+  "studentToday": {
+    "greeting": "Good morning, Ahmed!",
+    "subtitle": "Ready for a productive day?",
+    "date": "Tuesday, 8 September 2026",
+    "prioritiesLabel": "Your priorities today",
+    "viewAll": "View all",
+    "nextClass": {
+      "eyebrow": "Next class · Physics",
+      "title": "Newton’s Third Law",
+      "meta": "10:00 – 10:45 AM · Grade 10",
+      "cta": "Start 5-minute warm-up"
+    },
+    "studyCave": {
+      "eyebrow": "Continue in Study Cave",
+      "title": "Pick up where you left off",
+      "lesson": "Newton’s Third Law",
+      "progress": "Study progress",
+      "cta": "Continue studying"
+    },
+    "streak": {
+      "label": "day streak",
+      "days": [
+        "S",
+        "M",
+        "T",
+        "W",
+        "T",
+        "F",
+        "S"
+      ],
+      "encouragement": "Keep going!"
+    },
+    "homework": {
+      "title": "Due homework",
+      "physics": "Physics – Practice problems",
+      "physicsDetail": "Newton’s Third Law",
+      "math": "Math – Worksheet",
+      "mathDetail": "Quadratic equations",
+      "english": "English – Reading response",
+      "englishDetail": "Chapter 3",
+      "dueOne": "Due Wed, 9 Sep",
+      "dueTwo": "Due Thu, 10 Sep",
+      "dueThree": "Due Fri, 11 Sep"
+    },
+    "schedule": {
+      "title": "Today’s schedule",
+      "view": "View full schedule",
+      "timeOne": "8:30 – 9:15",
+      "timeTwo": "10:00 – 10:45",
+      "timeThree": "11:30 – 12:15",
+      "timeFour": "1:00 – 1:45",
+      "timeFive": "3:00 – 3:45",
+      "math": "Math",
+      "physics": "Physics",
+      "physicsDetail": "Newton’s Third Law · Room B201",
+      "english": "English",
+      "computerScience": "Computer Science",
+      "pe": "PE",
+      "roomOne": "Room A102",
+      "roomTwo": "Room A105",
+      "roomThree": "Room C301",
+      "sportsHall": "Sports Hall"
+    },
+    "assistant": {
+      "title": "Ask your Rafiqi companion",
+      "description": "Get help, explanations or study tips anytime.",
+      "placeholder": "Type your question…",
+      "send": "Ask Rafiqi",
+      "suggestionOne": "Explain Newton’s Third Law",
+      "suggestionTwo": "Give me practice questions",
+      "suggestionThree": "Help with my homework"
+    }
+  },
+  "teacherToday": {
+    "greeting": "Good morning, Mr. Adel",
+    "subtitle": "Your next lesson is ready to teach.",
+    "date": "Wednesday, 9 September 2026",
+    "productive": "A productive day for your students",
+    "nextClass": {
+      "eyebrow": "Next class · In 45 min",
+      "grade": "Grade 10 Physics",
+      "lesson": "Newton’s Third Law",
+      "meta": "10:00 – 10:45 AM",
+      "room": "Room B2",
+      "cta": "Prepare lesson"
+    },
+    "schedule": {
+      "title": "Today’s classes",
+      "view": "View schedule",
+      "seeFull": "See full schedule",
+      "timeOne": "10:00",
+      "timeTwo": "12:00",
+      "timeThree": "2:00",
+      "physicsTen": "Grade 10 Physics",
+      "physicsNine": "Grade 9 Physics",
+      "physicsEleven": "Grade 11 Physics",
+      "newton": "Newton’s Third Law",
+      "forces": "Forces and Motion",
+      "momentum": "Momentum and Collisions"
+    },
+    "attention": {
+      "title": "Needs attention",
+      "view": "View all",
+      "homework": "Homework approvals",
+      "homeworkDetail": "Ready for your review",
+      "questions": "Student questions",
+      "questionsDetail": "Awaiting a response",
+      "support": "Learners needing support",
+      "supportDetail": "Based on recent activity"
+    },
+    "tasks": {
+      "title": "Your tasks",
+      "filterLabel": "Filter tasks by priority",
+      "all": "All",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "review": "Review Grade 10 homework submissions",
+      "prepare": "Prepare Grade 11 lesson on momentum",
+      "respond": "Respond to student questions",
+      "rubric": "Update assessment rubric",
+      "support": "Meet with learners needing support",
+      "newTask": "New classroom task",
+      "add": "Add task"
+    }
+  },
+  "studentLearn": {
+    "title": "Learn",
+    "subtitle": "Explore your subjects and follow your learning journey.",
+    "gradeLabel": "Choose grade",
+    "grade": "Grade {value}",
+    "viewLabel": "Learning views",
+    "learningMap": "Learning map",
+    "schedule": "Schedule",
+    "chapter": "Chapter 1: Forces and Motion",
+    "completedCount": "4 / 6 lessons",
+    "openLesson": "Open lesson",
+    "subjects": {
+      "label": "Subjects",
+      "math": "Mathematics",
+      "physics": "Physics",
+      "chemistry": "Chemistry",
+      "biology": "Biology",
+      "english": "English",
+      "mathSummary": "Continue your mathematics path from the latest completed lesson.",
+      "lockedSummary": "Open this subject to review its chapters and lessons."
+    },
+    "lessons": {
+      "one": "Forces and their effects",
+      "oneMeta": "Video · 12 min",
+      "two": "Balanced and unbalanced forces",
+      "twoMeta": "Video · 14 min",
+      "three": "Newton’s Third Law",
+      "current": "Current lesson",
+      "four": "Solving problems with Newton’s laws",
+      "fourMeta": "Video · 18 min",
+      "five": "Real life applications",
+      "fiveMeta": "Video · 15 min",
+      "six": "Chapter review",
+      "sixMeta": "Quiz · 10 min"
+    },
+    "week": {
+      "title": "Your week",
+      "viewLabel": "Calendar range",
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "previous": "Previous day",
+      "next": "Next day",
+      "datePrevious": "Monday, 7 September 2026",
+      "date": "Tuesday, 8 September 2026",
+      "dateNext": "Wednesday, 9 September 2026",
+      "timeOne": "8:30 AM",
+      "timeTwo": "10:00 AM",
+      "timeThree": "11:30 AM",
+      "timeFour": "1:00 PM",
+      "timeFive": "3:00 PM",
+      "math": "Math",
+      "physics": "Physics",
+      "physicsDetail": "Newton’s Third Law · Room B201",
+      "english": "English",
+      "computerScience": "Computer Science",
+      "pe": "PE",
+      "roomOne": "Room A102",
+      "roomTwo": "Room A105",
+      "roomThree": "Room C301",
+      "sportsHall": "Sports Hall",
+      "add": "Add event",
+      "addTitle": "Add personal event",
+      "editTitle": "Edit personal event",
+      "description": "Keep your study plans beside your class schedule.",
+      "name": "Event name",
+      "time": "Time",
+      "place": "Place",
+      "save": "Save event",
+      "cancel": "Cancel",
+      "personal": "Personal event",
+      "eventTitle": "Study for Physics quiz",
+      "eventTime": "5:00 PM – 6:00 PM",
+      "eventPlace": "At home",
+      "edit": "Edit event",
+      "delete": "Delete"
+    }
+  },
+  "studentRafiqi": {
+    "eyebrow": "Your learning companion",
+    "title": "My Rafiqi",
+    "subtitle": "A private space to ask questions, make sense of tricky ideas, and build confidence at your pace.",
+    "workspaceLabel": "Rafiqi companion workspace",
+    "conversation": {
+      "title": "Rafiqi",
+      "context": "Here with you while you learn",
+      "opening": "Hi Ahmed! I am Rafiqi. I am here to learn with you, answer your questions, and help you in a way that fits you. What would you like to talk about today?",
+      "suggestionOne": "Explain it in a simple way",
+      "suggestionTwo": "Help me check my thinking",
+      "placeholder": "Ask Rafiqi anything…",
+      "send": "Send",
+      "response": "Great choice! Let us explore some examples together. I will also share a diagram you can look at.",
+      "studentReply": "I am trying to really understand Newton's Third Law. Can you give me an example from everyday life?",
+      "followUp": "Let us work through it together. What do you think happens first?",
+      "time": "10:16 AM",
+      "attachmentName": "Newton_third_law_examples.pdf",
+      "attachmentMeta": "1.2 MB · PDF"
+    },
+    "understands": {
+      "title": "How Rafiqi understands you",
+      "description": "This changes as you learn and chat together.",
+      "learning": {
+        "title": "How you learn",
+        "description": "You learn best by seeing a clear example, then trying it yourself."
+      },
+      "progress": {
+        "title": "Where you are",
+        "description": "You are building confidence with forces and motion."
+      },
+      "support": {
+        "title": "What helps",
+        "description": "Short steps and a chance to explain your thinking help most."
+      }
+    },
+    "questions": {
+      "title": "Questions for your teacher",
+      "description": "Save a question when you want to bring it to class.",
+      "action": "Add a question"
+    },
+    "focus": {
+      "label": "Your learning focus",
+      "title": "What to focus on",
+      "description": "Small next steps based on your recent learning.",
+      "first": "Remember that forces always come in pairs.",
+      "second": "Compare force with mass and acceleration.",
+      "third": "Try one practice question before class."
+    },
+    "tip": {
+      "title": "A gentle nudge",
+      "description": "You do not have to get it right straight away. Tell Rafiqi what you think and work it out together.",
+      "action": "Start a quick warm-up"
+    },
+    "course": "Grade 10 Physics",
+    "edit": "Edit",
+    "notQuiteMe": "Not quite me?",
+    "discuss": "Discuss with Rafiqi",
+    "preferences": {
+      "visual": {
+        "title": "Visual · example-driven",
+        "description": "Diagrams, real-life examples and short videos help you most."
+      },
+      "title": "How you prefer learning",
+      "focused": {
+        "title": "Steady and focused",
+        "description": "You work best with clear steps and practice."
+      },
+      "curious": {
+        "title": "Curious and asks why",
+        "description": "You like to dig deeper and connect ideas."
+      },
+      "illustrationAlt": "Student studying at a desk"
+    },
+    "goals": {
+      "title": "Your goals",
+      "confidence": {
+        "title": "Get more confident in problem solving",
+        "description": "Practice regularly and check my reasoning."
+      },
+      "concepts": {
+        "title": "Understand key Physics concepts",
+        "description": "Like Newtons Laws, energy and momentum."
+      }
+    }
+  },
+  "themePreview": {
+    "title": "Rafiqi theme preview",
+    "description": "Development-only component checks. Product pages remain empty.",
+    "buttons": "Buttons",
+    "interactive": "Check hover, keyboard focus, and interaction states.",
+    "primary": "Primary action",
+    "pressed": "Action selected",
+    "outline": "Outline",
+    "secondary": "Peach surface",
+    "quiet": "Quiet action",
+    "disabled": "Disabled",
+    "fields": "Form controls",
+    "input": "Text input",
+    "placeholder": "Enter text",
+    "invalid": "Invalid state",
+    "checkbox": "Select this option",
+    "surfaces": "Semantic surfaces",
+    "assistant": "Assistant",
+    "success": "Success",
+    "muted": "Muted",
+    "dialog": "Dialog",
+    "open": "Open dialog",
+    "close": "Close"
+  },
+  "studentHomework": {
+    "allHints": "You have seen all the hints",
+    "problem": "A 1500 kg car collides with a 200 kg motorbike. Which one exerts a greater force on the other at the moment of impact? And why?",
+    "title": "Homework",
+    "hints": {
+      "one": "Start by identifying the two objects in the interaction.",
+      "two": "Think about what Newton third law says about every force pair.",
+      "three": "Mass changes acceleration, not the size of the force pair.",
+      "title": "Work through the hints",
+      "description": "Reveal one step at a time, then return to your answer.",
+      "locked": "Select to reveal this step."
+    },
+    "nextHint": "Need a hint? Ask for the next step",
+    "eyebrow": "Guided homework",
+    "answerPlaceholder": "Write your answer in your own words. Rafiqi will not solve it for you; it walks with you.",
+    "correct": {
+      "text": "Both exert the same force on each other. The motorbike moves more because of its smaller mass, not because the force is greater.",
+      "title": "Excellent! You got there yourself."
+    },
+    "answerLabel": "Your answer",
+    "hintLabel": "Hint {number}",
+    "subtitle": "Tailored to your level",
+    "progress": {
+      "description": "Newton third law",
+      "title": "Your homework progress",
+      "value": "60% complete"
+    },
+    "rafiqi": {
+      "description": "Tell Rafiqi your thinking and get a nudge, not the answer.",
+      "opening": "Stuck? Tell me what you are thinking and I will help you find the next step.",
+      "title": "Homework help with Rafiqi",
+      "placeholder": "Ask for a nudge"
+    },
+    "check": "Check my answer",
+    "problemTitle": "Action and reaction",
+    "problemIntro": "Work through the thinking in your own words.",
+    "back": "Back",
+    "more": "More options",
+    "stagesLabel": "Homework stages",
+    "stages": {
+      "review": "Review",
+      "question": "Question",
+      "hints": "Hints"
+    },
+    "review": {
+      "title": "Review your thinking",
+      "description": "A short summary after you have attempted the question.",
+      "answer": "Both the car and the motorbike exert the same force on each other. Their accelerations differ because their masses differ.",
+      "next": "Return to Question to revise your answer or ask Rafiqi for another nudge."
+    }
+  },
+  "studyCave": {
+    "matching": {
+      "text": "Action and reaction forces are equal in size and opposite in direction.",
+      "title": "Matching notes",
+      "description": "Key points from today’s lesson.",
+      "one": "Action and reaction forces are equal in size and opposite in direction.",
+      "two": "They act on different objects.",
+      "three": "Examples include walking, swimming, and rocket propulsion.",
+      "add": "Add to my notes",
+      "added": "Added to my notes"
+    },
+    "guided": {
+      "title": "Guided conversation with Rafiqi",
+      "one": "Explain the law in simple terms",
+      "text": "Lets get ready for today lesson on Newton Third Law. What would you like to focus on?",
+      "three": "Check what I already know",
+      "two": "See a real-life example"
+    },
+    "goal": {
+      "title": "Today goal",
+      "text": "Be ready to understand how forces come in pairs and apply Newton law in examples.",
+      "status": "You are on track!"
+    },
+    "tabs": {
+      "after": "After class",
+      "homework": "Homework",
+      "during": "During class",
+      "before": "Before class"
+    },
+    "beforeSubtitle": "Get ready for class with your AI learning companion.",
+    "title": "Study Cave",
+    "noticed": {
+      "title": "What Rafiqi noticed",
+      "one": "You are taking clear and organized notes.",
+      "three": "You might want a simple diagram to visualize the forces.",
+      "two": "You asked a great question about real-life examples.",
+      "highlightText": "Draw a simple diagram to visualize the action and reaction forces.",
+      "highlight": "Highlight these in my notes",
+      "highlighted": "Added to my notes"
+    },
+    "questions": {
+      "add": "Add question",
+      "title": "Your questions for class",
+      "placeholder": "Type your question",
+      "one": "Why are action and reaction forces equal in size?",
+      "two": "If they are equal, why do they not cancel each other?",
+      "three": "Can you give an example from daily life?",
+      "description": "Ask questions during the lesson.",
+      "rocket": "Can you explain the rocket example again?",
+      "reaction": "In what situations is the reaction force larger?",
+      "now": "Now",
+      "sent": "Sent",
+      "pending": "Pending"
+    },
+    "notes": {
+      "one": "For every action force, there is an equal and opposite reaction force.",
+      "exampleOne": "Rocket and exhaust gases",
+      "two": "Forces always come in pairs.",
+      "title": "My class notes",
+      "exampleTwo": "Person pushing a wall",
+      "examples": "Class examples",
+      "three": "They act on different objects.",
+      "heading": "Newton’s Third Law",
+      "description": "Write your notes, highlight key ideas, or add diagrams.",
+      "normal": "Normal",
+      "bold": "Bold",
+      "italic": "Italic",
+      "list": "Bulleted list",
+      "link": "Insert link",
+      "undo": "Undo",
+      "redo": "Redo",
+      "editorLabel": "Class notes editor",
+      "saved": "Autosaved just now",
+      "selectionFallback": "key idea"
+    },
+    "subject": "Subject",
+    "material": {
+      "title": "Warm-up material",
+      "one": "Watch: Newton Third Law (5 min)",
+      "four": "Try: 3 quick practice questions",
+      "three": "Explore: Real-life examples",
+      "two": "Read: Textbook section 4.3"
+    },
+    "duringSubtitle": "Take notes, ask questions, and let Rafiqi support you in real time.",
+    "lesson": "Lesson",
+    "chapter": "Chapter",
+    "context": {
+      "title": "Live lesson context",
+      "text": "We’re now discussing real-life examples of Newton’s Third Law, starting with rockets.",
+      "teacher": "Mr. Adel"
+    },
+    "support": {
+      "two": "Think about other examples from daily life.",
+      "title": "Supportive suggestions",
+      "one": "Try drawing a simple diagram of the rocket and exhaust forces."
+    },
+    "workspaceTitle": "Lesson Workspace",
+    "selectorsLabel": "Lesson selection",
+    "values": {
+      "physics": "Physics",
+      "chemistry": "Chemistry",
+      "forces": "Forces and Motion",
+      "energy": "Energy and Work",
+      "newton": "Newton’s Third Law",
+      "balanced": "Balanced and Unbalanced Forces"
+    },
+    "phasesLabel": "Lesson phases",
+    "duringWorkspaceLabel": "Live lesson workspace",
+    "phaseWorkspaceLabel": "Lesson phase workspace",
+    "tabDescriptions": {
+      "before": "Prepare and get ready",
+      "during": "Take notes and ask",
+      "after": "Review and reflect",
+      "homework": "Practice and apply"
+    },
+    "phaseCopy": {
+      "before": "Prepare for class with a focused plan and your AI learning companion.",
+      "during": "Take notes, ask questions, and let Rafiqi support you in real time.",
+      "after": "Turn today’s class into a clear review you can return to.",
+      "homework": "Apply what you learned with guided practice and helpful nudges."
+    },
+    "phasePanels": {
+      "before": {
+        "title": "Get ready for class",
+        "description": "Build enough context to participate confidently without learning the whole lesson early.",
+        "one": "Watch the 5-minute lesson warm-up",
+        "two": "Review the key vocabulary",
+        "three": "Write one question you want answered"
+      },
+      "after": {
+        "title": "Review and reflect",
+        "description": "Organize what you learned and identify the ideas that still need attention.",
+        "one": "Review the notes Rafiqi organized",
+        "two": "Answer the lesson check-in",
+        "three": "Save one example in your own words"
+      },
+      "homework": {
+        "title": "Practice and apply",
+        "description": "Use the lesson ideas in new situations and ask for hints when you need them.",
+        "one": "Complete the action and reaction practice",
+        "two": "Explain one answer in your own words",
+        "three": "Submit your homework for feedback"
+      }
+    },
+    "phaseCoach": {
+      "title": "Rafiqi by your side",
+      "before": "I’ll help you arrive ready with a clear goal and a question worth exploring.",
+      "after": "I’ll help you find the strongest ideas in your notes and close any gaps.",
+      "homework": "I’ll give you hints and questions that move your thinking forward without giving away the answer.",
+      "continue": "Continue to the next phase"
+    }
+  },
+  "emptyStates": {
+    "notFound": {
+      "appName": "Rafiqi",
+      "title": "We couldn’t find that page.",
+      "description": "It may have moved, or the link may not be quite right. Let’s get you back to learning.",
+      "primaryAction": "Back to today"
+    },
+    "comingSoon": {
+      "appName": "Rafiqi",
+      "title": "This space is almost ready.",
+      "description": "We’re putting the finishing touches on it. In the meantime, your learning journey is ready whenever you are.",
+      "primaryAction": "Back to today",
+      "secondaryAction": "Explore learning"
+    }
+  },
+  "teacherLesson": {
+    "prepare": "Prepare for class",
+    "back": "Back",
+    "flow": {
+      "step3": "Introduce the concept (10 min)",
+      "detail1": "Show a short video of a rocket launch.",
+      "detail3": "Present Newton third law with examples.",
+      "step1": "Engage (5 min)",
+      "step2": "Elicit prior knowledge (5 min)",
+      "detail2": "Ask: What makes the rocket move up?",
+      "title": "Lesson flow (Before)",
+      "detail4": "Quick poll and discussion.",
+      "step4": "Check understanding (5 min)",
+      "count": "4 steps"
+    },
+    "subtitle": "Grade 10 Physics · 10:30 – 11:15 AM",
+    "tabs": {
+      "before": "Before",
+      "during": "During",
+      "after": "After"
+    },
+    "title": "Newton Third Law",
+    "more": "More options",
+    "objectives": {
+      "two": "Identify action-reaction pairs in real situations.",
+      "three": "Apply the law to solve simple problems.",
+      "one": "State Newton third law of motion.",
+      "title": "Learning objectives"
+    },
+    "materials": {
+      "slides": "Lesson slides",
+      "simulation": "Simulation",
+      "count": "3 items",
+      "worksheet": "Worksheet",
+      "title": "Materials"
+    },
+    "save": "Save draft",
+    "stagesLabel": "Lesson stages"
+  },
+  "studentWarmup": {
+    "feedback": "Correct thinking starts with the idea that forces come in equal and opposite pairs.",
+    "questionTitle": "Make a prediction",
+    "question": "Imagine a big car and a small motorbike crash head-on. Which one exerts a greater force on the other?",
+    "submit": "Check my thinking",
+    "subtitle": "Newton third law · Question 1 of 3",
+    "ask": "Ask Rafiqi",
+    "title": "Lets warm up",
+    "eyebrow": "Before class",
+    "options": {
+      "three": "Both exert the same force on each other",
+      "one": "The big car because it is heavier",
+      "two": "The motorbike because it is moving faster"
+    }
   }
 }
