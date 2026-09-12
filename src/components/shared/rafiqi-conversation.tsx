@@ -19,12 +19,13 @@ type Props = {
   sendLabel: string;
   response: string;
   time: string;
-  attachment: { name: string; meta: string };
+  attachment?: { name: string; meta: string };
 };
 export function RafiqiConversation({
   title,
   context,
   messages,
+  suggestions,
   placeholder,
   sendLabel,
   response,
@@ -87,23 +88,22 @@ export function RafiqiConversation({
             ) : null}
           </div>
         ))}
-        <div className="ms-12 flex max-w-[calc(100%-3rem)] items-center gap-3 rounded-lg border border-assistant bg-assistant/35 p-3">
-          <span className="grid size-9 place-items-center rounded-lg bg-destructive/10 text-destructive">
-            <FileText className="size-5" aria-hidden="true" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <strong className="block truncate text-xs">
-              {attachment.name}
-            </strong>
-            <span className="block text-[0.65rem] text-muted-foreground">
-              {attachment.meta}
-            </span>
-          </span>
-          <Download
-            className="size-4 text-muted-foreground"
-            aria-hidden="true"
-          />
-        </div>
+        {suggestions.length ? (
+          <div className="ms-11 grid max-w-[calc(100%-2.75rem)] gap-2 sm:grid-cols-3">
+            {suggestions.map((suggestion) => (
+              <Button key={suggestion} type="button" variant="outline" className="h-auto min-h-12 justify-start whitespace-normal bg-card px-3 py-2 text-start" onClick={() => send(suggestion)}>
+                {suggestion}
+              </Button>
+            ))}
+          </div>
+        ) : null}
+        {attachment ? (
+          <div className="ms-12 flex max-w-[calc(100%-3rem)] items-center gap-3 rounded-lg border border-assistant bg-assistant/35 p-3">
+            <span className="grid size-9 place-items-center rounded-lg bg-destructive/10 text-destructive"><FileText className="size-5" aria-hidden="true" /></span>
+            <span className="min-w-0 flex-1"><strong className="block truncate text-xs">{attachment.name}</strong><span className="block text-[0.65rem] text-muted-foreground">{attachment.meta}</span></span>
+            <Download className="size-4 text-muted-foreground" aria-hidden="true" />
+          </div>
+        ) : null}
       </div>
       <div className="mt-4 border border-border bg-card p-1.5">
         <form className="flex gap-2" onSubmit={submit}>
@@ -111,7 +111,7 @@ export function RafiqiConversation({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label={attachment.name}
+            aria-label={attachment?.name ?? sendLabel}
           >
             <Paperclip aria-hidden="true" />
           </Button>

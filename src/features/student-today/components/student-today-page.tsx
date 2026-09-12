@@ -47,7 +47,7 @@ export async function StudentTodayPage() {
             <CardDescription>{t("nextClass.meta")}</CardDescription>
           </CardHeader>
           <CardContent className="mt-auto px-4 sm:px-5">
-            <Button render={<Link href="/student/learn/warm-up" />} nativeButton={false} size="lg" className="w-full">{t("nextClass.cta")}<ActionArrow /></Button>
+            <Button render={<Link href="/student/study-cave" />} nativeButton={false} size="lg" className="w-full">{t("nextClass.cta")}<ActionArrow /></Button>
           </CardContent>
         </Card>
 

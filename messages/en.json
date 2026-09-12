@@ -15,7 +15,61 @@
     "closeMenu": "Close menu",
     "openSearch": "Open search",
     "navigationResults": "Pages",
-    "noResults": "No matching pages"
+    "noResults": "No matching pages",
+    "signOut": "Sign out"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "loginDescription": "Sign in to continue your learning journey.",
+    "createYourAccount": "Create your account",
+    "signUpDescription": "Choose your role and set up your Rafiqi profile.",
+    "newToRafiqi": "New to Rafiqi?",
+    "alreadyHaveAccount": "Already have an account?",
+    "accountCreated": "Your account was created. Sign in to continue.",
+    "name": "Full name",
+    "email": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordHelp": "Use at least 8 characters with a letter and a number.",
+    "roleLabel": "I am a",
+    "student": "Student",
+    "teacher": "Teacher",
+    "acceptTerms": "I agree to the terms of use and privacy policy.",
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Reset your password",
+    "forgotPasswordDescription": "Enter your email and we’ll send reset instructions if an account exists.",
+    "sendResetLink": "Send reset link",
+    "resetPassword": "Reset password",
+    "resetPasswordTitle": "Choose a new password",
+    "resetPasswordDescription": "Your new password must be different from passwords you used before.",
+    "returnToSignIn": "Return to sign in",
+    "emailVerified": "Email verified",
+    "emailVerifiedDescription": "Your email is confirmed. You can now sign in.",
+    "verificationFailed": "Verification link invalid",
+    "verificationFailedDescription": "This link is invalid or has expired. Request a new verification email.",
+    "pleaseWait": "Please wait…",
+    "mockHint": "Local preview: use any email and password123.",
+    "errors": {
+      "invalidEmail": "Enter a valid email address.",
+      "passwordRequired": "Enter your password.",
+      "passwordLength": "Use at least 8 characters.",
+      "passwordLetter": "Include at least one letter.",
+      "passwordNumber": "Include at least one number.",
+      "nameLength": "Enter a name between 2 and 80 characters.",
+      "termsRequired": "You must accept the terms to continue.",
+      "passwordMismatch": "The passwords do not match.",
+      "invalidResetLink": "This password reset link is invalid.",
+      "invalidCredentials": "The email, password, or selected role is incorrect.",
+      "accountExists": "An account already exists for this email.",
+      "backendUnavailable": "Authentication is temporarily unavailable. Try again shortly.",
+      "requestFailed": "We couldn’t complete that request. Try again.",
+      "resetEmailSent": "If an account exists for this email, reset instructions are on the way.",
+      "passwordReset": "Your password has been reset successfully."
+    }
   },
   "navigation": {
     "today": "Today",
@@ -206,7 +260,8 @@
       "sixMeta": "Quiz · 10 min"
     },
     "week": {
-      "title": "Your week",
+      "title": "Schedule",
+      "scheduleTitle": "Schedule",
       "viewLabel": "Calendar range",
       "day": "Day",
       "week": "Week",
@@ -245,7 +300,21 @@
       "eventTime": "5:00 PM – 6:00 PM",
       "eventPlace": "At home",
       "edit": "Edit event",
-      "delete": "Delete"
+      "delete": "Delete",
+      "subtitle": "Plan your classes and personal study time.",
+      "today": "Today",
+      "datePicker": "Choose a date",
+      "prepared": "Prepared",
+      "selectEvent": "Select an event to see its details.",
+      "eventDate": "Date",
+      "duration": "Duration in minutes",
+      "recurrence": "Repeat",
+      "doesNotRepeat": "Does not repeat",
+      "weekly": "Weekly on the same day",
+      "endDate": "Repeat until",
+      "weeklyPreview": "Every week from {date} through {end}.",
+      "recurrenceError": "The end date must be on or after the event date.",
+      "deleteConfirm": "Delete “{title}”? This cannot be undone."
     }
   },
   "studentRafiqi": {
@@ -410,6 +479,21 @@
     }
   },
   "studyCave": {
+    "warmup": {
+      "title": "Warm up with Rafiqi",
+      "context": "A guided prediction before Newton’s Third Law",
+      "wake": "Good morning, Ahmed! Your Physics class starts soon. Let’s wake up your thinking with one quick prediction — there is no pressure to get it right yet.",
+      "question": "Imagine a big car and a small motorbike crash head-on. Which one exerts a greater force on the other, and why do you think so?",
+      "placeholder": "Tell Rafiqi what you think…",
+      "send": "Send",
+      "response": "Interesting thinking. Newton’s Third Law says the forces are equal in size and opposite in direction. The motorbike moves more because its smaller mass gives it greater acceleration. I’ve saved your prediction so we can build on it in class.",
+      "time": "Just now",
+      "options": {
+        "car": "The big car — it is heavier",
+        "motorbike": "The motorbike — it is moving faster",
+        "equal": "Both exert the same force"
+      }
+    },
     "matching": {
       "text": "Action and reaction forces are equal in size and opposite in direction.",
       "title": "Matching notes",
@@ -493,6 +577,8 @@
       "two": "Read: Textbook section 4.3"
     },
     "duringSubtitle": "Take notes, ask questions, and let Rafiqi support you in real time.",
+    "afterSubtitle": "Bring today’s learning together and make it stick.",
+    "homeworkSubtitle": "Apply what you learned with guided practice.",
     "lesson": "Lesson",
     "chapter": "Chapter",
     "context": {
@@ -559,6 +645,94 @@
       "after": "I’ll help you find the strongest ideas in your notes and close any gaps.",
       "homework": "I’ll give you hints and questions that move your thinking forward without giving away the answer.",
       "continue": "Continue to the next phase"
+    },
+    "afterClass": {
+      "workspaceLabel": "After-class lesson review",
+      "objective": {
+        "title": "Today’s objective",
+        "text": "Understand and apply Newton’s Third Law: when one object exerts a force on a second object, the second object exerts an equal and opposite force on the first."
+      },
+      "keyPoints": {
+        "title": "Key points",
+        "one": "Forces always come in pairs: action and reaction.",
+        "two": "The two forces are equal in size and opposite in direction.",
+        "three": "They act on different objects, so they do not cancel each other.",
+        "four": "Both forces happen at the same time."
+      },
+      "timeline": {
+        "title": "How we got there",
+        "examples": "Started with everyday examples, including pushing a wall.",
+        "pairs": "Explored force pairs and the most common misconceptions.",
+        "scenarios": "Analysed real scenarios with diagrams and class discussion.",
+        "problems": "Solved sample problems together and explained the reasoning."
+      },
+      "selfCheck": {
+        "title": "Check yourself",
+        "pairs": "I can identify action–reaction pairs.",
+        "objects": "I know why the forces act on different objects.",
+        "apply": "I can apply the law to a new situation.",
+        "explain": "I can explain the law in my own words.",
+        "progress": "{complete} of {total} ideas feel clear"
+      },
+      "questions": {
+        "title": "Teacher Q&A",
+        "teacher": "Mr. Adel",
+        "description": "Official answers to common questions from today’s class.",
+        "cancel": {
+          "question": "Why don’t the two forces cancel each other out?",
+          "answer": "They do not cancel because each force acts on a different object. Forces can only cancel when they act on the same object."
+        },
+        "effect": {
+          "question": "Do action–reaction forces always have the same effect?",
+          "answer": "The forces are equal, but their effects can differ because the objects may have different masses and therefore different accelerations."
+        },
+        "rest": {
+          "question": "Can one of the objects be at rest?",
+          "answer": "Yes. A wall may stay still when you push it, but it still exerts an equal and opposite force on you."
+        }
+      },
+      "materials": {
+        "title": "Learning materials",
+        "slides": { "title": "Lesson slides — Newton’s Third Law", "meta": "Slides · 12 MB" },
+        "reading": { "title": "Class reading and notes", "meta": "PDF · 1.4 MB" },
+        "video": { "title": "Worked force-pair demonstration", "meta": "Video · 18 min" },
+        "practice": { "title": "Practice set", "meta": "5 questions" },
+        "helper": "Open a material or mark it complete.",
+        "opened": "Opened: {title}",
+        "markComplete": "Mark complete",
+        "markIncomplete": "Mark incomplete"
+      },
+      "notes": {
+        "title": "Personal notes & teacher feedback",
+        "description": "Your saved class notes and private feedback, together in one place.",
+        "editorLabel": "Personal lesson notes",
+        "saved": "Saved just now"
+      },
+      "feedback": {
+        "title": "Private feedback from Mr. Adel",
+        "text": "Your rocket example was clear. Next, always name both objects before describing the two forces.",
+        "private": "Only you can see this feedback."
+      },
+      "companion": {
+        "title": "Rafiqi review companion",
+        "description": "A quick check that today’s corrections will stick.",
+        "prompt": "Before we finish: confirm what feels clear, what you watched, and the misconception you corrected today.",
+        "understood": "I understand the key points",
+        "watched": "I watched the demonstration",
+        "retained": "I remember why the forces do not cancel",
+        "misconception": "Misconception corrected",
+        "correction": "Equal and opposite forces act on different objects; they do not cancel each other.",
+        "progress": "{complete} of {total} review checks confirmed",
+        "complete": "Review complete — you are ready to practise.",
+        "placeholder": "Explain the corrected idea in your own words…",
+        "send": "Send to Rafiqi"
+      },
+      "download": {
+        "title": "Keep this review",
+        "description": "Includes the objective, key points, timeline, Q&A, notes, corrected misconception, and teacher feedback.",
+        "action": "Download summary",
+        "documentTitle": "Newton’s Third Law — After-class review"
+      }
     }
   },
   "emptyStates": {

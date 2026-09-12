@@ -2,14 +2,14 @@ import { ArrowRight, Beaker, BookOpen, Check, ChevronDown, FlaskConical, Leaf, L
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { GradePicker } from "./grade-picker";
-import { LearningWeek } from "./learning-week";
+import { StudentSchedule, type CalendarView } from "./student-schedule";
+import { SchedulePreview } from "./schedule-preview";
 
 function Arrow() {
   return <ArrowRight data-icon="inline-end" className="rtl:-scale-x-100" aria-hidden="true" />;
 }
 
-export async function StudentLearnPage() {
+export async function StudentLearnPage({ view = "map", calendarView = "day" }: { view?: "map" | "schedule"; calendarView?: CalendarView }) {
   const t = await getTranslations("studentLearn");
   const lessons = [
     { number: "1.1", title: t("lessons.one"), meta: t("lessons.oneMeta"), status: "done" },
@@ -30,13 +30,13 @@ export async function StudentLearnPage() {
     <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-4 sm:gap-5" data-testid="student-learn-page">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div><h1 className="font-heading text-page font-bold tracking-tight">{t("title")}</h1><p className="mt-1 text-base text-muted-foreground">{t("subtitle")}</p></div>
-        <GradePicker />
       </header>
       <nav className="grid w-full max-w-md grid-cols-2 rounded-xl border border-border bg-card p-1" aria-label={t("viewLabel")}>
-        <span className="rounded-lg bg-secondary px-4 py-2 text-center text-sm font-semibold text-secondary-foreground">{t("learningMap")}</span>
-        <Link href="/student/schedule" className="rounded-lg px-4 py-2 text-center text-sm font-medium text-muted-foreground hover:bg-muted">{t("schedule")}</Link>
+        <Link href="/student/learn?view=map" className={view === "map" ? "rounded-lg bg-secondary px-4 py-2 text-center text-sm font-semibold text-secondary-foreground" : "rounded-lg px-4 py-2 text-center text-sm font-medium text-muted-foreground hover:bg-muted"}>{t("learningMap")}</Link>
+        <Link href="/student/learn?view=schedule" className={view === "schedule" ? "rounded-lg bg-secondary px-4 py-2 text-center text-sm font-semibold text-secondary-foreground" : "rounded-lg px-4 py-2 text-center text-sm font-medium text-muted-foreground hover:bg-muted"}>{t("schedule")}</Link>
       </nav>
 
+      {view === "schedule" ? <StudentSchedule initialView={calendarView} /> : (
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="flex min-w-0 flex-col gap-3" aria-label={t("subjects.label")}>
           <details className="group rounded-xl border border-border bg-card shadow-surface">
@@ -82,8 +82,9 @@ export async function StudentLearnPage() {
             </details>
           ))}
         </section>
-        <LearningWeek />
+        <SchedulePreview />
       </div>
+      )}
     </div>
   );
 }

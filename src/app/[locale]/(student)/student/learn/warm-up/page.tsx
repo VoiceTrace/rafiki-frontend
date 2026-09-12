@@ -1,4 +1,6 @@
-import { StudentWarmupPage } from "@/features/student-warmup/components/student-warmup-page";
-export default function Page() {
-  return <StudentWarmupPage />;
+import { redirect } from "@/i18n/navigation";
+
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  redirect({ href: "/student/study-cave", locale });
 }

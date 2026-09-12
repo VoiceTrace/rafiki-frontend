@@ -5,6 +5,7 @@ import {
   BookOpen,
   Bot,
   CheckCircle2,
+  ClipboardCheck,
   ChevronRight,
   FileText,
   HelpCircle,
@@ -32,6 +33,8 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { RafiqiConversation } from "@/components/shared/rafiqi-conversation";
+import { AfterClassReview } from "./after-class-review";
 
 type Phase = "before" | "during" | "after" | "homework";
 type Question = { id: number; text: string; status: "sent" | "pending" };
@@ -39,7 +42,7 @@ const phases: Phase[] = ["before", "during", "after", "homework"];
 const icons: Record<Phase, LucideIcon> = {
   before: BookOpen,
   during: Play,
-  after: LockKeyhole,
+  after: ClipboardCheck,
   homework: LockKeyhole,
 };
 
@@ -85,6 +88,13 @@ export function StudyCavePage() {
     lesson: ["newton", "balanced"],
   } as const;
 
+  const subtitles: Record<Phase, string> = {
+    before: t("beforeSubtitle"),
+    during: t("duringSubtitle"),
+    after: t("afterSubtitle"),
+    homework: t("homeworkSubtitle"),
+  };
+
   function addQuestion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const value = question.trim();
@@ -111,7 +121,7 @@ export function StudyCavePage() {
           {t("title")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground sm:text-base">
-          {phase === "during" ? t("duringSubtitle") : t("beforeSubtitle")}
+          {subtitles[phase]}
         </p>
       </header>
       <section
@@ -263,33 +273,19 @@ export function StudyCavePage() {
             </Card>
           </div>
           <div className="grid content-start gap-4">
-            <Card className="border-assistant bg-assistant/35 shadow-surface">
-              <CardHeader>
-                <Title icon={Bot} tone="text-assistant-foreground">
-                  {t("guided.title")}
-                </Title>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-xl bg-card p-4 text-sm leading-6 shadow-surface">
-                  <p className="text-xs text-muted-foreground">{t("title")}</p>
-                  {t("guided.text")}
-                </div>
-                <div className="mt-4 grid gap-2">
-                  {["one", "two", "three"].map((key) => (
-                    <Button
-                      key={key}
-                      type="button"
-                      variant="outline"
-                      className="justify-start bg-card text-start"
-                      onClick={() => setPhase("during")}
-                    >
-                      <FileText className="text-assistant-foreground" />
-                      {t(`guided.${key}`)}
-                    </Button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <RafiqiConversation
+              title={t("warmup.title")}
+              context={t("warmup.context")}
+              messages={[
+                { author: "rafiqi", text: t("warmup.wake") },
+                { author: "rafiqi", text: t("warmup.question") },
+              ]}
+              suggestions={[t("warmup.options.car"), t("warmup.options.motorbike"), t("warmup.options.equal")]}
+              placeholder={t("warmup.placeholder")}
+              sendLabel={t("warmup.send")}
+              response={t("warmup.response")}
+              time={t("warmup.time")}
+            />
             <QuestionCard
               t={t}
               question={question}
@@ -299,6 +295,8 @@ export function StudyCavePage() {
             />
           </div>
         </section>
+      ) : phase === "after" ? (
+        <AfterClassReview notes={notes} onNotesChange={setNotes} />
       ) : (
         <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,.9fr)]">
           <div className="grid content-start gap-4">
