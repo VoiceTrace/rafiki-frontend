@@ -499,11 +499,33 @@
       "send": "Send",
       "response": "Interesting thinking. Newton’s Third Law says the forces are equal in size and opposite in direction. The motorbike moves more because its smaller mass gives it greater acceleration. I’ve saved your prediction so we can build on it in class.",
       "time": "Just now",
-      "options": {
-        "car": "The big car — it is heavier",
-        "motorbike": "The motorbike — it is moving faster",
-        "equal": "Both exert the same force"
-      }
+    "options": {
+      "car": "The big car — it is heavier",
+      "motorbike": "The motorbike — it is moving faster",
+      "equal": "Both exert the same force"
+    },
+    "quiz": {
+      "title": "Warm-up prediction",
+      "description": "Choose an answer, then check your thinking with Rafiqi.",
+      "progress": "Question {current} of {total}",
+      "questions": {
+        "0": "In a car and motorbike collision, which statement best describes the force pair?",
+        "1": "When you push a wall, what force does the wall exert on your hand?",
+        "2": "A rocket pushes exhaust gases backward. What pushes the rocket forward?"
+      },
+      "checking": "Checking your answer…",
+      "correctTitle": "That’s right!",
+      "correctBody": "The two objects exert equal forces in opposite directions, even when their masses are different.",
+      "retryTitle": "You’re close — try that idea again.",
+      "retryBody": "Think about the interaction: each object pushes on the other with an equal and opposite force.",
+      "tryAgain": "Try again",
+      "check": "Check answer",
+      "save": "Save answer",
+      "saved": "Saved locally for this lesson. You can build on this answer in class.",
+      "next": "Next question",
+      "locked": "Warm-up complete. Your local answers are locked for this demo.",
+      "continue": "Continue to Study Cave"
+    }
     },
     "matching": {
       "text": "Action and reaction forces are equal in size and opposite in direction.",
@@ -554,10 +576,26 @@
       "description": "Ask questions during the lesson.",
       "rocket": "Can you explain the rocket example again?",
       "reaction": "In what situations is the reaction force larger?",
-      "now": "Now",
-      "sent": "Sent",
-      "pending": "Pending"
-    },
+    "now": "Now",
+    "sent": "Sent",
+    "sentSuccess": "Your question has been sent in this local demo.",
+    "timeOne": "12:14",
+    "timeTwo": "12:28",
+    "pending": "Pending",
+    "draft": "Draft",
+    "sending": "Sending",
+    "failed": "Couldn’t send",
+    "failedExample": "Can we observe Newton’s Third Law in everyday life, like skating?",
+    "demo": "Local demo",
+    "empty": "No questions yet. Add one you want to explore in class.",
+    "edit": "Edit draft",
+    "delete": "Delete draft",
+    "retry": "Retry",
+    "locked": "Class has begun, so new questions are locked in this local demo.",
+    "lockedDescription": "Your existing questions remain visible, but you can’t add another one now.",
+    "localOnly": "Demo only — this does not send a question to your teacher.",
+    "startClass": "Class started"
+  },
     "notes": {
       "one": "For every action force, there is an equal and opposite reaction force.",
       "exampleOne": "Rocket and exhaust gases",

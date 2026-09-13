@@ -25,12 +25,12 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { RafiqiConversation } from "@/components/shared/rafiqi-conversation";
 import { AfterClassReview } from "./after-class-review";
 import { StudyCaveHomeworkPanel } from "./study-cave-homework-panel";
 import { StudyCaveCardTitle } from "./study-cave-card-title";
 import { StudyCavePhaseTabs } from "./study-cave-phase-tabs";
 import { StudyCaveQuestionCard, type StudyCaveQuestion } from "./study-cave-question-card";
+import { StudyCaveWarmupPanel } from "./study-cave-warmup-panel";
 import {
   StudentSessionGate,
   type StudentSessionState,
@@ -71,10 +71,12 @@ export function StudyCavePage({
   const [phase, setPhase] = useState<StudyCavePhase>(initialPhase);
   const [checks, setChecks] = useState([true, true, false, false]);
   const [question, setQuestion] = useState("");
+  const [questionSuccess, setQuestionSuccess] = useState(false);
   const [questions, setQuestions] = useState<StudyCaveQuestion[]>([
-    { id: 1, text: t("questions.one"), status: "sent" },
-    { id: 2, text: t("questions.two"), status: "pending" },
-    { id: 3, text: t("questions.three"), status: "pending" },
+    { id: 1, text: t("questions.one"), status: "sent", time: t("questions.timeOne") },
+    { id: 2, text: t("questions.two"), status: "pending", time: t("questions.timeTwo") },
+    { id: 3, text: t("questions.three"), status: "draft" },
+    { id: 4, text: t("questions.failedExample"), status: "failed" },
   ]);
   const [notes, setNotes] = useState(
     () =>
@@ -102,11 +104,30 @@ export function StudyCavePage({
     event.preventDefault();
     const value = question.trim();
     if (!value) return;
-    setQuestions((items) => [
-      ...items,
-      { id: Date.now(), text: value, status: "pending" },
-    ]);
+    const id = Date.now();
+    const shouldFail = questions.filter((item) => item.id > 4).length % 3 === 2;
+    setQuestionSuccess(false);
+    setQuestions((items) => [...items, { id, text: value, status: "sending" }]);
     setQuestion("");
+    window.setTimeout(() => {
+      setQuestions((items) => items.map((item) => item.id === id ? { ...item, status: shouldFail ? "failed" : "sent", time: shouldFail ? undefined : t("questions.now") } : item));
+      setQuestionSuccess(!shouldFail);
+    }, 700);
+  }
+  function updateQuestion(id: number, text: string) {
+    const value = text.trim();
+    if (value) setQuestions((items) => items.map((item) => item.id === id ? { ...item, text: value } : item));
+  }
+  function deleteQuestion(id: number) {
+    setQuestions((items) => items.filter((item) => item.id !== id));
+  }
+  function retryQuestion(id: number) {
+    setQuestionSuccess(false);
+    setQuestions((items) => items.map((item) => item.id === id ? { ...item, status: "sending" } : item));
+    window.setTimeout(() => {
+      setQuestions((items) => items.map((item) => item.id === id ? { ...item, status: "sent", time: t("questions.now") } : item));
+      setQuestionSuccess(true);
+    }, 700);
   }
   function addToNotes(text: string) {
     if (!notes.includes(text)) setNotes((current) => `${current}\n\n• ${text}`);
@@ -237,25 +258,17 @@ export function StudyCavePage({
             </Card>
           </div>
           <div className="grid content-start gap-4">
-            <RafiqiConversation
-              title={t("warmup.title")}
-              context={t("warmup.context")}
-              messages={[
-                { author: "rafiqi", text: t("warmup.wake") },
-                { author: "rafiqi", text: t("warmup.question") },
-              ]}
-              suggestions={[t("warmup.options.car"), t("warmup.options.motorbike"), t("warmup.options.equal")]}
-              placeholder={t("warmup.placeholder")}
-              sendLabel={t("warmup.send")}
-              response={t("warmup.response")}
-              time={t("warmup.time")}
-            />
+            <StudyCaveWarmupPanel t={t} onContinue={() => setChecks((current) => current.map(() => true))} />
             <StudyCaveQuestionCard
               t={t}
               question={question}
               setQuestion={setQuestion}
               questions={questions}
               onSubmit={addQuestion}
+              onUpdate={updateQuestion}
+              onDelete={deleteQuestion}
+              onRetry={retryQuestion}
+              success={questionSuccess}
             />
           </div>
         </section>
@@ -296,6 +309,10 @@ export function StudyCavePage({
               setQuestion={setQuestion}
               questions={questions}
               onSubmit={addQuestion}
+              onUpdate={updateQuestion}
+              onDelete={deleteQuestion}
+              onRetry={retryQuestion}
+              success={questionSuccess}
             />
           </div>
           <div className="grid content-start gap-4">
