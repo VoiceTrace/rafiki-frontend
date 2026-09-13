@@ -16,7 +16,7 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Copy `.env.example` to `.env.local` and run `npx auth secret` before connecting a real backend. The complete frontend auth contract and security boundary are documented in [`docs/authentication.md`](docs/authentication.md).
+Copy `.env.example` to `.env.local` and run `npx auth secret` before connecting a real backend. For the Rafiqi API, set `API_URL` to its origin (no trailing slash). The complete frontend auth contract, local setup, and security boundary are documented in [`docs/authentication.md`](docs/authentication.md).
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

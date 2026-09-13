@@ -2,9 +2,30 @@
 
 Rafiqi uses Auth.js credentials sessions as its browser-facing authentication boundary. All forms submit to Server Actions, session cookies are HTTP-only and encrypted by Auth.js, `src/proxy.ts` performs fast optimistic route checks, and `src/features/auth/server/dal.ts` performs the authoritative check before protected UI or data is returned.
 
-## Connect the backend
+## Connect the Rafiqi API
 
-Set `AUTH_SECRET` and `AUTH_API_URL`, then adapt only `src/features/auth/server/auth-api.ts` if the backend's paths or envelopes differ. Production never falls back to mock authentication. Local development uses the mock only when no `AUTH_API_URL` exists and `AUTH_USE_MOCK_BACKEND` is not `false`.
+Set `AUTH_SECRET` and `API_URL`; both are required in a production frontend deployment. `API_URL` is the Rafiqi API origin without a trailing slash. The production value must point to the deployed API, never `localhost`.
+
+The Rafiqi login contract is:
+
+| Method | Path | Request | Successful response |
+| --- | --- | --- | --- |
+| POST | `/auth/login` | `{ email, password }` | `{ access_token }` |
+
+The frontend decodes only the JWT payload needed to create its Auth.js session: `sub` for the user ID and `role` (`teacher` or `student`) for authorization. It does not trust the role chosen in the login UI. Keep backend API calls inside `src/features/auth/server/auth-api.ts`; do not call the API from components.
+
+For local integration testing, start the API from [rafiqi-api](https://github.com/VoiceTrace/rafiqi-api), then use:
+
+```env
+API_URL=http://localhost:8000
+AUTH_SECRET=<output of npx auth secret>
+```
+
+The supplied local test accounts are appropriate only for the seeded local database. Do not add real or production credentials to this repository.
+
+## Generic auth adapter (legacy)
+
+`AUTH_API_URL` remains available for a non-Rafiqi backend with the generic session contract below. `API_URL` takes precedence when both are configured. Adapt only `src/features/auth/server/auth-api.ts` if that backend's paths or envelopes differ.
 
 The frontend currently expects these JSON endpoints:
 
@@ -44,5 +65,5 @@ Access and refresh tokens stay inside the encrypted Auth.js JWT cookie and are n
 
 ## Local preview
 
-With no `AUTH_API_URL`, choose either role, use any syntactically valid email, and a password of at least eight characters (for example `password123`). Sign-up, forgot password, reset password, and verification flows operate as UI previews without persisting users.
+With neither `API_URL` nor `AUTH_API_URL`, choose either role, use any syntactically valid email, and a password of at least eight characters (for example `password123`). Sign-up, forgot password, reset password, and verification flows operate as UI previews without persisting users.
 

@@ -105,6 +105,15 @@ src/
 * Avoid unnecessary dependencies and abstractions.
 * Do not add Redux, Zustand, TanStack Query, or Axios unless there is a real product requirement.
 
+## Rafiqi authentication
+
+* Use `API_URL` for the Rafiqi API origin; it is the preferred integration variable and must not include a trailing slash.
+* Keep API integration in `src/features/auth/server/auth-api.ts`. Never call the authentication API from a client component.
+* The Rafiqi login endpoint is `POST /auth/login` with `{ email, password }` and returns `{ access_token }`. The JWT `sub` and `role` claims are the source of truth for the session identity and role.
+* `AUTH_API_URL` supports the older generic backend adapter only. Do not replace `API_URL` with it for the Rafiqi API.
+* Do not commit `.env.local`, generated secrets, JWTs, or credentials. Production needs `API_URL` and `AUTH_SECRET`.
+* For a real local login test, run the API from `https://github.com/VoiceTrace/rafiqi-api`, set `API_URL=http://localhost:8000`, and verify both teacher and student journeys. Details are in `docs/authentication.md`.
+
 ## Verification
 
 * Use the `next-dev-loop` Skill when available if not tell me . 
