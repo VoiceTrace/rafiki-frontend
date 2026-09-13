@@ -2,28 +2,21 @@
 
 import { type FormEvent, useRef, useState } from "react";
 import {
-  BookOpen,
   Bot,
   CheckCircle2,
   ChevronRight,
   FileText,
-  HelpCircle,
   Lightbulb,
-  LockKeyhole,
   Pencil,
-  Play,
   Plus,
   Radio,
   Sparkles,
   Target,
-  type LucideIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { cn } from "cn";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -32,40 +25,53 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { RafiqiConversation } from "@/components/shared/rafiqi-conversation";
+import { AfterClassReview } from "./after-class-review";
+import { StudyCaveHomeworkPanel } from "./study-cave-homework-panel";
+import { StudyCaveCardTitle } from "./study-cave-card-title";
+import { StudyCavePhaseTabs } from "./study-cave-phase-tabs";
+import { StudyCaveQuestionCard, type StudyCaveQuestion } from "./study-cave-question-card";
+import {
+  StudentSessionGate,
+  type StudentSessionState,
+} from "@/features/live-session/components/student-session-gate";
+import {
+  studyCavePhases,
+  type StudyCavePhase,
+} from "@/features/study-cave/types";
 
-type Phase = "before" | "during" | "after" | "homework";
-type Question = { id: number; text: string; status: "sent" | "pending" };
-const phases: Phase[] = ["before", "during", "after", "homework"];
-const icons: Record<Phase, LucideIcon> = {
-  before: BookOpen,
-  during: Play,
-  after: LockKeyhole,
-  homework: LockKeyhole,
-};
+const phases = studyCavePhases;
 
-function Title({
-  icon: Icon,
+function SessionContentFrame({
+  enabled,
+  initialState,
   children,
-  tone = "text-primary",
 }: {
-  icon: LucideIcon;
+  enabled: boolean;
+  initialState?: StudentSessionState;
   children: React.ReactNode;
-  tone?: string;
 }) {
-  return (
-    <CardTitle className="flex items-center gap-2 text-base font-bold">
-      <Icon className={cn("size-5", tone)} aria-hidden="true" />
-      {children}
-    </CardTitle>
+  return enabled ? (
+    <StudentSessionGate initialState={initialState}>{children}</StudentSessionGate>
+  ) : (
+    <>{children}</>
   );
 }
 
-export function StudyCavePage() {
+export function StudyCavePage({
+  initialPhase = "before",
+  showHomeworkState = false,
+  initialSessionState,
+}: {
+  initialPhase?: StudyCavePhase;
+  showHomeworkState?: boolean;
+  initialSessionState?: StudentSessionState;
+}) {
   const t = useTranslations("studyCave");
-  const [phase, setPhase] = useState<Phase>("before");
+  const [phase, setPhase] = useState<StudyCavePhase>(initialPhase);
   const [checks, setChecks] = useState([true, true, false, false]);
   const [question, setQuestion] = useState("");
-  const [questions, setQuestions] = useState<Question[]>([
+  const [questions, setQuestions] = useState<StudyCaveQuestion[]>([
     { id: 1, text: t("questions.one"), status: "sent" },
     { id: 2, text: t("questions.two"), status: "pending" },
     { id: 3, text: t("questions.three"), status: "pending" },
@@ -85,6 +91,13 @@ export function StudyCavePage() {
     lesson: ["newton", "balanced"],
   } as const;
 
+  const subtitles: Record<StudyCavePhase, string> = {
+    before: t("beforeSubtitle"),
+    during: t("duringSubtitle"),
+    after: t("afterSubtitle"),
+    homework: t("homeworkSubtitle"),
+  };
+
   function addQuestion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const value = question.trim();
@@ -103,7 +116,7 @@ export function StudyCavePage() {
 
   return (
     <div
-      className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 pb-8"
+      className="mx-auto flex w-full max-w-300 flex-col gap-4 pb-8"
       data-testid="study-cave-page"
     >
       <header>
@@ -111,7 +124,7 @@ export function StudyCavePage() {
           {t("title")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground sm:text-base">
-          {phase === "during" ? t("duringSubtitle") : t("beforeSubtitle")}
+          {subtitles[phase]}
         </p>
       </header>
       <section
@@ -141,52 +154,13 @@ export function StudyCavePage() {
           </label>
         ))}
       </section>
-      <nav
-        className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-card p-2 shadow-surface sm:grid-cols-4"
-        aria-label={t("phasesLabel")}
-      >
-        {phases.map((item) => {
-          const Icon = icons[item];
-          const active = phase === item;
-          return (
-            <button
-              type="button"
-              key={item}
-              onClick={() => setPhase(item)}
-              aria-current={active ? "step" : undefined}
-              className={cn(
-                "flex min-h-14 items-center gap-3 rounded-xl px-3 text-start outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
-                active
-                  ? "bg-secondary text-secondary-foreground"
-                  : "text-muted-foreground hover:bg-muted",
-              )}
-            >
-              <span
-                className={cn(
-                  "grid size-9 shrink-0 place-items-center rounded-full border",
-                  active
-                    ? "border-primary/20 bg-card text-primary"
-                    : "border-border bg-muted",
-                )}
-              >
-                <Icon className="size-4" />
-              </span>
-              <span>
-                <strong className="block text-sm">{t(`tabs.${item}`)}</strong>
-                <small className="hidden text-xs opacity-75 lg:block">
-                  {t(`tabDescriptions.${item}`)}
-                </small>
-              </span>
-            </button>
-          );
-        })}
-      </nav>
+      <StudyCavePhaseTabs phases={phases} activePhase={phase} onSelect={setPhase} t={t} />
       {phase === "before" ? (
         <section className="grid gap-4 lg:grid-cols-[minmax(0,.95fr)_minmax(20rem,1.05fr)]">
           <div className="grid content-start gap-4">
             <Card className="shadow-surface">
               <CardHeader>
-                <Title icon={Target}>{t("goal.title")}</Title>
+                <StudyCaveCardTitle icon={Target}>{t("goal.title")}</StudyCaveCardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm leading-6">{t("goal.text")}</p>
@@ -205,9 +179,9 @@ export function StudyCavePage() {
             </Card>
             <Card className="shadow-surface">
               <CardHeader>
-                <Title icon={FileText} tone="text-info-foreground">
+                <StudyCaveCardTitle icon={FileText} tone="text-info-foreground">
                   {t("material.title")}
-                </Title>
+                </StudyCaveCardTitle>
                 <p className="text-xs text-muted-foreground">
                   {t("phasePanels.before.description")}
                 </p>
@@ -263,34 +237,20 @@ export function StudyCavePage() {
             </Card>
           </div>
           <div className="grid content-start gap-4">
-            <Card className="border-assistant bg-assistant/35 shadow-surface">
-              <CardHeader>
-                <Title icon={Bot} tone="text-assistant-foreground">
-                  {t("guided.title")}
-                </Title>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-xl bg-card p-4 text-sm leading-6 shadow-surface">
-                  <p className="text-xs text-muted-foreground">{t("title")}</p>
-                  {t("guided.text")}
-                </div>
-                <div className="mt-4 grid gap-2">
-                  {["one", "two", "three"].map((key) => (
-                    <Button
-                      key={key}
-                      type="button"
-                      variant="outline"
-                      className="justify-start bg-card text-start"
-                      onClick={() => setPhase("during")}
-                    >
-                      <FileText className="text-assistant-foreground" />
-                      {t(`guided.${key}`)}
-                    </Button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            <QuestionCard
+            <RafiqiConversation
+              title={t("warmup.title")}
+              context={t("warmup.context")}
+              messages={[
+                { author: "rafiqi", text: t("warmup.wake") },
+                { author: "rafiqi", text: t("warmup.question") },
+              ]}
+              suggestions={[t("warmup.options.car"), t("warmup.options.motorbike"), t("warmup.options.equal")]}
+              placeholder={t("warmup.placeholder")}
+              sendLabel={t("warmup.send")}
+              response={t("warmup.response")}
+              time={t("warmup.time")}
+            />
+            <StudyCaveQuestionCard
               t={t}
               question={question}
               setQuestion={setQuestion}
@@ -299,12 +259,20 @@ export function StudyCavePage() {
             />
           </div>
         </section>
+      ) : phase === "after" ? (
+        <AfterClassReview notes={notes} onNotesChange={setNotes} />
+      ) : phase === "homework" && showHomeworkState ? (
+        <StudyCaveHomeworkPanel />
       ) : (
-        <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,.9fr)]">
+        <SessionContentFrame
+          enabled={phase === "during"}
+          initialState={initialSessionState}
+        >
+          <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,.9fr)]">
           <div className="grid content-start gap-4">
             <Card className="shadow-surface">
               <CardHeader>
-                <Title icon={Pencil}>{t("notes.title")}</Title>
+                <StudyCaveCardTitle icon={Pencil}>{t("notes.title")}</StudyCaveCardTitle>
                 <p className="text-xs text-muted-foreground">
                   {t("notes.description")}
                 </p>
@@ -322,7 +290,7 @@ export function StudyCavePage() {
                 </p>
               </CardContent>
             </Card>
-            <QuestionCard
+              <StudyCaveQuestionCard
               t={t}
               question={question}
               setQuestion={setQuestion}
@@ -333,9 +301,9 @@ export function StudyCavePage() {
           <div className="grid content-start gap-4">
             <Card className="border-assistant bg-assistant/35 shadow-surface">
               <CardHeader>
-                <Title icon={Bot} tone="text-assistant-foreground">
+                <StudyCaveCardTitle icon={Bot} tone="text-assistant-foreground">
                   {t("noticed.title")}
-                </Title>
+                </StudyCaveCardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="grid gap-3 text-sm">
@@ -359,9 +327,9 @@ export function StudyCavePage() {
             </Card>
             <Card className="shadow-surface">
               <CardHeader>
-                <Title icon={FileText} tone="text-info-foreground">
+                <StudyCaveCardTitle icon={FileText} tone="text-info-foreground">
                   {t("matching.title")}
-                </Title>
+                </StudyCaveCardTitle>
               </CardHeader>
               <CardContent>
                 <div className="rounded-xl bg-secondary p-4 text-sm">
@@ -384,9 +352,9 @@ export function StudyCavePage() {
             </Card>
             <Card className="shadow-surface">
               <CardHeader>
-                <Title icon={Radio} tone="text-assistant-foreground">
+                <StudyCaveCardTitle icon={Radio} tone="text-assistant-foreground">
                   {t("context.title")}
-                </Title>
+                </StudyCaveCardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm leading-6">{t("context.text")}</p>
@@ -403,73 +371,10 @@ export function StudyCavePage() {
               </CardContent>
             </Card>
           </div>
-        </section>
+          </section>
+        </SessionContentFrame>
       )}
     </div>
   );
 }
 
-function QuestionCard({
-  t,
-  question,
-  setQuestion,
-  questions,
-  onSubmit,
-}: {
-  t: ReturnType<typeof useTranslations>;
-  question: string;
-  setQuestion: (value: string) => void;
-  questions: Question[];
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-}) {
-  return (
-    <Card className="shadow-surface">
-      <CardHeader>
-        <Title icon={HelpCircle} tone="text-info-foreground">
-          {t("questions.title")}
-        </Title>
-        <p className="text-xs text-muted-foreground">
-          {t("questions.description")}
-        </p>
-      </CardHeader>
-      <CardContent>
-        <form className="flex gap-2" onSubmit={onSubmit}>
-          <Input
-            value={question}
-            onChange={(event) => setQuestion(event.target.value)}
-            placeholder={t("questions.placeholder")}
-          />
-          <Button
-            type="submit"
-            disabled={!question.trim()}
-            className="shrink-0 bg-secondary-foreground hover:bg-secondary-foreground/90"
-          >
-            <Plus />
-            {t("questions.add")}
-          </Button>
-        </form>
-        <ul className="mt-3 overflow-hidden rounded-xl border border-border">
-          {questions.map((item) => (
-            <li
-              key={item.id}
-              className="flex items-center gap-3 border-b border-border px-3 py-3 text-sm last:border-b-0"
-            >
-              <span className="size-3 rounded-full border border-info-foreground" />
-              <span className="min-w-0 flex-1">{item.text}</span>
-              <span
-                className={cn(
-                  "rounded-full px-2 py-1 text-xs font-medium",
-                  item.status === "sent"
-                    ? "bg-success text-success-foreground"
-                    : "bg-secondary text-secondary-foreground",
-                )}
-              >
-                {t(`questions.${item.status}`)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-    </Card>
-  );
-}

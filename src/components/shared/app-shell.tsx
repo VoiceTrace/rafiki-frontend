@@ -10,6 +10,7 @@ import {
   GraduationCap,
   Home,
   LibraryBig,
+  LogOut,
   MessageCircleMore,
   MoreHorizontal,
   Search,
@@ -32,6 +33,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Link, usePathname } from "@/i18n/navigation";
+import { logoutAction } from "@/features/auth/actions/auth-actions";
 
 type Role = "teacher" | "student";
 type Item = { path: string; label: string; icon: LucideIcon };
@@ -205,9 +207,11 @@ function NavigationSearch({
 export function AppShell({
   children,
   role,
+  userName,
 }: {
   children: ReactNode;
   role: Role;
+  userName: string;
 }) {
   const locale = useLocale();
   const pathname = usePathname();
@@ -347,12 +351,18 @@ export function AppShell({
                 aria-hidden="true"
               />
               <div className="hidden text-xs leading-relaxed lg:block">
-                <strong className="block font-semibold">{t(role)}</strong>
+                <strong className="block max-w-32 truncate font-semibold">{userName}</strong>
                 <span className="text-muted-foreground">
                   {t(role + "Role")}
                 </span>
               </div>
             </div>
+            <form action={logoutAction}>
+              <input type="hidden" name="locale" value={locale} />
+              <Button type="submit" variant="ghost" size="icon" className="size-10" aria-label={t("signOut")} title={t("signOut")}>
+                <LogOut aria-hidden="true" />
+              </Button>
+            </form>
           </div>
         </header>
         <main

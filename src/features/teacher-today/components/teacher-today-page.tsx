@@ -26,7 +26,7 @@ export async function TeacherTodayPage() {
   ];
 
   return (
-    <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-4 sm:gap-5" data-testid="teacher-today-page">
+    <div className="mx-auto flex w-full max-w-295 flex-col gap-4 sm:gap-5" data-testid="teacher-today-page">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-heading text-page font-bold tracking-tight">{t("greeting")}</h1>

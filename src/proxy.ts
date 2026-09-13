@@ -5,31 +5,29 @@ import { auth } from "@/auth"
 import { routing } from "@/i18n/routing"
 
 const handleI18nRouting = createMiddleware(routing)
+const protectedRoute = /^\/(en|ar)\/(teacher|student)(?:\/|$)/
+const authRoute = /^\/(en|ar)\/(login|sign-up|forgot-password|reset-password|verify-email)(?:\/|$)/
 
 export const proxy = auth((request) => {
-  const { pathname } = request.nextUrl
-  const session = request.auth
+  const { pathname, search } = request.nextUrl
+  const protectedMatch = pathname.match(protectedRoute)
+  const authMatch = pathname.match(authRoute)
+  const locale = protectedMatch?.[1] ?? authMatch?.[1] ?? "en"
+  const requestedRole = protectedMatch?.[2]
+  const user = request.auth?.user
 
-  // Public paths — skip auth checks
-  const isPublic =
-    pathname.endsWith("/login") ||
-    pathname.includes("/auth/redirect") ||
-    pathname.startsWith("/api/auth/")
-
-  if (!isPublic && !session?.user) {
-    return NextResponse.redirect(new URL("/en/login", request.url))
+  if (protectedMatch && !user) {
+    const loginUrl = new URL(`/${locale}/login`, request.url)
+    loginUrl.searchParams.set("callbackUrl", `${pathname}${search}`)
+    return NextResponse.redirect(loginUrl)
   }
 
-  if (session?.user) {
-    const role = session.user.role
+  if (requestedRole && user?.role && requestedRole !== user.role) {
+    return NextResponse.redirect(new URL(`/${locale}/${user.role}/today`, request.url))
+  }
 
-    // Prevent a student from hitting teacher routes and vice versa
-    if (pathname.includes("/teacher/") && role !== "teacher") {
-      return NextResponse.redirect(new URL("/en/student/today", request.url))
-    }
-    if (pathname.includes("/student/") && role !== "student") {
-      return NextResponse.redirect(new URL("/en/teacher/today", request.url))
-    }
+  if (authMatch && user?.role) {
+    return NextResponse.redirect(new URL(`/${locale}/${user.role}/today`, request.url))
   }
 
   return handleI18nRouting(request)

@@ -34,7 +34,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 * Keep reusable utilities and integrations in `src/lib`.
 * Do not create unnecessary folders or abstraction layers.
 
-Preferred structure:
+Preferred structure not a must :
 
 ```text
 src/
@@ -107,7 +107,7 @@ src/
 
 ## Verification
 
-* Use the `next-dev-loop` Skill when available.
+* Use the `next-dev-loop` Skill when available if not tell me . 
 * After meaningful changes, verify affected routes against the running application.
 * For UI or routing changes, verify both `/en/...` and `/ar/...`.
 * Check compilation errors, TypeScript errors, runtime errors, browser console errors, hydration issues, and rendered UI.
