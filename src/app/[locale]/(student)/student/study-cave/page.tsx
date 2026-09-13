@@ -1,46 +1,15 @@
+import { StudyCavePage } from "@/features/study-cave/components/study-cave-page";
 import {
-  StudyCavePage,
-  type StudyCavePhase,
-} from "@/features/study-cave/components/study-cave-page";
-import type { StudentSessionState } from "@/features/live-session/components/student-session-gate";
-
-const phases = new Set<StudyCavePhase>([
-  "before",
-  "during",
-  "after",
-  "homework",
-]);
-const sessionStates = new Set<StudentSessionState>([
-  "ready",
-  "joining",
-  "connected",
-  "reconnecting",
-  "failed",
-  "locked",
-]);
+  parseStudyCaveRouteState,
+  type StudyCaveSearchParams,
+} from "@/features/study-cave/types";
 
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ phase?: string | string[]; session?: string | string[] }>;
+  searchParams: Promise<StudyCaveSearchParams>;
 }) {
-  const { phase: requestedPhase, session: requestedSession } = await searchParams;
-  const initialPhase =
-    typeof requestedPhase === "string" &&
-    phases.has(requestedPhase as StudyCavePhase)
-      ? (requestedPhase as StudyCavePhase)
-      : "before";
+  const routeState = parseStudyCaveRouteState(await searchParams);
 
-  const initialSessionState =
-    typeof requestedSession === "string" &&
-    sessionStates.has(requestedSession as StudentSessionState)
-      ? (requestedSession as StudentSessionState)
-      : undefined;
-
-  return (
-    <StudyCavePage
-      initialPhase={initialPhase}
-      initialSessionState={initialSessionState}
-    />
-  );
+  return <StudyCavePage {...routeState} />;
 }
