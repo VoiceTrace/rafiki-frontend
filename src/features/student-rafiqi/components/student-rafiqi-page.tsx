@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RafiqiConversation } from "@/components/shared/rafiqi-conversation";
 
-export async function StudentRafiqiPage() {
+export async function StudentRafiqiPage({ initialPrompt }: { initialPrompt?: string }) {
   const t = await getTranslations("studentRafiqi");
   const preferences = [
     {
@@ -52,7 +52,7 @@ export async function StudentRafiqiPage() {
   ];
   return (
     <div
-      className="mx-auto flex w-full max-w-[1180px] flex-col gap-4 pb-2 sm:gap-5"
+      className="mx-auto flex w-full max-w-295 flex-col gap-4 pb-2 sm:gap-5"
       data-testid="student-rafiqi-page"
     >
       <header className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
@@ -84,6 +84,9 @@ export async function StudentRafiqiPage() {
             { author: "rafiqi", text: t("conversation.opening") },
             { author: "student", text: t("conversation.studentReply") },
             { author: "rafiqi", text: t("conversation.response") },
+            ...(initialPrompt?.trim()
+              ? [{ author: "student" as const, text: initialPrompt.trim() }, { author: "rafiqi" as const, text: t("conversation.followUp") }]
+              : []),
           ]}
           suggestions={[]}
           placeholder={t("conversation.placeholder")}

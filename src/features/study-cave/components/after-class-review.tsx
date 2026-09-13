@@ -17,6 +17,7 @@ import {
   Target,
   UserRoundCheck,
   Video,
+  X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "cn";
@@ -72,6 +73,16 @@ export function AfterClassReview({ notes, onNotesChange }: Props) {
           `  ${t(`questions.${key}.answer`)}`,
         ]),
         "",
+        t("selfCheck.title"),
+        ...selfCheckKeys.map(
+          (key, index) => `${selfChecks[index] ? "[x]" : "[ ]"} ${t(`selfCheck.${key}`)}`,
+        ),
+        "",
+        t("materials.title"),
+        ...materialKeys.map(
+          (key, index) => `${materials[index] ? "[x]" : "[ ]"} ${t(`materials.${key}.title`)}`,
+        ),
+        "",
         t("notes.title"),
         notes,
         "",
@@ -80,8 +91,14 @@ export function AfterClassReview({ notes, onNotesChange }: Props) {
         "",
         t("companion.misconception"),
         t("companion.correction"),
+        "",
+        t("companion.title"),
+        ...(["understood", "watched", "retained"] as const).map(
+          (key, index) => `${reviewChecks[index] ? "[x]" : "[ ]"} ${t(`companion.${key}`)}`,
+        ),
+        ...(studentReply ? [studentReply] : []),
       ].join("\n"),
-    [notes, t],
+    [materials, notes, reviewChecks, selfChecks, studentReply, t],
   );
 
   function downloadSummary() {
@@ -91,7 +108,7 @@ export function AfterClassReview({ notes, onNotesChange }: Props) {
     anchor.href = url;
     anchor.download = "newtons-third-law-review.txt";
     anchor.click();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   function sendReply(event: FormEvent<HTMLFormElement>) {
@@ -100,7 +117,6 @@ export function AfterClassReview({ notes, onNotesChange }: Props) {
     if (!value) return;
     setStudentReply(value);
     setDraft("");
-    setReviewChecks((current) => current.map(() => true));
   }
 
   return (
@@ -210,7 +226,8 @@ export function AfterClassReview({ notes, onNotesChange }: Props) {
                   <button
                     type="button"
                     className="min-w-0 flex-1 text-start outline-none focus-visible:underline"
-                    onClick={() => setOpenedMaterial(index)}
+                    aria-expanded={openedMaterial === index}
+                    onClick={() => setOpenedMaterial(openedMaterial === index ? null : index)}
                   >
                     <strong className="block truncate text-sm">{t(`materials.${key}.title`)}</strong>
                     <span className="text-xs text-muted-foreground">{t(`materials.${key}.meta`)}</span>
@@ -234,11 +251,25 @@ export function AfterClassReview({ notes, onNotesChange }: Props) {
               );
             })}
           </ul>
-          <p className="mt-3 text-xs text-muted-foreground" aria-live="polite">
-            {openedMaterial === null
-              ? t("materials.helper")
-              : t("materials.opened", { title: t(`materials.${materialKeys[openedMaterial]}.title`) })}
-          </p>
+          {openedMaterial === null ? (
+            <p className="mt-3 text-xs text-muted-foreground">{t("materials.helper")}</p>
+          ) : (
+            <div className="mt-3 rounded-xl border border-info bg-info/50 p-4" aria-live="polite">
+              <div className="flex items-start justify-between gap-3">
+                <strong className="text-sm">{t(`materials.${materialKeys[openedMaterial]}.previewTitle`)}</strong>
+                <button
+                  type="button"
+                  className="rounded-md p-1 text-muted-foreground hover:bg-card focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label={t("materials.closePreview")}
+                  onClick={() => setOpenedMaterial(null)}
+                >
+                  <X className="size-4" aria-hidden="true" />
+                </button>
+              </div>
+              <p className="mt-2 text-sm leading-6">{t(`materials.${materialKeys[openedMaterial]}.preview`)}</p>
+              <p className="mt-3 text-xs text-info-foreground">{t("materials.attachmentPending")}</p>
+            </div>
+          )}
         </ReviewCard>
       </div>
 

@@ -2,6 +2,10 @@
   "common": {
     "appName": "Rafiqi"
   },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "retry": "Try again"
+  },
   "shell": {
     "searchPlaceholder": "Search Rafiqi…",
     "notifications": "Notifications",
@@ -428,6 +432,12 @@
     "close": "Close"
   },
   "studentHomework": {
+    "list": { "eyebrow": "Current homework", "title": "Homework", "description": "Choose an assignment to continue with a guided workspace.", "label": "Current homework assignments", "help": { "title": "Rafiqi is here to help", "description": "Hints without the answer", "text": "Open an assignment whenever you need a nudge, a place to explain your thinking, or a quick review.", "note": "Your progress is saved as you work" } },
+    "assignments": {
+      "action-reaction": { "title": "Action and reaction", "subject": "Physics · Newton’s Third Law", "description": "Force pairs in a collision", "due": "Due tomorrow", "status": "In progress · 60%", "taskTitle": "Action and reaction", "problem": "A 1500 kg car collides with a 200 kg motorbike. Which one exerts a greater force on the other at the moment of impact? And why?", "feedback": "Both exert the same force on each other. The motorbike moves more because of its smaller mass, not because the force is greater.", "progress": "Newton’s Third Law", "review": "Both the car and the motorbike exert the same force on each other. Their accelerations differ because their masses differ." },
+      "force-pairs": { "title": "Finding force pairs", "subject": "Physics · Newton’s Third Law", "description": "Identify the interacting objects", "due": "Due in 2 days", "status": "Not started", "taskTitle": "Name both forces", "problem": "When a student pushes a wall, identify the two objects and describe the force each object exerts. Why do the forces not cancel?", "feedback": "The student pushes the wall and the wall pushes the student with an equal and opposite force. They do not cancel because they act on different objects.", "progress": "Force-pair practice", "review": "Every interaction includes two equal and opposite forces acting on two different objects." },
+      "balanced-forces": { "title": "Balanced and unbalanced forces", "subject": "Physics · Forces and motion", "description": "Explain what changes motion", "due": "Due Friday", "status": "Not started", "taskTitle": "Explain the motion", "problem": "A book is resting on a table. Describe the forces on the book and explain whether they are balanced. What would need to change for the book to move upward?", "feedback": "The upward support force and downward gravitational force are balanced while the book rests. An upward net force would be needed for it to accelerate upward.", "progress": "Forces and motion", "review": "Balanced forces give a zero net force; motion changes only when forces are unbalanced." }
+    },
     "allHints": "You have seen all the hints",
     "problem": "A 1500 kg car collides with a 200 kg motorbike. Which one exerts a greater force on the other at the moment of impact? And why?",
     "title": "Homework",
@@ -479,6 +489,7 @@
     }
   },
   "studyCave": {
+    "homeworkPanel": { "title": "Homework for this lesson", "description": "Your current assignment for Newton’s Third Law.", "status": "In progress", "assignment": "Action and reaction", "subject": "Physics · Newton’s Third Law", "due": "Due tomorrow", "progress": "60% complete", "open": "Open homework", "next": { "title": "What to do next", "description": "Continue from where you left off.", "one": "Read the question carefully", "two": "Use a hint if you get stuck", "three": "Explain your reasoning in your own words" } },
     "warmup": {
       "title": "Warm up with Rafiqi",
       "context": "A guided prediction before Newton’s Third Law",
@@ -693,12 +704,13 @@
       },
       "materials": {
         "title": "Learning materials",
-        "slides": { "title": "Lesson slides — Newton’s Third Law", "meta": "Slides · 12 MB" },
-        "reading": { "title": "Class reading and notes", "meta": "PDF · 1.4 MB" },
-        "video": { "title": "Worked force-pair demonstration", "meta": "Video · 18 min" },
-        "practice": { "title": "Practice set", "meta": "5 questions" },
-        "helper": "Open a material or mark it complete.",
-        "opened": "Opened: {title}",
+        "slides": { "title": "Lesson slides — Newton’s Third Law", "meta": "Slides · lesson preview", "previewTitle": "Slide preview", "preview": "Action and reaction are two forces from one interaction. They are equal in magnitude, opposite in direction, and act on different objects. Use the wall-push and rocket examples to label both objects." },
+        "reading": { "title": "Class reading and notes", "meta": "Reading · lesson preview", "previewTitle": "Reading preview", "preview": "When you push a wall, your hand exerts a force on the wall and the wall exerts a force on your hand. The pair does not cancel because the forces act on separate objects." },
+        "video": { "title": "Worked force-pair demonstration", "meta": "Demonstration · lesson preview", "previewTitle": "Demonstration transcript", "preview": "Watch for two interacting objects: the rocket pushes exhaust gases backward; the gases push the rocket forward. Pause and name each object and force before checking the direction arrows." },
+        "practice": { "title": "Practice set", "meta": "5 questions · lesson preview", "previewTitle": "Practice preview", "preview": "A skater pushes a wall with 200 N of force. What force does the wall exert on the skater? Name both objects, give the magnitude and direction, and explain why the forces do not cancel." },
+        "helper": "Select a material for its lesson preview, or mark it complete.",
+        "closePreview": "Close material preview",
+        "attachmentPending": "Teacher-uploaded files and video will open here when connected to the lesson.",
         "markComplete": "Mark complete",
         "markIncomplete": "Mark incomplete"
       },
@@ -750,6 +762,60 @@
       "secondaryAction": "Explore learning"
     }
   },
+  "liveSession": {
+    "student": {
+      "readyTitle": "Your class is ready",
+      "readyDescription": "Join Mr. Adel’s Physics class when you are ready.",
+      "joiningTitle": "Joining your class",
+      "joiningDescription": "Checking your connection and preparing your Study Cave.",
+      "connectionReady": "Connection ready",
+      "participants": "24 classmates are ready",
+      "privacy": "Joining shares only your class presence. Your notes remain private.",
+      "join": "Join class",
+      "joining": "Joining",
+      "connected": "Connected - class is live",
+      "connectedDescription": "Your notes and questions are ready for this class.",
+      "connectionHelp": "Connection problem",
+      "reconnectingTitle": "Reconnecting to class",
+      "reconnectingDescription": "Keep this page open. Your notes remain here while we reconnect.",
+      "failedTitle": "We could not reconnect",
+      "failedDescription": "Check your connection, then try to join again.",
+      "retry": "Try again",
+      "stillOffline": "Still offline",
+      "leave": "Leave session",
+      "lockedTitle": "Class has ended",
+      "lockedDescription": "This session is now locked. You can review your notes after class."
+    },
+    "teacher": {
+      "lobbyTitle": "Ready to start class",
+      "lobbyDescription": "Students can join as soon as you start Newton’s Third Law.",
+      "scheduledTitle": "Class scheduled and ready",
+      "scheduledDescription": "Grade 10 Physics starts at 10:30 AM. Review the plan before opening the room.",
+      "participants": "0 of 28 students joined",
+      "joiningParticipants": "12 of 28 students joining",
+      "liveParticipants": "28 of 30 students joined",
+      "shareHint": "The join link is ready to share.",
+      "startClass": "Start class",
+      "joining": "Starting",
+      "connected": "Class is live",
+      "liveNow": "Live now",
+      "connectionHelp": "Connection problem",
+      "reconnectingTitle": "Reconnecting your class",
+      "reconnectingDescription": "Keep this page open while we restore the class connection.",
+      "failedTitle": "Class connection failed",
+      "failedDescription": "Ask students to stay on this page, then try reconnecting.",
+      "retry": "Try again",
+      "stillOffline": "Still offline",
+      "backToLobby": "Back to lobby",
+      "endClass": "End class",
+      "endTitle": "End this class?",
+      "endDescription": "Students will see that class has ended. This frontend demo does not save a session record.",
+      "keepTeaching": "Keep teaching",
+      "lockedTitle": "Class ended",
+      "lockedDescription": "The session is shown as locked. A real lock record will be added with backend work later.",
+      "viewSummary": "View class summary"
+    }
+  },
   "teacherLesson": {
     "prepare": "Prepare for class",
     "back": "Back",
@@ -786,8 +852,25 @@
       "worksheet": "Worksheet",
       "title": "Materials"
     },
+    "warmup": { "title": "Warm-up questions", "question": "Which object exerts the greater force in a collision?", "status": "Published for students before class" },
+    "checks": { "title": "Check for understanding", "question": "Ask students to identify both objects in an action-reaction pair." },
+    "during": {
+      "questions": "Student questions", "markAnswered": "Mark all answered", "unresolved": "Unresolved", "questionOne": "Why does the wall push back with the same force?", "questionTwo": "If forces are equal, why do objects accelerate differently?", "questionThree": "Does this work for non-contact forces too?",
+      "readiness": "Class readiness", "devices": "Devices connected", "materials": "Materials opened", "joined": "Students joined", "support": "Students need support",
+      "participation": "Participation & engagement", "active": "Very active", "someParticipation": "Some participation",
+      "notes": "My notes", "notesText": "Good discussion on real-life examples.\nStudents are clear about objects and non-contact forces.", "autosaved": "Auto-saved",
+      "highlights": "Highlight these", "highlightOne": "The two forces act on different objects.", "highlightTwo": "They are equal in magnitude and opposite in direction.", "sendAll": "Send to all",
+      "observation": "Classroom observation", "demo": "Demo", "permissionDenied": "Permission denied", "demoDescription": "Observation demo — no live camera or student data is used.", "permissionDescription": "Camera permission is unavailable. Continue teaching without observation.", "testPermission": "Test permission", "retryPermission": "Try again", "consent": "Use only with school approval and consent."
+    },
     "save": "Save draft",
-    "stagesLabel": "Lesson stages"
+    "stagesLabel": "Lesson stages",
+    "preparation": {
+      "generatingTitle": "Rafiqi is preparing a lesson draft", "generatingText": "Creating objectives, warm-up questions, flow, and checks.", "reviewTitle": "Review generated draft", "reviewText": "Keep the parts that work, or regenerate before using them.", "keepDraft": "Keep draft", "regenerate": "Regenerate", "generationFailedTitle": "Couldn’t generate the draft", "generationFailedText": "Something went wrong. Try again when you are ready.", "retry": "Retry",
+      "unsavedTitle": "You have unsaved changes", "unsavedText": "Save your changes or discard them before leaving.", "savedTitle": "Lesson preparation saved", "savedText": "Your changes are ready to use for this class.", "validationTitle": "Review the lesson objective", "validationText": "Add a clear objective before saving your changes.", "saveChanges": "Save changes", "cancel": "Cancel", "discardTitle": "Discard unsaved changes?", "discardText": "Your local edits will be lost. This cannot be undone.", "keepEditing": "Keep editing", "discard": "Discard",
+      "objectiveTitle": "Lesson objective", "objectiveText": "Students will be able to explain Newton’s Third Law and apply it to real-life situations.", "objectiveError": "Use at least 10 characters for the objective.", "edit": "Edit", "generate": "Generate with AI", "aiDraft": "AI draft", "warmupTitle": "Socratic warm-up questions", "add": "Add", "remove": "Remove", "toggle": "Enable question", "materialsTitle": "Pre-class materials", "materialsOne": "Reading: Newton’s Third Law", "materialsTwo": "Simulation: Forces and Motion", "materialsThree": "Worksheet: Real-life examples", "flowTitle": "45-minute lesson flow", "checksTitle": "Checks for understanding", "editPreparation": "Edit preparation",
+      "questionOne": "When you push on a wall, what happens to the wall and to you?", "questionTwo": "Can a force exist without a pair? Why or why not?", "questionThree": "If a book is resting on a table, what is the force pair at work?", "flowOne": "Engage — Socratic questions and quick discussion", "flowTwo": "Explore — Simulation and real-life examples", "flowThree": "Explain — Introduce Newton’s Third Law", "flowFour": "Apply — Guided practice problems", "flowFive": "Check for understanding — Quick questions / exit ticket", "checkOne": "If you jump off a boat, what happens to the boat? Explain.", "checkTwo": "Two skaters push away from each other. What can you say about their forces?",
+      "insightTitle": "Warm-up misconceptions", "refreshInsights": "Refresh warm-up insights", "misconception": "Equal forces cancel out", "responses": "8 anonymized responses", "evidenceOne": "They cancel each other so nothing happens.", "evidenceTwo": "The wall does not move, so the force is zero.", "suggestion": "Use a two-object diagram to show that each force acts on a different object.", "consent": "Insights require approved consent and privacy-safe aggregation.", "insight": { "empty": "No warm-up responses are available yet.", "processing": "Analyzing privacy-safe response patterns…", "failed": "We could not analyze warm-up responses. Try again.", "permission": "Warm-up insight access is unavailable for this class." }
+    }
   },
   "studentWarmup": {
     "feedback": "Correct thinking starts with the idea that forces come in equal and opposite pairs.",

@@ -35,11 +35,16 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { RafiqiConversation } from "@/components/shared/rafiqi-conversation";
 import { AfterClassReview } from "./after-class-review";
+import { StudyCaveHomeworkPanel } from "./study-cave-homework-panel";
+import {
+  StudentSessionGate,
+  type StudentSessionState,
+} from "@/features/live-session/components/student-session-gate";
 
-type Phase = "before" | "during" | "after" | "homework";
+export type StudyCavePhase = "before" | "during" | "after" | "homework";
 type Question = { id: number; text: string; status: "sent" | "pending" };
-const phases: Phase[] = ["before", "during", "after", "homework"];
-const icons: Record<Phase, LucideIcon> = {
+const phases: StudyCavePhase[] = ["before", "during", "after", "homework"];
+const icons: Record<StudyCavePhase, LucideIcon> = {
   before: BookOpen,
   during: Play,
   after: ClipboardCheck,
@@ -63,9 +68,33 @@ function Title({
   );
 }
 
-export function StudyCavePage() {
+function SessionContentFrame({
+  enabled,
+  initialState,
+  children,
+}: {
+  enabled: boolean;
+  initialState?: StudentSessionState;
+  children: React.ReactNode;
+}) {
+  return enabled ? (
+    <StudentSessionGate initialState={initialState}>{children}</StudentSessionGate>
+  ) : (
+    <>{children}</>
+  );
+}
+
+export function StudyCavePage({
+  initialPhase = "before",
+  showHomeworkState = false,
+  initialSessionState,
+}: {
+  initialPhase?: StudyCavePhase;
+  showHomeworkState?: boolean;
+  initialSessionState?: StudentSessionState;
+}) {
   const t = useTranslations("studyCave");
-  const [phase, setPhase] = useState<Phase>("before");
+  const [phase, setPhase] = useState<StudyCavePhase>(initialPhase);
   const [checks, setChecks] = useState([true, true, false, false]);
   const [question, setQuestion] = useState("");
   const [questions, setQuestions] = useState<Question[]>([
@@ -88,7 +117,7 @@ export function StudyCavePage() {
     lesson: ["newton", "balanced"],
   } as const;
 
-  const subtitles: Record<Phase, string> = {
+  const subtitles: Record<StudyCavePhase, string> = {
     before: t("beforeSubtitle"),
     during: t("duringSubtitle"),
     after: t("afterSubtitle"),
@@ -113,7 +142,7 @@ export function StudyCavePage() {
 
   return (
     <div
-      className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 pb-8"
+      className="mx-auto flex w-full max-w-300 flex-col gap-4 pb-8"
       data-testid="study-cave-page"
     >
       <header>
@@ -159,8 +188,8 @@ export function StudyCavePage() {
           const Icon = icons[item];
           const active = phase === item;
           return (
-            <button
-              type="button"
+            <a
+              href={`?phase=${item}`}
               key={item}
               onClick={() => setPhase(item)}
               aria-current={active ? "step" : undefined}
@@ -187,7 +216,7 @@ export function StudyCavePage() {
                   {t(`tabDescriptions.${item}`)}
                 </small>
               </span>
-            </button>
+            </a>
           );
         })}
       </nav>
@@ -297,8 +326,14 @@ export function StudyCavePage() {
         </section>
       ) : phase === "after" ? (
         <AfterClassReview notes={notes} onNotesChange={setNotes} />
+      ) : phase === "homework" && showHomeworkState ? (
+        <StudyCaveHomeworkPanel />
       ) : (
-        <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,.9fr)]">
+        <SessionContentFrame
+          enabled={phase === "during"}
+          initialState={initialSessionState}
+        >
+          <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,.9fr)]">
           <div className="grid content-start gap-4">
             <Card className="shadow-surface">
               <CardHeader>
@@ -401,7 +436,8 @@ export function StudyCavePage() {
               </CardContent>
             </Card>
           </div>
-        </section>
+          </section>
+        </SessionContentFrame>
       )}
     </div>
   );

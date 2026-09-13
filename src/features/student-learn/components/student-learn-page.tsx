@@ -27,7 +27,7 @@ export async function StudentLearnPage({ view = "map", calendarView = "day" }: {
   ];
 
   return (
-    <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-4 sm:gap-5" data-testid="student-learn-page">
+    <div className="mx-auto flex w-full max-w-295 flex-col gap-4 sm:gap-5" data-testid="student-learn-page">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div><h1 className="font-heading text-page font-bold tracking-tight">{t("title")}</h1><p className="mt-1 text-base text-muted-foreground">{t("subtitle")}</p></div>
       </header>

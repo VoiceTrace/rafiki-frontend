@@ -21,9 +21,13 @@ import {
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Link } from "@/i18n/navigation";
 import { LessonStageTabs } from "@/components/shared/lesson-stage-tabs";
-export function StudentHomeworkPage() {
+import type { HomeworkId } from "../homework-data";
+
+export function StudentHomeworkDetail({ homeworkId }: { homeworkId: HomeworkId }) {
   const t = useTranslations("studentHomework");
+  const assignment = `assignments.${homeworkId}`;
   const [hint, setHint] = useState(0);
   const [stage, setStage] = useState("question");
   const [answer, setAnswer] = useState("");
@@ -32,11 +36,11 @@ export function StudentHomeworkPage() {
   const hints = [t("hints.one"), t("hints.two"), t("hints.three")];
   return (
     <div
-      className="mx-auto flex w-full max-w-[1080px] flex-col gap-4 pb-20"
+      className="mx-auto flex w-full max-w-270 flex-col gap-4 pb-20"
       data-testid="student-homework-page"
     >
       <header className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" aria-label={t("back")}>
+        <Button render={<Link href="/student/homework" />} nativeButton={false} variant="ghost" size="icon" aria-label={t("back")}>
           <ArrowLeft className="rtl:-scale-x-100" />
         </Button>
         <div className="min-w-0 flex-1">
@@ -44,8 +48,8 @@ export function StudentHomeworkPage() {
             <StepForward className="size-4" />
             <span className="text-xs font-semibold">{t("eyebrow")}</span>
           </div>
-          <h1 className="font-heading text-section font-bold">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
+          <h1 className="font-heading text-section font-bold">{t(`${assignment}.title`)}</h1>
+          <p className="text-sm text-muted-foreground">{t(`${assignment}.subject`)} · {t(`${assignment}.due`)}</p>
         </div>
         <Button variant="ghost" size="icon" aria-label={t("more")}>
           <MoreHorizontal />
@@ -69,12 +73,12 @@ export function StudentHomeworkPage() {
       >
         <Card className="shadow-surface">
           <CardHeader>
-            <CardTitle>{t("problemTitle")}</CardTitle>
+            <CardTitle>{t(`${assignment}.taskTitle`)}</CardTitle>
             <CardDescription>{t("problemIntro")}</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="rounded-xl border border-secondary bg-secondary/45 p-4 text-base leading-7 font-medium">
-              {t("problem")}
+              {t(`${assignment}.problem`)}
             </p>
             <div className="mt-4 grid gap-2">
               {hints.slice(0, hint).map((item, index) => (
@@ -115,7 +119,7 @@ export function StudentHomeworkPage() {
                 <div>
                   <strong>{t("correct.title")}</strong>
                   <p className="mt-1 text-sm text-success-foreground">
-                    {t("correct.text")}
+                    {t(`${assignment}.feedback`)}
                   </p>
                 </div>
               </div>
@@ -164,13 +168,13 @@ export function StudentHomeworkPage() {
           <Card>
             <CardHeader>
               <CardTitle>{t("progress.title")}</CardTitle>
-              <CardDescription>{t("progress.description")}</CardDescription>
+              <CardDescription>{t(`${assignment}.progress`)}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-2 overflow-hidden rounded-full bg-muted">
                 <span className="block h-full w-3/5 rounded-full bg-primary" />
               </div>
-              <p className="mt-3 text-sm font-medium">{t("progress.value")}</p>
+              <p className="mt-3 text-sm font-medium">{t(`${assignment}.status`)}</p>
             </CardContent>
           </Card>
         </aside>
@@ -216,7 +220,7 @@ export function StudentHomeworkPage() {
             </CardHeader>
             <CardContent className="rounded-xl bg-success/70 text-sm leading-6">
               <CheckCircle2 className="mb-2 size-6 text-success-foreground" />
-              <p>{t("review.answer")}</p>
+              <p>{t(`${assignment}.review`)}</p>
             </CardContent>
           </Card>
           <Card className="shadow-surface">
