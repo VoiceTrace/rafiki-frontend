@@ -1,5 +1,6 @@
 "use server"
 
+import { unstable_update } from "@/auth"
 import { getBackendAccessToken } from "@/features/auth/server/dal"
 import { updateMe, uploadAvatar, removeAvatar } from "@/lib/api"
 import { profileSchema } from "@/features/profile/schemas"
@@ -33,7 +34,8 @@ export async function updateProfileAction(
   }
 
   try {
-    await updateMe(accessToken, data)
+    const result = await updateMe(accessToken, data)
+    await unstable_update({ user: { name: result.full_name } })
     return { status: "success", message: "saved" }
   } catch {
     return { status: "error", message: "server" }

@@ -35,12 +35,17 @@ export function ProfileForm({ user, avatarBaseUrl }: { user: User; avatarBaseUrl
   const [avatarState, avatarAction, avatarPending] = useActionState(uploadAvatarAction, idle)
   const [removeState, removeAction, removePending] = useActionState(removeAvatarAction, idle)
 
-  // Refresh server component data after avatar changes so the session stays in sync
+  // Refresh server component data after any successful change so the layout
+  // re-reads the updated JWT (name, avatar) and the navbar reflects it
   useEffect(() => {
-    if (avatarState.status === "success" || removeState.status === "success") {
+    if (
+      profileState.status === "success" ||
+      avatarState.status === "success" ||
+      removeState.status === "success"
+    ) {
       router.refresh()
     }
-  }, [avatarState.status, removeState.status, router])
+  }, [profileState.status, avatarState.status, removeState.status, router])
 
   // Derive the displayed avatar path from the latest action state for instant visual feedback
   const currentAvatarPath = (() => {
