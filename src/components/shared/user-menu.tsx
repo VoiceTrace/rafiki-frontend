@@ -4,6 +4,7 @@ import { Menu } from "@base-ui/react/menu"
 import { LogOut, UserRound } from "lucide-react"
 import { signOut } from "next-auth/react"
 import { useTranslations } from "next-intl"
+import { Link } from "@/i18n/navigation"
 
 interface UserMenuProps {
   user: {
@@ -47,13 +48,13 @@ export function UserMenu({ user, role }: UserMenuProps) {
             <p className="truncate text-sm font-semibold">{user.name}</p>
             <p className="truncate text-xs text-muted-foreground">{user.email}</p>
           </div>
-          <Menu.LinkItem
-            href={"/" + role + "/profile"}
+          <Menu.Item
             className="mt-1 flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+            render={<Link href={"/" + role + "/profile"} />}
           >
             <UserRound className="size-4 shrink-0" aria-hidden="true" />
             {t("viewProfile")}
-          </Menu.LinkItem>
+          </Menu.Item>
           <Menu.Item
             className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm text-destructive outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
             onClick={() => signOut({ redirectTo: "/" })}
