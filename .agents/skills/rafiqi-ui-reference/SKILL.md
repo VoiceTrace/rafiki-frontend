@@ -9,21 +9,13 @@ Use this skill for any Rafiqi page or UI change.
 
 ## Required references
 
-Read the relevant parts of these sources before proposing or editing UI:
+Read the relevant sections of `docs/RAFIQI_PRODUCT_AND_DESIGN_REFERENCE.md` before proposing or editing UI. Inspect only the boards relevant to the requested flow under `design/boards/`.
 
-- `C:/Users/Qassas/Documents/ChatGPT/rafiky ai/design/README.md`
-- `C:/Users/Qassas/Documents/ChatGPT/rafiky ai/design/COVERAGE.md`
-- `C:/Users/Qassas/Documents/ChatGPT/rafiky ai/design/WIREFRAMES.md`
-- `C:/Users/Qassas/Documents/ChatGPT/rafiky ai/design/boards/` — inspect only the boards relevant to the requested flow.
-- `C:/Users/Qassas/Documents/ChatGPT/rafiky ai/PRODUCT_DESCRIPTION_AND_USER_STORIES.md`
-- `C:/Users/Qassas/Documents/ChatGPT/rafiky ai/MVP_SIMPLE_TICKETS.md`
-- `C:/Users/Qassas/Documents/ChatGPT/rafiky ai/CURRENT_FRONTEND_PAGE_REFERENCE.md`
-
-Treat the SVG wireframes and `screens.json` as the structural design reference; use PNG boards for visual direction. Compare the current route/component with the latest relevant reference before editing.
+Treat the SVG wireframes and `design/screens.json` as the structural design reference; use PNG boards for visual direction. Compare the current route/component with the latest relevant reference before editing.
 
 ## Current implementation comparison
 
-Before proposing or changing a page, inspect the corresponding current frontend route and feature component under `Frontend/rafiky-frontend/src/`, alongside `CURRENT_FRONTEND_PAGE_REFERENCE.md` and the related board/wireframe.
+Before proposing or changing a page, inspect the corresponding current frontend route and feature component under `src/`, alongside the current frontend page reference section of the consolidated document and the related board/wireframe.
 
 Make a short comparison of the existing implementation against the reference:
 
@@ -52,3 +44,4 @@ If the request is absent from the approved design, conflicts with it, or the imp
 3. Ask whether to update the design/reference or continue following the existing design.
 4. After explicit confirmation, record the decision in the relevant design or product Markdown.
 5. When replacing a reference, mark the prior guidance as deprecated and link to its replacement; never silently overwrite or deprecate it.
+

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "01-teacher-today",
+    "title": "Teacher · Today and schedule",
+    "path": "boards/01-teacher-today.png"
+  },
+  {
+    "id": "02-teacher-prepare-live",
+    "title": "Teacher · Prepare and teach",
+    "path": "boards/02-teacher-prepare-live.png"
+  },
+  {
+    "id": "03-teacher-review-insights",
+    "title": "Teacher · Review and insights",
+    "path": "boards/03-teacher-review-insights.png"
+  },
+  {
+    "id": "04-teacher-map-library",
+    "title": "Teacher · Curriculum and library",
+    "path": "boards/04-teacher-map-library.png"
+  },
+  {
+    "id": "05-teacher-students-messages",
+    "title": "Teacher · Students and communication",
+    "path": "boards/05-teacher-students-messages.png"
+  },
+  {
+    "id": "06-teacher-companion-club",
+    "title": "Teacher · Rafiqi and Development Club",
+    "path": "boards/06-teacher-companion-club.png"
+  },
+  {
+    "id": "07-teacher-courses-resources",
+    "title": "Teacher · Courses and resource editor",
+    "path": "boards/07-teacher-courses-resources.png"
+  },
+  {
+    "id": "08-teacher-dialogs",
+    "title": "Teacher · Secondary interaction states",
+    "path": "boards/08-teacher-dialogs.png"
+  },
+  {
+    "id": "09-student-today-map",
+    "title": "Student · Today and learning map",
+    "path": "boards/09-student-today-map.png"
+  },
+  {
+    "id": "10-student-lesson-warmup",
+    "title": "Student · Lesson and warm-up",
+    "path": "boards/10-student-lesson-warmup.png"
+  },
+  {
+    "id": "11-student-study-before-during",
+    "title": "Student · Study Cave before and during",
+    "path": "boards/11-student-study-before-during.png"
+  },
+  {
+    "id": "12-student-review-homework",
+    "title": "Student · Review and homework",
+    "path": "boards/12-student-review-homework.png"
+  },
+  {
+    "id": "13-student-connect-resources",
+    "title": "Student · Companions and resources",
+    "path": "boards/13-student-connect-resources.png"
+  },
+  {
+    "id": "14-student-cave-progress",
+    "title": "Student · My Rafiqi and progress",
+    "path": "boards/14-student-cave-progress.png"
+  },
+  {
+    "id": "15-student-club-dialogs",
+    "title": "Student · Development Club and secondary states",
+    "path": "boards/15-student-club-dialogs.png"
+  },
+  {
+    "id": "16-mobile-flows",
+    "title": "Responsive · Mobile core journeys",
+    "path": "boards/16-mobile-flows.png"
+  },
+  {
+    "id": "17-arabic-rtl",
+    "title": "Localization · Arabic RTL direction",
+    "path": "boards/17-arabic-rtl.png"
+  },
+  {
+    "id": "18-components-states",
+    "title": "Design foundation · Components and states",
+    "path": "boards/18-components-states.png"
+  }
+]
