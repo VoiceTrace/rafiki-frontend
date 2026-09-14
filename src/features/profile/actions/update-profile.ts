@@ -6,7 +6,7 @@ import { profileSchema } from "@/features/profile/schemas"
 
 export type ProfileActionState =
   | { status: "idle" }
-  | { status: "success"; message: string }
+  | { status: "success"; message: string; avatarUrl?: string | null }
   | { status: "error"; message: string }
 
 export async function updateProfileAction(
@@ -53,8 +53,8 @@ export async function uploadAvatarAction(
   }
 
   try {
-    await uploadAvatar(session.user.access_token, file)
-    return { status: "success", message: "avatar_updated" }
+    const result = await uploadAvatar(session.user.access_token, file)
+    return { status: "success", message: "avatar_updated", avatarUrl: result.avatar_url }
   } catch (err) {
     const msg = err instanceof Error ? err.message : "upload_failed"
     return { status: "error", message: msg }
@@ -70,7 +70,7 @@ export async function removeAvatarAction(
 
   try {
     await removeAvatar(session.user.access_token)
-    return { status: "success", message: "avatar_removed" }
+    return { status: "success", message: "avatar_removed", avatarUrl: null }
   } catch {
     return { status: "error", message: "server" }
   }

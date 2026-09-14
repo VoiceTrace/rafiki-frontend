@@ -1,9 +1,9 @@
 "use client"
 
-import { useActionState, useRef, useTransition } from "react"
+import { useActionState, useEffect, useRef, useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { UserRound, Camera, Trash2 } from "lucide-react"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -27,6 +27,7 @@ const idle: ProfileActionState = { status: "idle" }
 
 export function ProfileForm({ user }: { user: User }) {
   const t = useTranslations("profile")
+  const router = useRouter()
   const avatarInputRef = useRef<HTMLInputElement>(null)
   const [isPending, startTransition] = useTransition()
 
@@ -34,8 +35,26 @@ export function ProfileForm({ user }: { user: User }) {
   const [avatarState, avatarAction, avatarPending] = useActionState(uploadAvatarAction, idle)
   const [removeState, removeAction, removePending] = useActionState(removeAvatarAction, idle)
 
-  const avatarSrc = user.avatar_url
-    ? `${process.env.NEXT_PUBLIC_API_URL}${user.avatar_url}`
+  // Refresh server component data after avatar changes so the session stays in sync
+  useEffect(() => {
+    if (avatarState.status === "success" || removeState.status === "success") {
+      router.refresh()
+    }
+  }, [avatarState.status, removeState.status, router])
+
+  // Derive the displayed avatar path from the latest action state for instant visual feedback
+  const currentAvatarPath = (() => {
+    if (avatarState.status === "success" && "avatarUrl" in avatarState) {
+      return avatarState.avatarUrl ?? null
+    }
+    if (removeState.status === "success" && "avatarUrl" in removeState) {
+      return null
+    }
+    return user.avatar_url ?? null
+  })()
+
+  const avatarSrc = currentAvatarPath
+    ? `${process.env.NEXT_PUBLIC_API_URL}${currentAvatarPath}`
     : null
 
   const initials = (user.full_name ?? "")
@@ -64,12 +83,11 @@ export function ProfileForm({ user }: { user: User }) {
           <div className="flex items-center gap-5">
             <span className="relative flex size-20 shrink-0 items-center justify-center rounded-full bg-secondary text-lg font-semibold text-secondary-foreground">
               {avatarSrc ? (
-                <Image
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
                   src={avatarSrc}
                   alt={t("avatarAlt")}
-                  fill
-                  className="rounded-full object-cover"
-                  sizes="80px"
+                  className="size-20 rounded-full object-cover"
                 />
               ) : (
                 initials ? (
@@ -111,7 +129,7 @@ export function ProfileForm({ user }: { user: User }) {
                   {t("uploadAvatar")}
                 </Button>
               </form>
-              {user.avatar_url && (
+              {currentAvatarPath && (
                 <form action={removeAction}>
                   <Button
                     type="submit"
