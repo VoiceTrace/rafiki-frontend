@@ -5,7 +5,7 @@ import { AppShell } from "@/components/shared/app-shell"
 
 export default async function Layout({ children }: { children: ReactNode }) {
   const session = await auth()
-  if (!session?.user?.access_token) redirect("/api/auth/signin")
+  if (!session?.user?.access_token) redirect("/login")
 
   return (
     <AppShell role="teacher" user={session.user}>
