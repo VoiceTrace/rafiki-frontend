@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useEffect, useRef, useTransition } from "react"
+import { useActionState, useEffect, useRef, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { UserRound, Camera, Trash2 } from "lucide-react"
@@ -34,6 +34,12 @@ export function ProfileForm({ user, avatarBaseUrl }: { user: User; avatarBaseUrl
   const [profileState, profileAction, profilePending] = useActionState(updateProfileAction, idle)
   const [avatarState, avatarAction, avatarPending] = useActionState(uploadAvatarAction, idle)
   const [removeState, removeAction, removePending] = useActionState(removeAvatarAction, idle)
+
+  // Controlled value so the field reflects updated data after router.refresh()
+  const [fullName, setFullName] = useState(user.full_name)
+  useEffect(() => {
+    setFullName(user.full_name)
+  }, [user.full_name])
 
   // Refresh server component data after any successful change so the layout
   // re-reads the updated JWT (name, avatar) and the navbar reflects it
@@ -200,7 +206,8 @@ export function ProfileForm({ user, avatarBaseUrl }: { user: User; avatarBaseUrl
                 <Input
                   id="full_name"
                   name="full_name"
-                  defaultValue={user.full_name}
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                   minLength={1}
                   maxLength={255}
                   required
