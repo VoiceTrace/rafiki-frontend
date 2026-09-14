@@ -6,7 +6,6 @@ import {
   CalendarDays,
   ChartNoAxesCombined,
   CircleHelp,
-  CircleUserRound,
   GraduationCap,
   Home,
   LibraryBig,
@@ -32,6 +31,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Link, usePathname } from "@/i18n/navigation";
+import { UserMenu } from "@/components/shared/user-menu";
 
 type Role = "teacher" | "student";
 type Item = { path: string; label: string; icon: LucideIcon };
@@ -205,9 +205,11 @@ function NavigationSearch({
 export function AppShell({
   children,
   role,
+  user,
 }: {
   children: ReactNode;
   role: Role;
+  user: { name?: string | null; email?: string | null; role: string };
 }) {
   const locale = useLocale();
   const pathname = usePathname();
@@ -337,22 +339,7 @@ export function AppShell({
             >
               <Bell aria-hidden="true" />
             </Link>
-            <div
-              className="flex items-center gap-2"
-              role="group"
-              aria-label={t(role + "Role")}
-            >
-              <CircleUserRound
-                className="size-8 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <div className="hidden text-xs leading-relaxed lg:block">
-                <strong className="block font-semibold">{t(role)}</strong>
-                <span className="text-muted-foreground">
-                  {t(role + "Role")}
-                </span>
-              </div>
-            </div>
+            <UserMenu user={user} role={role} />
           </div>
         </header>
         <main
