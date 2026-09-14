@@ -35,7 +35,7 @@ function normalizeLocale(value: FormDataEntryValue | null) {
 }
 
 function roleHome(locale: string, role: UserRole) {
-  return `/${locale}/${role}/today`
+  return role === "student" ? `/${locale}/onboarding` : `/${locale}/${role}/today`
 }
 
 function safeCallbackUrl(

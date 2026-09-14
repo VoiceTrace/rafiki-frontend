@@ -1,5 +1,5 @@
 "use client";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import {
   Bot,
   Download,
@@ -20,6 +20,8 @@ type Props = {
   response: string;
   time: string;
   attachment?: { name: string; meta: string };
+  onStudentMessage?: (message: string) => void;
+  focusRequest?: number;
 };
 export function RafiqiConversation({
   title,
@@ -31,9 +33,19 @@ export function RafiqiConversation({
   response,
   time,
   attachment,
+  onStudentMessage,
+  focusRequest = 0,
 }: Props) {
   const [thread, setThread] = useState(messages);
   const [draft, setDraft] = useState("");
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (focusRequest > 0) {
+      sectionRef.current?.querySelector("input")?.focus();
+    }
+  }, [focusRequest]);
+
   function send(value = draft) {
     const message = value.trim();
     if (!message) return;
@@ -42,6 +54,7 @@ export function RafiqiConversation({
       { author: "student", text: message },
       { author: "rafiqi", text: response },
     ]);
+    onStudentMessage?.(message);
     setDraft("");
   }
   function submit(e: FormEvent<HTMLFormElement>) {
@@ -50,6 +63,7 @@ export function RafiqiConversation({
   }
   return (
     <section
+      ref={sectionRef}
       className="flex min-h-[31rem] flex-col overflow-hidden rounded-xl border border-border bg-card p-4 shadow-surface sm:p-5"
       aria-label={title}
     >

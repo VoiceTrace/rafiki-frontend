@@ -18,5 +18,9 @@ export default async function AuthRedirectPage({
     redirect(`/${safeLocale}/login`)
   }
 
-  redirect(`/${safeLocale}/${session.user.role}/today`)
+  redirect(
+    session.user.role === "student"
+      ? `/${safeLocale}/onboarding`
+      : `/${safeLocale}/${session.user.role}/today`,
+  )
 }
