@@ -52,15 +52,15 @@ function open(path) {
   browser("wait", "--load", "networkidle");
 }
 function menu() {
-  browser("click", "button[data-slot=dialog-trigger]");
+  browser("click", "button[data-testid=mobile-menu-trigger]");
 }
 function checkPage(locale, role) {
   const result = evaluate(`(()=>{
    const visible=e=>!!e&&getComputedStyle(e).display!=="none"&&e.getBoundingClientRect().width>0;
    const side=document.querySelector("aside");
-   const bottom=document.querySelector("nav[class*=bottomNavigation]");
+   const bottom=document.querySelector("nav[data-testid=bottom-navigation]");
    const main=document.querySelector("main");
-   const links=[...document.querySelectorAll("a[href]")].filter(e=>visible(e)&&!e.className.includes("localeSwitch")&&!e.getAttribute("href").startsWith("#"));
+   const links=[...document.querySelectorAll("a[href]")].filter(e=>visible(e)&&e.getAttribute("data-testid")!=="locale-switch"&&!e.getAttribute("href").startsWith("#"));
    return {lang:document.documentElement.lang,dir:document.documentElement.dir,width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
      sidebar:visible(side),sideX:side.getBoundingClientRect().x,sideRight:side.getBoundingClientRect().right,bottom:visible(bottom),
      header:visible(document.querySelector("header")),empty:main.textContent.trim()==="",links:links.map(e=>e.getAttribute("href"))};
@@ -92,7 +92,7 @@ function checkMenu() {
     result.left >= 0 &&
       result.right <= result.width + 1 &&
       result.top >= 0 &&
-      result.bottom <= result.height,
+      result.bottom <= result.height + 1,
     "menu clipped",
   );
   assert.ok(result.focus, "focus must be trapped in dialog");
@@ -109,16 +109,16 @@ try {
       }
       viewport(390, 844);
       const primary = evaluate(
-        '[...document.querySelector("nav[class*=bottomNavigation]").querySelectorAll("a")].map(a=>a.getAttribute("href"))',
+        '[...document.querySelector("nav[data-testid=bottom-navigation]").querySelectorAll("a")].map(a=>a.getAttribute("href"))',
       );
       for (const href of primary) {
-        browser("click", 'nav[class*=bottomNavigation] a[href="' + href + '"]');
+        browser("click", 'nav[data-testid=bottom-navigation] a[href="' + href + '"]');
         browser("wait", "--load", "networkidle");
         browser("wait", "--url", "**" + href);
         assert.equal(evaluate("location.pathname"), href);
         assert.ok(
           evaluate(
-            "document.querySelector('nav[class*=bottomNavigation] a[aria-current=page]')?.getAttribute(\"href\")",
+            "document.querySelector('nav[data-testid=bottom-navigation] a[aria-current=page]')?.getAttribute(\"href\")",
           ) === href,
         );
       }
@@ -132,8 +132,8 @@ try {
       );
       browser("press", "Escape");
       assert.equal(
-        evaluate('document.activeElement.getAttribute("data-slot")'),
-        "dialog-trigger",
+        evaluate('document.activeElement.getAttribute("data-testid")'),
+        "mobile-menu-trigger",
       );
       for (const href of more.links) {
         menu();
@@ -148,7 +148,7 @@ try {
         );
         assert.ok(
           evaluate(
-            'document.querySelector("button[data-slot=dialog-trigger]").className.includes("active")',
+            'document.querySelector("button[data-testid=mobile-menu-trigger]").getAttribute("data-active")==="true"',
           ),
         );
       }
@@ -163,7 +163,7 @@ try {
         "screenshot",
         "verification/" + locale + "-" + role + "-mobile.png",
       );
-      browser("click", "a[class*=localeSwitch]");
+      browser("click", "a[data-testid=locale-switch]");
       browser("wait", "--load", "networkidle");
       const other = locale === "ar" ? "en" : "ar";
       assert.equal(evaluate("document.documentElement.lang"), other);

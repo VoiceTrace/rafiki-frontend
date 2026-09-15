@@ -1,6 +1,6 @@
 # Rafiqi theme and shell
 
-Visual sources: `design/boards/01-teacher-today.png`, `16-mobile-flows.png`, `17-arabic-rtl.png`, and `18-components-states.png` in the parent product workspace.
+Visual sources: [`01-teacher-today.png`](../design/boards/01-teacher-today.png), [`16-mobile-flows.png`](../design/boards/16-mobile-flows.png), [`17-arabic-rtl.png`](../design/boards/17-arabic-rtl.png), and [`18-components-states.png`](../design/boards/18-components-states.png) in this repo.
 
 ## Token mapping
 | Reference | Semantic token | Usage |

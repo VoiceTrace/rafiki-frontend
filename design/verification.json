@@ -1,0 +1,48 @@
+{
+  "svgScreens": 34,
+  "renderedPreviews": 34,
+  "sourceRoutes": {
+    "teacher": {
+      "count": 10,
+      "routes": [
+        "today",
+        "lesson",
+        "dash",
+        "messages",
+        "club",
+        "cave",
+        "smap",
+        "library",
+        "students",
+        "courses"
+      ],
+      "missing": []
+    },
+    "student": {
+      "count": 11,
+      "routes": [
+        "home",
+        "prime",
+        "map",
+        "lesson",
+        "hw",
+        "teach",
+        "study",
+        "rooms",
+        "res",
+        "club",
+        "prog"
+      ],
+      "missing": []
+    }
+  },
+  "figmaHelper": {
+    "syntax": "passed",
+    "mockApiExecution": "passed",
+    "liveFigmaExecution": "NOT RUN: Figma tools unavailable",
+    "createdPages": 1,
+    "createdNodes": 3228,
+    "navigationLinks": 324
+  },
+  "note": "Route coverage is verified. This is a design kit, not a functional replacement for the HTML. Forms and state changes are visual specifications; only mapped navigation has prototype links."
+}

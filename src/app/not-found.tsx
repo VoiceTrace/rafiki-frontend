@@ -1,5 +1,7 @@
+import { getLocale, getTranslations } from "next-intl/server";
 import { EmptyStatePage } from "@/components/shared/empty-state-page";
 
-export default function NotFound() {
-  return <EmptyStatePage kind="not-found" appName="Rafiqi" title="We couldn’t find that page." description="It may have moved, or the link may not be quite right. Let’s get you back to learning." primaryAction="Back to today" primaryHref="/en/student/today" />;
+export default async function NotFound() {
+  const [locale, t] = await Promise.all([getLocale(), getTranslations("emptyStates.notFound")]);
+  return <EmptyStatePage kind="not-found" locale={locale as "en" | "ar"} appName={t("appName")} title={t("title")} description={t("description")} primaryAction={t("primaryAction")} primaryHref={`/${locale}/student/today`} />;
 }

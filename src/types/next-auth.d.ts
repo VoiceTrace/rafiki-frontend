@@ -1,29 +1,33 @@
-import "next-auth"
-import "next-auth/jwt"
+import type { DefaultSession } from "next-auth"
+
+import type { UserRole } from "@/features/auth/types"
 
 declare module "next-auth" {
   interface User {
-    role: string
-    school_id: string
-    access_token: string
+    role: UserRole
+    isEmailVerified: boolean
+    accessToken?: string
+    refreshToken?: string
+    accessTokenExpiresAt?: number
   }
+
   interface Session {
-    user: {
+    authError?: "RefreshAccessTokenError"
+    user: DefaultSession["user"] & {
       id: string
-      name?: string | null
-      email?: string | null
-      image?: string | null
-      role: string
-      school_id: string
-      access_token: string
+      role: UserRole
+      isEmailVerified: boolean
     }
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    role: string
-    school_id: string
-    access_token: string
+    role: UserRole
+    isEmailVerified: boolean
+    accessToken?: string
+    refreshToken?: string
+    accessTokenExpiresAt?: number
+    authError?: "RefreshAccessTokenError"
   }
 }

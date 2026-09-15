@@ -1,15 +1,15 @@
-import { redirect } from "next/navigation"
 import type { ReactNode } from "react"
-import { auth } from "@/auth"
 import { AppShell } from "@/components/shared/app-shell"
+import { verifySession } from "@/features/auth/server/dal"
 
-export default async function Layout({ children }: { children: ReactNode }) {
-  const session = await auth()
-  if (!session?.user?.access_token) redirect("/login")
-
-  return (
-    <AppShell role="teacher" user={session.user}>
-      {children}
-    </AppShell>
-  )
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const { user } = await verifySession(locale === "ar" ? "ar" : "en", "teacher")
+  return <AppShell role="teacher" user={user}>{children}</AppShell>
 }

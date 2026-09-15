@@ -27,7 +27,7 @@ export async function StudentTodayPage() {
   ];
 
   return (
-    <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-4 sm:gap-5" data-testid="student-today-page">
+    <div className="mx-auto flex w-full max-w-295 flex-col gap-4 sm:gap-5" data-testid="student-today-page">
       <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="font-heading text-page font-bold tracking-tight">{t("greeting")}</h1>
@@ -47,7 +47,7 @@ export async function StudentTodayPage() {
             <CardDescription>{t("nextClass.meta")}</CardDescription>
           </CardHeader>
           <CardContent className="mt-auto px-4 sm:px-5">
-            <Button render={<Link href="/student/learn/warm-up" />} nativeButton={false} size="lg" className="w-full">{t("nextClass.cta")}<ActionArrow /></Button>
+            <Button render={<Link href="/student/study-cave" />} nativeButton={false} size="lg" className="w-full">{t("nextClass.cta")}<ActionArrow /></Button>
           </CardContent>
         </Card>
 

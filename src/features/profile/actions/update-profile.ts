@@ -1,6 +1,6 @@
 "use server"
 
-import { auth } from "@/auth"
+import { getBackendAccessToken } from "@/features/auth/server/dal"
 import { updateMe, uploadAvatar, removeAvatar } from "@/lib/api"
 import { profileSchema } from "@/features/profile/schemas"
 
@@ -13,8 +13,8 @@ export async function updateProfileAction(
   _prev: ProfileActionState,
   formData: FormData,
 ): Promise<ProfileActionState> {
-  const session = await auth()
-  if (!session?.user?.access_token) return { status: "error", message: "unauthenticated" }
+  const accessToken = await getBackendAccessToken()
+  if (!accessToken) return { status: "error", message: "unauthenticated" }
 
   const raw = {
     full_name: formData.get("full_name"),
@@ -33,7 +33,7 @@ export async function updateProfileAction(
   }
 
   try {
-    await updateMe(session.user.access_token, data)
+    await updateMe(accessToken, data)
     return { status: "success", message: "saved" }
   } catch {
     return { status: "error", message: "server" }
@@ -44,8 +44,8 @@ export async function uploadAvatarAction(
   _prev: ProfileActionState,
   formData: FormData,
 ): Promise<ProfileActionState> {
-  const session = await auth()
-  if (!session?.user?.access_token) return { status: "error", message: "unauthenticated" }
+  const accessToken = await getBackendAccessToken()
+  if (!accessToken) return { status: "error", message: "unauthenticated" }
 
   const file = formData.get("file")
   if (!(file instanceof File) || file.size === 0) {
@@ -53,7 +53,7 @@ export async function uploadAvatarAction(
   }
 
   try {
-    const result = await uploadAvatar(session.user.access_token, file)
+    const result = await uploadAvatar(accessToken, file)
     return { status: "success", message: "avatar_updated", avatarUrl: result.avatar_url }
   } catch (err) {
     const msg = err instanceof Error ? err.message : "upload_failed"
@@ -65,11 +65,11 @@ export async function removeAvatarAction(
   _prev: ProfileActionState,
   _formData: FormData,
 ): Promise<ProfileActionState> {
-  const session = await auth()
-  if (!session?.user?.access_token) return { status: "error", message: "unauthenticated" }
+  const accessToken = await getBackendAccessToken()
+  if (!accessToken) return { status: "error", message: "unauthenticated" }
 
   try {
-    await removeAvatar(session.user.access_token)
+    await removeAvatar(accessToken)
     return { status: "success", message: "avatar_removed", avatarUrl: null }
   } catch {
     return { status: "error", message: "server" }

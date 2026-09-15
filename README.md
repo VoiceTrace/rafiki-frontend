@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+The [Rafiqi product and design reference](docs/RAFIQI_PRODUCT_AND_DESIGN_REFERENCE.md) combines the design overview, coverage, wireframe index, product stories, MVP tickets, and current frontend page reference. Supporting boards, wireframes, and design assets live in [`design/`](design/).
+
 ## Getting Started
 
 First, run the development server:
@@ -15,6 +17,8 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+Copy `.env.example` to `.env.local` and run `npx auth secret` before connecting a real backend. The complete frontend auth contract and security boundary are documented in [`docs/authentication.md`](docs/authentication.md).
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
@@ -34,3 +38,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+

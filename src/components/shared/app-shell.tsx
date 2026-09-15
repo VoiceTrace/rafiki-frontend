@@ -209,7 +209,11 @@ export function AppShell({
 }: {
   children: ReactNode;
   role: Role;
-  user: { name?: string | null; email?: string | null; role: string };
+  user: {
+    name: string;
+    email: string;
+    role: Role;
+  };
 }) {
   const locale = useLocale();
   const pathname = usePathname();

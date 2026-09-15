@@ -25,7 +25,7 @@ import {
 
 const idle: ProfileActionState = { status: "idle" }
 
-export function ProfileForm({ user }: { user: User }) {
+export function ProfileForm({ user, avatarBaseUrl }: { user: User; avatarBaseUrl: string }) {
   const t = useTranslations("profile")
   const router = useRouter()
   const avatarInputRef = useRef<HTMLInputElement>(null)
@@ -54,7 +54,9 @@ export function ProfileForm({ user }: { user: User }) {
   })()
 
   const avatarSrc = currentAvatarPath
-    ? `${process.env.NEXT_PUBLIC_API_URL}${currentAvatarPath}`
+    ? currentAvatarPath.startsWith("http")
+      ? currentAvatarPath
+      : avatarBaseUrl + currentAvatarPath
     : null
 
   const initials = (user.full_name ?? "")
