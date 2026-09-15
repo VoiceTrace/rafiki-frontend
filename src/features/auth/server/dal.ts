@@ -1,6 +1,8 @@
 import "server-only"
 
 import { cache } from "react"
+import { getToken } from "next-auth/jwt"
+import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 
 import { auth } from "@/auth"
@@ -19,6 +21,14 @@ export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
     role: user.role,
     emailVerified: user.isEmailVerified,
   }
+})
+
+export const getBackendAccessToken = cache(async (): Promise<string | null> => {
+  const secret = process.env.AUTH_SECRET
+  if (!secret) return null
+
+  const token = await getToken({ req: { headers: await headers() }, secret })
+  return typeof token?.accessToken === "string" ? token.accessToken : null
 })
 
 export async function verifySession(locale: string, requiredRole?: UserRole) {

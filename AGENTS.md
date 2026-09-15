@@ -113,3 +113,11 @@ src/
 * Check compilation errors, TypeScript errors, runtime errors, browser console errors, hydration issues, and rendered UI.
 * Run `npm run lint` before considering substantial work complete.
 * Do not claim something works without verifying it when runtime verification is available.
+
+## Authentication and profile guardrail
+
+Before editing authentication, protected layouts, the app-shell user menu, or profiles, read `docs/authentication.md` and verify the live backend OpenAPI contract. Preserve the PR #2 integration described there.
+
+In particular, keep backend identity and role authoritative through `POST /auth/login` followed by `GET /users/me`; keep the bearer token in the encrypted Auth.js JWT and access it only through the server-only DAL; retain `verifySession()` in role layouts; and retain the localized profile routes and `UserMenu`. Do not expose the backend token on `session.user`, restore the removed duplicate login route, or enable refresh, revocation, registration, recovery, or verification as real-backend features until their endpoints exist.
+
+If the backend contract changes, update `docs/authentication.md` in the same commit.

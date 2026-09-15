@@ -1139,6 +1139,33 @@
       }
     }
   },
+  "profile": {
+    "openProfileMenu": "Open profile menu",
+    "viewProfile": "Profile",
+    "signOut": "Sign out",
+    "title": "My profile",
+    "subtitle": "Update your name, password, and photo.",
+    "avatar": "Profile photo",
+    "avatarDescription": "Upload a photo to personalise your profile.",
+    "avatarAlt": "Profile photo",
+    "uploadAvatar": "Upload photo",
+    "removeAvatar": "Remove photo",
+    "avatarUpdated": "Photo updated.",
+    "avatarRemoved": "Photo removed.",
+    "errorAvatarTooLarge": "Photo must be under 5 MB.",
+    "errorAvatarType": "Use a JPEG, PNG, or WebP file.",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "personalInfo": "Personal information",
+    "personalInfoDescription": "Update your name or set a new password.",
+    "email": "Email",
+    "fullName": "Full name",
+    "changePassword": "Change password",
+    "newPassword": "New password",
+    "passwordPlaceholder": "Leave blank to keep current password",
+    "passwordHint": "Minimum 8 characters. Leave blank to keep your current password.",
+    "save": "Save changes",
+    "saved": "Changes saved."
+  },
   "studentWarmup": {
     "feedback": "Correct thinking starts with the idea that forces come in equal and opposite pairs.",
     "questionTitle": "Make a prediction",

@@ -41,18 +41,17 @@ function roleHome(locale: string, role: UserRole) {
 function safeCallbackUrl(
   value: FormDataEntryValue | null,
   locale: string,
-  role: UserRole,
 ) {
   if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//")) {
-    return roleHome(locale, role)
+    return "/" + locale + "/auth/redirect"
   }
 
   try {
     const url = new URL(value, "https://rafiqi.local")
-    if (url.origin !== "https://rafiqi.local") return roleHome(locale, role)
+    if (url.origin !== "https://rafiqi.local") return "/" + locale + "/auth/redirect"
     return `${url.pathname}${url.search}${url.hash}`
   } catch {
-    return roleHome(locale, role)
+    return "/" + locale + "/auth/redirect"
   }
 }
 
@@ -74,7 +73,6 @@ export async function loginAction(
   const redirectTo = safeCallbackUrl(
     formData.get("callbackUrl"),
     locale,
-    parsed.data.role,
   )
 
   try {

@@ -9,7 +9,7 @@ import {
   revokeAuthSession,
 } from "@/features/auth/server/auth-api"
 
-export const { auth, handlers, signIn, signOut } = NextAuth({
+export const { auth, handlers, signIn, signOut, unstable_update } = NextAuth({
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 },
   trustHost: true,
   providers: [
@@ -44,7 +44,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.sub = user.id
         token.role = user.role
@@ -74,6 +74,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         } catch {
           token.authError = "RefreshAccessTokenError"
         }
+      }
+
+      if (trigger === "update" && (session as { user?: { name?: string } } | null)?.user?.name) {
+        token.name = (session as { user: { name: string } }).user.name
       }
 
       return token

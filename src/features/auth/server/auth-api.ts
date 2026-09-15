@@ -9,7 +9,12 @@ import type {
 type LoginInput = { email: string; password: string; role: UserRole }
 type SignUpInput = LoginInput & { name: string }
 type AccessTokenLoginResponse = { access_token: string }
-type AccessTokenPayload = { sub?: string; role?: unknown }
+type BackendUser = {
+  id: string
+  email: string
+  full_name: string
+  role: UserRole
+}
 
 type BackendEnvelope<T> = T | { data: T }
 
@@ -100,42 +105,6 @@ function mockUser(input: { email: string; role: UserRole; name?: string }): Sess
   }
 }
 
-function sessionFromAccessToken(
-  input: LoginInput,
-  response: AccessTokenLoginResponse,
-): BackendAuthSession {
-  const accessToken = response.access_token
-
-  try {
-    const payloadSegment = accessToken.split(".")[1]
-    if (!payloadSegment) throw new Error("Missing JWT payload.")
-
-    const payload = JSON.parse(
-      Buffer.from(payloadSegment, "base64url").toString("utf-8"),
-    ) as AccessTokenPayload
-
-    if (
-      (payload.role !== "teacher" && payload.role !== "student") ||
-      typeof payload.sub !== "string"
-    ) {
-      throw new Error("JWT is missing a valid subject or role.")
-    }
-
-    return {
-      user: {
-        id: payload.sub,
-        name: input.email,
-        email: input.email,
-        role: payload.role,
-        emailVerified: true,
-      },
-      accessToken,
-    }
-  } catch {
-    throw new AuthApiError("invalidLoginResponse", 502)
-  }
-}
-
 export async function authenticateUser(
   input: LoginInput,
 ): Promise<BackendAuthSession> {
@@ -147,19 +116,29 @@ export async function authenticateUser(
     return { user: mockUser(input) }
   }
 
-  if (apiUrl) {
-    const response = await request<AccessTokenLoginResponse>("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email: input.email, password: input.password }),
-    })
+  const response = await request<AccessTokenLoginResponse>("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email: input.email, password: input.password }),
+  })
 
-    return sessionFromAccessToken(input, response)
+  const user = await request<BackendUser>("/users/me", {
+    headers: { Authorization: `Bearer ${response.access_token}` },
+  })
+
+  if (user.role !== "teacher" && user.role !== "student") {
+    throw new AuthApiError("invalidLoginResponse", 502)
   }
 
-  return request<BackendAuthSession>("/auth/login", {
-    method: "POST",
-    body: JSON.stringify(input),
-  })
+  return {
+    user: {
+      id: user.id,
+      name: user.full_name,
+      email: user.email,
+      role: user.role,
+      emailVerified: true,
+    },
+    accessToken: response.access_token,
+  }
 }
 
 export async function refreshAuthSession(refreshToken: string): Promise<{

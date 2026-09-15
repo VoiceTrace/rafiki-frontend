@@ -6,11 +6,9 @@ import {
   CalendarDays,
   ChartNoAxesCombined,
   CircleHelp,
-  CircleUserRound,
   GraduationCap,
   Home,
   LibraryBig,
-  LogOut,
   MessageCircleMore,
   MoreHorizontal,
   Search,
@@ -33,7 +31,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Link, usePathname } from "@/i18n/navigation";
-import { logoutAction } from "@/features/auth/actions/auth-actions";
+import { UserMenu } from "@/components/shared/user-menu";
 
 type Role = "teacher" | "student";
 type Item = { path: string; label: string; icon: LucideIcon };
@@ -207,11 +205,15 @@ function NavigationSearch({
 export function AppShell({
   children,
   role,
-  userName,
+  user,
 }: {
   children: ReactNode;
   role: Role;
-  userName: string;
+  user: {
+    name: string;
+    email: string;
+    role: Role;
+  };
 }) {
   const locale = useLocale();
   const pathname = usePathname();
@@ -341,28 +343,7 @@ export function AppShell({
             >
               <Bell aria-hidden="true" />
             </Link>
-            <div
-              className="flex items-center gap-2"
-              role="group"
-              aria-label={t(role + "Role")}
-            >
-              <CircleUserRound
-                className="size-8 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <div className="hidden text-xs leading-relaxed lg:block">
-                <strong className="block max-w-32 truncate font-semibold">{userName}</strong>
-                <span className="text-muted-foreground">
-                  {t(role + "Role")}
-                </span>
-              </div>
-            </div>
-            <form action={logoutAction}>
-              <input type="hidden" name="locale" value={locale} />
-              <Button type="submit" variant="ghost" size="icon" className="size-10" aria-label={t("signOut")} title={t("signOut")}>
-                <LogOut aria-hidden="true" />
-              </Button>
-            </form>
+            <UserMenu user={user} role={role} />
           </div>
         </header>
         <main
