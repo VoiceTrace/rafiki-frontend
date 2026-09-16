@@ -9,3 +9,81 @@ module.exports = {
 }
 
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+⚠ Blocked cross-origin request to Next.js dev resource /_next/hmr from "127.0.0.1".
+Cross-origin access to Next.js dev resources is blocked by default for safety.
+
+To allow this host in development, add it to "allowedDevOrigins" in next.config.js and restart the dev server:
+
+// next.config.js
+module.exports = {
+  allowedDevOrigins: ['127.0.0.1'],
+}
+
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[31m[auth][error][0m JWTSessionError: Read more at https://errors.authjs.dev#jwtsessionerror
+[31m[auth][cause][0m: Error: no matching decryption secret
+    at clockTolerance (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_@auth_core_1wpnri1._.js:484:15)
+    at async decryptJWE (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_jose_dist_webapi_1oqzxyj._.js:977:40)
+    at async jwtDecrypt (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_jose_dist_webapi_1oqzxyj._.js:98:38)
+    at async Object.decode (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_@auth_core_1wpnri1._.js:474:25)
+    at async Module.session (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_@auth_core_1wpnri1._.js:1940:29)
+    at async AuthInternal (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_@auth_core_1wpnri1._.js:2494:24)
+    at async Auth (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_@auth_core_1wpnri1._.js:350:34)
+    at async handleAuth (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_1vi4brp._.js:5946:29)
+    at async C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_next_1jwlgir._.js:6101:20
+    at async C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_next_1jwlgir._.js:13309:28
+    at async adapter (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\node_modules_next_1jwlgir._.js:13248:16)
+    at async DevServer.runMiddleware (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\next-server.js:1206:26)
+    at async DevServer.runMiddleware (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\dev\next-dev-server.js:310:28)
+    at async NextNodeServer.handleCatchallMiddlewareRequest (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\next-server.js:392:26)
+    at async DevServer.handleRequestImpl (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\base-server.js:985:28)
+    at async C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async handleRoute (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\lib\router-utils\resolve-routes.js:369:33)
+    at async resolveRoutes (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\lib\router-utils\resolve-routes.js:625:28)
+    at async handleRequest (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\lib\router-server.js:354:96)
+    at async requestHandlerImpl (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\lib\start-server.js:225:13)
+[31m[auth][details][0m: {}
+[31m[auth][error][0m JWTSessionError: Read more at https://errors.authjs.dev#jwtsessionerror
+[31m[auth][cause][0m: Error: no matching decryption secret
+    at clockTolerance (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_@auth_core_1tplxaj._.js:484:15)
+    at async decryptJWE (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_jose_dist_webapi_09q564q._.js:977:40)
+    at async jwtDecrypt (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_jose_dist_webapi_09q564q._.js:98:38)
+    at async Object.decode (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_@auth_core_1tplxaj._.js:474:25)
+    at async Module.session (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_@auth_core_1tplxaj._.js:1940:29)
+    at async AuthInternal (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_@auth_core_1tplxaj._.js:2494:24)
+    at async Auth (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_@auth_core_1tplxaj._.js:350:34)
+    at async C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\[root-of-the-server]__1w1me77._.js:414:21
+    at async OnboardingPage (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\[root-of-the-server]__1w1me77._.js:33:18)
+[31m[auth][details][0m: {}
+[31m[auth][error][0m CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at Module.callback (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_@auth_core_1tplxaj._.js:1182:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async AuthInternal (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_@auth_core_1tplxaj._.js:2511:24)
+    at async Auth (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_@auth_core_1tplxaj._.js:350:34)
+    at async signIn (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_0eoepvw._.js:308:17)
+    at async loginAction (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\[root-of-the-server]__16r_czk._.js:198:9)
+    at async executeActionAndPrepareForRender (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js:168:5395)
+    at async C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js:168:2018
+    at async handleAction (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js:166:27863)
+    at async renderToHTMLOrFlightImpl (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js:173:2883)
+    at async doRender (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_0oeaqcj._.js:670:32)
+    at async AppPageRouteModule.handleResponse (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js:216:76101)
+    at async handleResponse (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_0oeaqcj._.js:1037:36)
+    at async Module.handler (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\.next\dev\server\chunks\ssr\node_modules_0oeaqcj._.js:1508:24)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Qassas\Documents\ChatGPT\rafiky ai\Frontend\rafiky-frontend\node_modules\next\dist\server\lib\start-server.js:225:13)

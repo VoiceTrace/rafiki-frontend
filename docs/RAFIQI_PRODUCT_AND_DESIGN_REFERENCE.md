@@ -14,11 +14,11 @@ _Source: `design/README.md`_
 
 # Rafiqi — complete UI design kit
 
-This package contains **34 rendered design boards**, **34 SVG wireframes**, matching PNG/SVG previews, source-route coverage, and an optional native Figma import helper. Boards 30 and 31 are superseded proposals. Boards 32 and 33 hold the first-login interaction specification. Board 34 is the selected professional visual direction and approved frontend implementation reference.
+This package contains **35 rendered design boards**, **34 SVG wireframes**, matching PNG/SVG previews, source-route coverage, and an optional native Figma import helper. Boards 30 and 31 are superseded proposals. Boards 32 and 33 retain the first-login interaction specification. Board 34 preserves the welcome-screen and form-step rollback direction; Board 35 is the selected and implemented chat-based question reference.
 
 ## Open the designs
 
-- [Current MVP plan](#mvp-simple-tickets): the implementation scope, tickets, and delivery order for Student Profile, Pre-Class, and During-Class.
+- [Current MVP plan](#mvp-simple-tickets): the MVP v1 scope and delivery order for Student Profile, Pre-Class, Study Sessions, and Homework. During-Class is deferred to v2.
 - [Broader product specification](#product-description-and-user-stories): product context and detailed user stories beyond the current MVP.
 - [Rendered design boards](../design/BOARDS.md): teacher and student screens, secondary forms, mobile journeys, Arabic RTL direction and a component/state sheet.
 - [Editable wireframe index](#wireframe-index): all 34 named frames.
@@ -114,9 +114,9 @@ Supporting loops: S02 Map → S03 Lesson → S05 Study Cave; S02 Schedule → S1
 - Community: idea type, filter, vote/unvote for students and status change for teachers.
 - Models: displayed model, edit/cancel/save, model discussion and attachments.
 
-## Approved MVP additions - C1/C2 live-session UI
+## Historical prototype approval - C1/C2 live-session UI (deferred to MVP v2)
 
-**Decision (2026-09-13):** the student and teacher session lifecycle is approved for implementation within the existing Study Cave and teacher lesson flows. It does not introduce a separate app shell or backend behavior.
+**Updated scope decision (2026-09-15):** the previously approved frontend-only prototype is retained as a future reference, but C1/C2 and all During-Class/realtime behavior are deferred to MVP v2. Do not treat these boards or existing local demo states as v1 implementation authority.
 
 - **Student:** the existing During-class tab first shows a join card, then a joining state, connected banner, reconnecting/failed recovery states, and a locked completion state.
 - **Teacher:** the existing During tab first shows a lobby/start card, then connected, reconnecting/failed, end-class confirmation, and locked completion states.
@@ -164,6 +164,8 @@ This proposal was superseded by Board 32 after the requirement was clarified as 
 [Board 32](../design/boards/32-first-login-onboarding.md) and its [mobile Arabic companion](../design/boards/33-first-login-onboarding-mobile-arabic.md) propose a focused onboarding screen immediately after a student's first successful login and before Student Today. The student may answer three voluntary questions or skip, then enters the existing student experience. This supersedes the proposed in-workspace welcome direction in Boards 30 and 31.
 
 The user selected [Board 34](../design/boards/34-first-login-onboarding-selected.md) as the professional visual direction on 2026-09-14. Frontend routing, the interactive bilingual question flow, a per-student browser completion marker, and the existing session-only profile demonstration are approved. Server persistence, production inference, and data sharing remain out of scope.
+
+On 2026-09-16, the user approved [Board 35](../design/boards/35-first-login-onboarding-chat-concept.md) for the question steps. Board 35 replaces the form-step presentation with a continuous conversation while preserving Board 34's welcome screen, visual language, and data boundaries. Board 34 and the preserved legacy component remain the rollback reference.
 ## Limits of this check
 
 This table verifies screen-level representation and documents interaction families. It does not assert that each source handler has a working Figma equivalent. The full original function and inline-action inventory is included as source-interactions.json.
@@ -223,11 +225,15 @@ _Source: `design/WIREFRAMES.md`_
 
 - [Board 29 — S11 first-open profile onboarding](../design/boards/29-s11-first-open-profile.md) extends S11 and S16 with a voluntary first-time conversation, live learner-profile updates, **Confident** / **Still forming** labels, correction controls, and a mobile Arabic RTL direction. It does not replace the canonical S11/S16 wireframes.
 
+- [Board 34 — Selected professional first-login onboarding](../design/boards/34-first-login-onboarding-selected.md) defines the welcome screen, overall visual language, routing, completion behavior, and the retained form-step rollback reference.
+
+- [Board 35 — First-login onboarding chat](../design/boards/35-first-login-onboarding-chat-concept.md) is the active implemented reference for the three question steps, including the continuous transcript, suggestions, listening state, and message composer.
+
 ## Proposed state extensions
 
 - [Board 30 — S11 onboarding welcome concept](../design/boards/30-s11-onboarding-welcome-concept.md) proposes a dedicated welcome state with a persistent Skip action before the A2 questions begin. [Board 31](../design/boards/31-s11-onboarding-mobile-arabic.md) supplies the companion mobile Arabic RTL direction. Neither board changes the canonical or currently approved S11/S16 reference until design approval.
 
-- [Board 32 — First-login student onboarding](../design/boards/32-first-login-onboarding.md) supersedes the proposed Boards 30/31 direction. It moves the voluntary A2/A3 conversation to a focused screen immediately after first login, before the student shell. [Board 33](../design/boards/33-first-login-onboarding-mobile-arabic.md) supplies the provisional mobile Arabic RTL direction. Implementation still requires approval.
+- [Board 32 — First-login student onboarding](../design/boards/32-first-login-onboarding.md) superseded the proposed Boards 30/31 direction and remains the interaction/routing specification. [Board 33](../design/boards/33-first-login-onboarding-mobile-arabic.md) retains the original mobile Arabic RTL reference. Boards 34 and 35 document the approved implementation direction.
 
 ---
 
@@ -239,7 +245,7 @@ _Source: `PRODUCT_DESCRIPTION_AND_USER_STORIES.md`_
 
 # Rafiqi — Product Description and User Stories
 
-> **Current MVP scope:** [Rafiqi MVP Plan — Simple Tickets](#mvp-simple-tickets) is the authoritative plan for the current release. It limits delivery to Student Profile, Pre-Class, and During-Class; this document remains the wider product specification and reference.
+> **Current MVP v1 scope:** [Rafiqi MVP Plan — Simple Tickets](#mvp-simple-tickets) is authoritative. It covers Student Profile, Pre-Class, Study Sessions, and Homework. During-Class and all realtime behavior are deferred to MVP v2; this section remains the wider product specification and reference.
 
 ## 1. Product summary
 
@@ -1075,13 +1081,14 @@ _Source: `MVP_SIMPLE_TICKETS.md`_
 
 ## Scope
 
-This MVP covers three connected areas for both teachers and students:
+MVP v1 covers four connected areas for teachers and students:
 
 - Student Profile
 - Pre-Class
-- During-Class
+- Study Sessions
+- Homework
 
-Everything else shown in the current mockups is out of scope for this release. Each ticket below describes the outcome, intended user, and purpose. Foundation tickets are technical or governance prerequisites rather than user stories.
+The v1 product spine is **Study → Profile → Prep + Homework → Study**. The whole During-Class epic and anything realtime are deferred to MVP v2. Each ticket below describes the outcome, intended user, and purpose. Foundation tickets are technical or governance prerequisites rather than user stories.
 
 ## Epic A — Student Profile
 
@@ -1109,6 +1116,12 @@ The current implementation is deliberately a frontend-only, browser-session demo
 
 The browser stores only a versioned per-student completion marker. Personal answers remain session-only. Server persistence, cross-device history, production inference, and teacher/guardian access still require A1 and A8.
 
+### Approved first-login onboarding chat experience (2026-09-16)
+
+[Board 35 — First-login onboarding chat concept](../design/boards/35-first-login-onboarding-chat-concept.md) is approved and implemented for presenting the same three voluntary questions as a continuous conversation with Rafiqi. It preserves Board 34's visual language, progress, Skip action, trust statement, bilingual requirement, and data boundary while replacing the focused question forms with chat bubbles, suggestions, listening feedback, and a message composer.
+
+Board 34 and `student-onboarding-form-reference.tsx` remain available as the deprecated rollback reference. The route, welcome state, completion review, and frontend-only data boundary are unchanged.
+
 ## Epic B — Pre-Class
 
 | ID | Ticket | User / type | Purpose |
@@ -1122,7 +1135,9 @@ The browser stores only a versioned per-student completion marker. Personal answ
 | B7 | Ask the teacher ahead of time | Student | Flag a question for the teacher while chatting with Rafiqi, so it is not lost before class. |
 | B8 | Turn prep into slides | Teacher — nice-to-have | Generate a presentation from completed prep instead of rebuilding it in a slide tool. |
 
-## Epic C — During Class
+## Epic C — During Class (deferred to MVP v2)
+
+**Do not build C1–C8 in v1.** The epic depends on an unvalidated classroom-device assumption and carries expensive realtime infrastructure for a weaker learning signal than outside-class study. Existing UI remains a prototype/reference only.
 
 | ID | Ticket | User / type | Purpose |
 | --- | --- | --- | --- |
@@ -1135,22 +1150,47 @@ The browser stores only a versioned per-student completion marker. Personal answ
 | C7 | Connect notes to questions | Student — nice-to-have | Have Rafiqi recognize when the student's own notes answer a previously asked question. |
 | C8 | Freeze session data at class end | Foundation | Lock engagement and question data when a session ends, so it can safely feed later summaries and profile updates. |
 
-### C1/C2 frontend slice status (2026-09-13)
+### C1/C2 frontend slice status (updated 2026-09-15)
 
-The student Study Cave During-class UI is implemented as a local, bilingual demo layer above the existing S06 content. It includes ready, joining, connected, reconnecting, failed/retry, and locked states without backend, real-time synchronization, authentication, or persistence. The teacher session UI remains a separate frontend-only slice. C1/C2 still require their backend/realtime foundation before either experience can represent a shared class session.
+The student and teacher live-session states remain local bilingual demo layers without backend, realtime synchronization, authentication, or persistence. They are parked for MVP v2 and must not be advanced as v1 work. If C3 is revived, it must show neutral observed activity rather than attention/engagement verdicts; C4 must define and visibly communicate attribution/anonymity.
+
+## Epic D — Study Sessions
+
+| ID | Ticket | User / type | Purpose |
+| --- | --- | --- | --- |
+| D1 | StudySession entity | Foundation | Store resumable, distinguishable student sessions linked to a lesson. |
+| D2 | Explicit study state machine | Student | Record bounded stages and transitions, show the current stage, and prevent silent skipping. |
+| D3 | Attempt capture | Foundation — blocker | Store correctness, concept, and a defined subject-specific error type for every attempt. |
+| D4 | MasteryRecord | Foundation — blocker | Represent concept-level understanding through attempts, outcomes, and dominant error patterns; support student and class aggregation. |
+| D5 | Next step and hint ladder | Student | Select bounded assistance, prevent immediate answer extraction, and record hint level as learning signal. |
+| D6 | Session close and handoff | Student / Foundation — blocker | Show a summary and verifiably update profile extraction and mastery; replaces C8 in v1. |
+
+## Epic E — Homework
+
+| ID | Ticket | User / type | Purpose |
+| --- | --- | --- | --- |
+| E1 | HomeworkAssignment schema | Foundation | Link class and per-student work to lessons, concepts, and the MasteryRecord evidence that selected each item. |
+| E2 | Class gap digest | Teacher | Aggregate class gaps with the same low-coverage rule as B6. |
+| E3 | Differentiated self-checking generation | Teacher / Student — blocker | Generate objectively markable work with consistent presentation and no student-visible difficulty labels. |
+| E4 | Teacher review and approval | Teacher — blocker | Require editable teacher approval before generated work reaches a student or home. |
+| E5 | Distribution, submission, and mastery feedback | Teacher / Student | Return automatic results to MasteryRecord without manual teacher marking. |
+
+Human marking and open-response homework are deferred to MVP v2. Homework policy by year group must be validated with target schools before Epic E is built.
 
 ## Suggested delivery order
 
-1. Foundations: A1, A2, B1, C1, C2.
-2. Complete the profile loop: A3 → A6 → A7.
-3. Complete the pre-class loop: B2/B3 → B5 → B6/B7.
-4. Complete the live-class loop: C3 → C4 → C5 → C6.
-5. Do not defer: A5 and A8 (privacy review).
-6. Nice-to-haves: A9, B4, B8, C7, C8.
+0. Decisions: A8 policy, A3 promotion rule, A6 disclosure rule, D4 model shape, and school validation.
+1. Foundations: A1, A2, B1.
+2. Profile loop and trust: A3 → A6 + A5 → A7 + A9.
+3. Study loop: D1, D2 → D3 → D4 → D5 → D6.
+4. Pre-class loop: B2/B3 → B5 plus participation mechanics → B6/B7.
+5. Profile-to-prep link: add the class profile digest to LessonPrep.
+6. Homework loop: E1 → E2 → E3 + E4 → E5.
+7. Polish: B4 and B8.
 
 ## Relationship to the broader product specification
 
-This plan is the authoritative scope for the current MVP. [Product Description and User Stories](#product-description-and-user-stories) remains the broader product reference; features outside the three MVP areas above are deferred unless explicitly added to this plan.
+This plan is the authoritative scope for MVP v1. [Product Description and User Stories](#product-description-and-user-stories) remains the broader product reference. Epic C, all realtime behavior, human-marked/open-response homework, peer study, and lesson-efficacy feedback are parked for MVP v2.
 
 ---
 
@@ -1207,10 +1247,11 @@ The current application preserves the original product idea—an AI-supported te
 - Route: `/[locale]/onboarding`, outside the regular student shell.
 - Default successful student login destination; teachers continue to their Today page.
 - Returning students with a local completion or skip marker continue to Student Today.
-- Welcome, persistent Skip, three localized questions, optional suggestions, free text, progress, review, and completion states.
+- Welcome, persistent Skip, three localized questions presented as a continuous chat, optional suggestions, free text composer, prior-answer bubbles, listening feedback, progress, review, and completion states.
 - Answers update the existing session-only My Rafiqi profile demonstration. The completion marker contains no answer content.
 - English LTR and Arabic RTL share the same responsive hierarchy.
-- Visual reference: [Board 34](../design/boards/34-first-login-onboarding-selected.md).
+- Active question-step reference: [Board 35](../design/boards/35-first-login-onboarding-chat-concept.md).
+- Welcome and rollback reference: [Board 34](../design/boards/34-first-login-onboarding-selected.md) and `src/features/student-onboarding/components/student-onboarding-form-reference.tsx`.
 
 
 # Student frontend

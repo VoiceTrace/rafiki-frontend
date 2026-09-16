@@ -58,7 +58,7 @@ Client Components are justified for application shell navigation, forms with Ser
 - Calendar UI remains in `features/student-learn`; it has no compatible non-student consumer yet.
 - Study Cave and teacher-preparation components remain feature-owned because their state models and workflows differ from other pages.
 - Teacher and student live-session UI remains separate; it shares a lifecycle concept but not a compatible presentation contract.
-
+2
 ### Intentionally shared
 
 - App shell, empty-state presentation, lesson-stage tabs, Rafiqi conversation, and Today dashboard patterns have real cross-page reuse and remain shared.

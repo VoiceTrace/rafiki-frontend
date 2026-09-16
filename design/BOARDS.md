@@ -112,6 +112,8 @@
 
 ## T04 · Live-session states (desktop teacher)
 
+> **MVP v2 reference:** Boards 19 and 20 document the deferred During-Class/realtime concept. They are not MVP v1 implementation scope.
+
 ![T04 · Live-session states](boards/19-mvp-live-session-lifecycle.png)
 
 [Open full image](boards/19-mvp-live-session-lifecycle.png) · [Read implementation notes](boards/19-mvp-live-session-lifecycle.md)

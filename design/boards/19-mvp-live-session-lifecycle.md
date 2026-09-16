@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Canonical desktop teacher reference for MVP tickets **C1 Start/join session** and **C2 Live connection**. Every panel is the existing **T04 · Teacher · Prepare and teach (During class)** screen with a session-state layer; it is not a new dashboard or meeting shell.
+Historical desktop teacher reference for **C1 Start/join session** and **C2 Live connection**, both deferred to MVP v2. It must not drive MVP v1 implementation or realtime infrastructure. Every panel is the existing **T04 · Teacher · Prepare and teach (During class)** screen with a session-state layer; it is not a new dashboard or meeting shell.
 
 ## States shown
 

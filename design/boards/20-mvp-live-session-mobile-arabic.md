@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Responsive Arabic RTL student companion to [Board 19](19-mvp-live-session-lifecycle.md) for C1/C2 implementation review. Every phone is the existing **S06 · Study Cave · During class** structure, with a compact state layer above—not a separate mobile dashboard.
+Responsive Arabic RTL student companion to [Board 19](19-mvp-live-session-lifecycle.md) for deferred MVP v2 C1/C2 review. It is a future reference, not MVP v1 implementation authority. Every phone is the existing **S06 · Study Cave · During class** structure, with a compact state layer above—not a separate mobile dashboard.
 
 ## States shown
 

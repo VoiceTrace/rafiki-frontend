@@ -770,6 +770,8 @@ Each metric requires a calculation method, evidence window, confidence treatment
 
 ## 17. Suggested MVP scope
 
+**Revision 2 scope decision:** MVP v1 is built around Student Profile, Pre-Class, outside-class Study Sessions, and teacher-approved self-checking Homework. The whole During-Class epic and anything realtime are deferred to MVP v2.
+
 The first production release should prioritize the connected learning loop without unverified observation capabilities:
 
 1. Authentication, roles, classes, curricula, and bilingual preferences.
@@ -781,7 +783,7 @@ The first production release should prioritize the connected learning loop witho
 7. Messages with clear permissions and moderation.
 8. Editable teacher and learner personalization models.
 
-Camera analysis, live calling, advanced engagement inference, presentation export, Development Club workflows, and professional-learning enrollment can follow when their operational and policy requirements are ready.
+Camera analysis, live calling, in-class notes/questions, live question clustering, highlight broadcast, advanced engagement inference, and all other realtime behavior are MVP v2. Human-marked/open-response homework, peer study, lesson-efficacy feedback, presentation export, Development Club workflows, and professional-learning enrollment are also deferred.
 
 ## 18. Product success measures
 
