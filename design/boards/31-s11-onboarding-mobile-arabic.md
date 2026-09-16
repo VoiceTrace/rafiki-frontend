@@ -6,7 +6,7 @@
 
 ## Superseded proposal
 
-**Superseded on 2026-09-14 by [Board 32 — First-login student onboarding](32-first-login-onboarding.md).** The revised requirement places onboarding immediately after first login, before the student workspace.
+**Superseded on 2026-09-14 by [Board 32 — First-login student onboarding](32-first-login-onboarding.md).** The revised requirement places onboarding immediately after first login, before the student  workspace.
 
 ## Status
 
