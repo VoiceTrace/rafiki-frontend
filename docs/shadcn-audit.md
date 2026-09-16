@@ -1,6 +1,6 @@
 # shadcn audit
 
-**Date:** 2026-09-15  
+**Date:** 2026-09-16  
 **Mode:** Architecture review only — no product code or dependencies changed.
 
 ## Result
