@@ -209,3 +209,11 @@
 ![Selected professional onboarding](boards/34-first-login-onboarding-selected.png)
 
 [Open selected image](boards/34-first-login-onboarding-selected.png) · [Read implementation mapping](boards/34-first-login-onboarding-selected.md)
+
+## Selected · Chat-based first-login onboarding
+
+![Chat-based first-login onboarding](boards/35-first-login-onboarding-chat-concept.png)
+
+[Open selected image](boards/35-first-login-onboarding-chat-concept.png) · [Read implementation mapping](boards/35-first-login-onboarding-chat-concept.md)
+
+Board 35 is the active question-step reference. Board 34 remains the welcome-screen and rollback reference.

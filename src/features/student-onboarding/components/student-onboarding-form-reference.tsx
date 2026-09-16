@@ -5,11 +5,8 @@ import {
   ArrowRight,
   BookOpen,
   Brain,
-  CircleCheck,
   Gamepad2,
-  SendHorizontal,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -34,7 +31,8 @@ const emptyAnswers: Answers = {
 }
 
 
-export function StudentOnboarding({
+/** Preserved Board 34 form-step implementation for design rollback/reference. */
+export function StudentOnboardingFormReference({
   locale,
   studentId,
   studentName,
@@ -214,7 +212,6 @@ export function StudentOnboarding({
             <CompleteContent answers={answers} headingRef={headingRef} onFinish={() => finish("completed")} onReview={() => { setDraft(answers.likes.value); setStep(1) }} t={t} />
           ) : activeQuestion ? (
             <QuestionContent
-              answers={answers}
               draft={draft}
               headingRef={headingRef}
               locale={locale}
@@ -222,7 +219,6 @@ export function StudentOnboarding({
               onChange={setDraft}
               onContinue={nextQuestion}
               question={activeQuestion}
-              questions={questions}
               step={step}
               t={t}
             />
@@ -272,98 +268,32 @@ function WelcomeContent({ firstName, headingRef, onStart, t }: { firstName: stri
   )
 }
 
-type OnboardingQuestion = {
-  id: keyof Answers
-  icon: typeof Gamepad2
-  title: string
-  description: string
-  suggestions: string[]
-}
-
-function QuestionContent({ answers, draft, headingRef, locale, onBack, onChange, onContinue, question, questions, step, t }: { answers: Answers; draft: string; headingRef: React.RefObject<HTMLHeadingElement | null>; locale: "en" | "ar"; onBack: () => void; onChange: (value: string) => void; onContinue: () => void; question: OnboardingQuestion; questions: OnboardingQuestion[]; step: number; t: Translator }) {
+function QuestionContent({ draft, headingRef, locale, onBack, onChange, onContinue, question, step, t }: { draft: string; headingRef: React.RefObject<HTMLHeadingElement | null>; locale: "en" | "ar"; onBack: () => void; onChange: (value: string) => void; onContinue: () => void; question: { title: string; description: string; suggestions: string[] }; step: number; t: Translator }) {
   const BackIcon = locale === "ar" ? ArrowRight : ArrowLeft
-
+  const ContinueIcon = locale === "ar" ? ArrowLeft : ArrowRight
   return (
-    <div className="min-w-0">
-      <h1 ref={headingRef} tabIndex={-1} className="sr-only outline-none">{question.title}</h1>
-      <div className="overflow-hidden rounded-[2rem] border border-[#202236]/8 bg-white/90 shadow-[0_24px_70px_rgba(32,34,54,.08)]">
-        <div className="max-h-[52dvh] min-h-105 space-y-6 overflow-y-auto px-4 py-6 sm:px-7 sm:py-8" aria-live="polite">
-          <AssistantMessage>{t("chat.opening")}</AssistantMessage>
-
-          {questions.slice(0, step).map((item, index) => {
-            const isActive = index === step - 1
-            const answer = answers[item.id].value
-
-            return (
-              <div className="space-y-4" key={item.id}>
-                <AssistantMessage>
-                  <p className="font-semibold text-[#202236]">{item.title}</p>
-                  <p className="mt-1 text-sm leading-6 text-[#697084]">{item.description}</p>
-                </AssistantMessage>
-
-                {isActive ? (
-                  <div className="ps-12 sm:ps-14">
-                    <div className="flex flex-wrap gap-2">
-                      {item.suggestions.map((suggestion) => (
-                        <button key={suggestion} type="button" onClick={() => onChange(suggestion)} aria-pressed={draft === suggestion} className={cn("min-h-10 rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary", draft === suggestion ? "border-primary bg-[#fff0e8] text-[#b84718]" : "border-[#dfe1e7] bg-white text-[#41475a] hover:border-primary/45 hover:bg-[#fff8f4]")}>{suggestion}</button>
-                      ))}
-                    </div>
-                  </div>
-                ) : answer ? (
-                  <StudentMessage>{answer}</StudentMessage>
-                ) : null}
-              </div>
-            )
-          })}
-
-          <div className="flex items-center gap-2 ps-12 text-xs font-medium text-[#39734b] sm:ps-14">
-            <span className="size-2 rounded-full bg-[#6eb27f]" aria-hidden="true" />
-            {t("chat.listening")}
-          </div>
-        </div>
-
-        <div className="border-t border-[#202236]/8 bg-[#fffdf9] p-3 sm:p-4">
-          <label htmlFor="onboarding-answer" className="sr-only">{t("answerLabel")}</label>
-          <div className="flex items-end gap-2 rounded-[1.35rem] border border-[#dfe1e7] bg-white p-2 ps-4 focus-within:border-primary/50 focus-within:ring-3 focus-within:ring-primary/10">
-            <Textarea id="onboarding-answer" value={draft} onChange={(event) => onChange(event.target.value.slice(0, 300))} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && draft.trim()) { event.preventDefault(); onContinue() } }} placeholder={t("chat.placeholder")} className="max-h-28 min-h-11 flex-1 resize-none border-0 bg-transparent px-0 py-2.5 text-base shadow-none focus-visible:ring-0" />
-            <Button type="button" size="icon" onClick={onContinue} disabled={!draft.trim()} aria-label={t("chat.send")} className="size-11 shrink-0 rounded-full shadow-[0_8px_20px_rgba(245,116,54,.24)]">
-              <SendHorizontal className="size-5 rtl:rotate-180" aria-hidden="true" />
-            </Button>
-          </div>
-          <div className="mt-2 flex items-center justify-between gap-3 px-1">
-            <Button type="button" variant="ghost" size="sm" onClick={onBack} className="h-9 px-2 text-[#596074]">
-              <BackIcon className="size-4" aria-hidden="true" />{t("back")}
-            </Button>
-            <p className="text-xs text-muted-foreground">{draft.length} / 300</p>
-          </div>
-        </div>
+    <div>
+      <p className="mb-5 text-xs font-bold uppercase tracking-[.28em] text-primary">{t("progress.question", { current: step })}</p>
+      <h1 ref={headingRef} tabIndex={-1} className="max-w-160 font-heading text-4xl font-extrabold leading-[1.08] tracking-[-.045em] outline-none sm:text-5xl">{question.title}</h1>
+      <p className="mt-5 max-w-145 text-base leading-7 text-[#62697d]">{question.description}</p>
+      <div className="mt-8 flex flex-wrap gap-3">
+        {question.suggestions.map((suggestion) => (
+          <button key={suggestion} type="button" onClick={() => onChange(suggestion)} aria-pressed={draft === suggestion} className={cn("min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary", draft === suggestion ? "border-primary bg-secondary text-secondary-foreground" : "border-[#dfe1e7] bg-white text-[#41475a] hover:border-primary/45 hover:bg-secondary/35")}>{suggestion}</button>
+        ))}
       </div>
-    </div>
-  )
-}
-
-function AssistantMessage({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-start gap-3">
-      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#eee9ff] text-[#7465bd] sm:size-11" aria-hidden="true">
-        <Sparkles className="size-4 sm:size-5" />
-      </span>
-      <div className="max-w-[85%] rounded-e-2xl rounded-es-2xl bg-[#f0ecff] px-4 py-3 text-base leading-7 text-[#30334a] sm:px-5">
-        {children}
+      <div className="mt-6">
+        <label htmlFor="onboarding-answer" className="sr-only">{t("answerLabel")}</label>
+        <Textarea id="onboarding-answer" value={draft} onChange={(event) => onChange(event.target.value.slice(0, 300))} placeholder={t("placeholder")} className="min-h-32 resize-none rounded-2xl border-[#dfe1e7] bg-white px-5 py-4 text-base shadow-none focus-visible:ring-primary/30" />
+        <p className="mt-2 text-end text-xs text-muted-foreground">{draft.length} / 300</p>
       </div>
-    </div>
-  )
-}
-
-function StudentMessage({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex justify-end gap-3 ps-10">
-      <div className="max-w-[85%] rounded-s-2xl rounded-ee-2xl bg-[#ffe6d9] px-4 py-3 text-base leading-7 text-[#60331f] sm:px-5">
-        {children}
+      <div className="mt-7 flex items-center justify-between gap-4">
+        <Button type="button" variant="outline" size="lg" onClick={onBack} className="h-13 rounded-xl px-5">
+          <BackIcon className="size-4" aria-hidden="true" />{t("back")}
+        </Button>
+        <Button type="button" size="lg" onClick={onContinue} disabled={!draft.trim()} className="h-13 rounded-xl px-7 font-bold">
+          {t("continue")}<ContinueIcon className="size-4" aria-hidden="true" />
+        </Button>
       </div>
-      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#fff0e8] text-primary sm:size-11" aria-hidden="true">
-        <CircleCheck className="size-4 sm:size-5" />
-      </span>
     </div>
   )
 }

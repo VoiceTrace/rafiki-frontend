@@ -1195,6 +1195,12 @@
     "continue": "متابعة",
     "answerLabel": "إجابتك",
     "placeholder": "أخبر رفيقي بطريقتك…",
+    "chat": {
+      "opening": "لنبدأ بشيء بسيط.",
+      "listening": "رفيقي يستمع إليك",
+      "placeholder": "اكتب إجابتك…",
+      "send": "إرسال الإجابة"
+    },
     "illustrationAlt": "رفيقي، رفيق التعلّم، يجلس إلى مكتب",
     "progress": {
       "welcome": "مرحبًا · ٠ من ٣",

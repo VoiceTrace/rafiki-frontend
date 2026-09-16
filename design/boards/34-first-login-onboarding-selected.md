@@ -4,7 +4,7 @@
 
 ## Status
 
-**Selected by the user on 2026-09-14 and approved for frontend implementation.** This direction supersedes the provisional Boards 32 and 33 as the visual target while preserving their first-login trigger, interaction specification, Arabic RTL requirement, and A1/A8 boundary.
+**Deprecated for the active question-step presentation on 2026-09-16; retained as the rollback reference.** The welcome composition and product boundaries remain relevant, while [Board 35](35-first-login-onboarding-chat-concept.md) now defines the implemented chat-based question experience. This direction originally superseded the provisional Boards 32 and 33 while preserving their first-login trigger, interaction specification, Arabic RTL requirement, and A1/A8 boundary.
 
 ## Selected direction
 

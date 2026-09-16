@@ -1195,6 +1195,12 @@
     "continue": "Continue",
     "answerLabel": "Your answer",
     "placeholder": "Tell Rafiqi in your own words…",
+    "chat": {
+      "opening": "Let’s start with something easy.",
+      "listening": "Rafiqi is listening",
+      "placeholder": "Type your answer…",
+      "send": "Send answer"
+    },
     "illustrationAlt": "Rafiqi learning companion at a desk",
     "progress": {
       "welcome": "Welcome · 0 of 3",
