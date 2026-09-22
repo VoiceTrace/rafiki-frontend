@@ -1,8 +1,7 @@
 "use client";
 
-import { type FormEvent, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
-  Bot,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -13,7 +12,6 @@ import {
   MessageCircleQuestion,
   NotebookPen,
   Play,
-  SendHorizontal,
   Target,
   UserRoundCheck,
   Video,
@@ -24,10 +22,12 @@ import { cn } from "cn";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
+import { ReviewCompanion } from "./review-companion";
+import type { ReviewData } from "../review-types";
 import { Textarea } from "@/components/ui/textarea";
 
 type Props = {
+  review: ReviewData;
   notes: string;
   onNotesChange: (value: string) => void;
 };
@@ -38,16 +38,12 @@ const questionKeys = ["cancel", "effect", "rest"] as const;
 const materialKeys = ["slides", "reading", "video", "practice"] as const;
 const materialIcons = [FileText, FileText, Video, ListChecks] as const;
 
-export function AfterClassReview({ notes, onNotesChange }: Props) {
+export function AfterClassReview({ notes, onNotesChange, review }: Props) {
   const t = useTranslations("studyCave.afterClass");
   const [selfChecks, setSelfChecks] = useState([true, true, false, false]);
   const [openQuestion, setOpenQuestion] = useState<number | null>(0);
   const [materials, setMaterials] = useState([true, true, false, false]);
   const [openedMaterial, setOpenedMaterial] = useState<number | null>(null);
-  const [reviewChecks, setReviewChecks] = useState([true, false, false]);
-  const [draft, setDraft] = useState("");
-  const [studentReply, setStudentReply] = useState<string | null>(null);
-  const reviewProgress = reviewChecks.filter(Boolean).length;
 
   const summary = useMemo(
     () =>
@@ -55,12 +51,10 @@ export function AfterClassReview({ notes, onNotesChange }: Props) {
         t("download.documentTitle"),
         "",
         t("objective.title"),
-        t("objective.text"),
+        review.lesson?.objective ?? "",
         "",
         t("keyPoints.title"),
-        ...(["one", "two", "three", "four"] as const).map(
-          (key) => `• ${t(`keyPoints.${key}`)}`,
-        ),
+        ...(review.lesson?.key_points ?? []).map((point) => `• ${point}`),
         "",
         t("timeline.title"),
         ...timelineKeys.map(
@@ -91,14 +85,8 @@ export function AfterClassReview({ notes, onNotesChange }: Props) {
         "",
         t("companion.misconception"),
         t("companion.correction"),
-        "",
-        t("companion.title"),
-        ...(["understood", "watched", "retained"] as const).map(
-          (key, index) => `${reviewChecks[index] ? "[x]" : "[ ]"} ${t(`companion.${key}`)}`,
-        ),
-        ...(studentReply ? [studentReply] : []),
       ].join("\n"),
-    [materials, notes, reviewChecks, selfChecks, studentReply, t],
+    [materials, notes, selfChecks, t, review.lesson],
   );
 
   function downloadSummary() {
@@ -111,29 +99,21 @@ export function AfterClassReview({ notes, onNotesChange }: Props) {
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  function sendReply(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const value = draft.trim();
-    if (!value) return;
-    setStudentReply(value);
-    setDraft("");
-  }
-
   return (
     <section className="grid gap-4" aria-label={t("workspaceLabel")}>
       <div className="grid gap-4 lg:grid-cols-2">
         <ReviewCard icon={Target} title={t("objective.title")} tone="text-info-foreground">
-          <p className="leading-6 text-muted-foreground">{t("objective.text")}</p>
+          <p className="leading-6 text-muted-foreground">{review.lesson?.objective ?? "—"}</p>
         </ReviewCard>
 
         <ReviewCard icon={FileText} title={t("keyPoints.title")} tone="text-info-foreground">
           <ul className="grid gap-2">
-            {(["one", "two", "three", "four"] as const).map((key) => (
-              <li className="flex gap-2 leading-5" key={key}>
+            {(review.lesson?.key_points ?? []).map((point) => (
+              <li className="flex gap-2 leading-5" key={point}>
                 <span className="mt-0.5 grid size-4 shrink-0 place-items-center rounded-full bg-success text-success-foreground">
                   <Check className="size-3" aria-hidden="true" />
                 </span>
-                {t(`keyPoints.${key}`)}
+                {point}
               </li>
             ))}
           </ul>
@@ -301,64 +281,7 @@ export function AfterClassReview({ notes, onNotesChange }: Props) {
           </CardContent>
         </Card>
 
-        <Card className="border-assistant bg-assistant/25 shadow-surface">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base font-bold">
-              <Bot className="size-5 text-assistant-foreground" aria-hidden="true" />
-              {t("companion.title")}
-            </CardTitle>
-            <p className="text-xs text-muted-foreground">{t("companion.description")}</p>
-          </CardHeader>
-          <CardContent>
-            <div className="rounded-xl rounded-ss-sm bg-card p-3 text-sm leading-6 shadow-surface">
-              {t("companion.prompt")}
-            </div>
-            <div className="mt-3 grid gap-2">
-              {(["understood", "watched", "retained"] as const).map((key, index) => (
-                <button
-                  type="button"
-                  key={key}
-                  onClick={() =>
-                    setReviewChecks((current) =>
-                      current.map((value, item) => (item === index ? !value : value)),
-                    )
-                  }
-                  className={cn(
-                    "flex min-h-10 items-center gap-2 rounded-lg border px-3 text-start text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
-                    reviewChecks[index]
-                      ? "border-success bg-success text-success-foreground"
-                      : "border-border bg-card hover:bg-muted",
-                  )}
-                >
-                  {reviewChecks[index] ? <CheckCircle2 className="size-4" /> : <Circle className="size-4" />}
-                  {t(`companion.${key}`)}
-                </button>
-              ))}
-            </div>
-            {studentReply ? (
-              <div className="ms-auto mt-3 max-w-[88%] rounded-xl rounded-se-sm bg-secondary p-3 text-sm leading-5">
-                {studentReply}
-              </div>
-            ) : null}
-            <p className="mt-3 text-xs text-muted-foreground" aria-live="polite">
-              {reviewProgress === reviewChecks.length
-                ? t("companion.complete")
-                : t("companion.progress", { complete: reviewProgress, total: reviewChecks.length })}
-            </p>
-            <form className="mt-3 flex gap-2" onSubmit={sendReply}>
-              <Input
-                value={draft}
-                onChange={(event) => setDraft(event.target.value)}
-                placeholder={t("companion.placeholder")}
-                aria-label={t("companion.placeholder")}
-                className="bg-card"
-              />
-              <Button type="submit" size="icon" disabled={!draft.trim()} aria-label={t("companion.send")}>
-                <SendHorizontal className="rtl:-scale-x-100" />
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        {review.lesson && !review.error && <ReviewCompanion key={review.lesson.id} lessonId={review.lesson.id} initialSession={review.session} />}
       </div>
 
       <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 shadow-surface sm:flex-row sm:items-center sm:justify-between">

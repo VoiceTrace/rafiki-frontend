@@ -1554,3 +1554,7 @@ The new frontend keeps these main concepts:
 The current visual design differs through its modern responsive shell, semantic pastel surfaces, tighter cards, cleaner typography, Lucide icon system, bilingual RTL support, and smaller focused workflows.
 
 Major prototype concepts still awaiting implementation include the teacher curriculum map, resource library, student profiles, live classroom analysis, full teacher dashboard, messaging/rooms, Development Club, course catalog, student progress dashboard, resource catalog, lesson detail, and backend persistence.
+
+## Approved review companion integration — 2026-09-22
+
+[Board 41](../design/boards/41-review-companion-chat.md) and [integration contract](review-companion.md) record the user-approved replacement of static After-class companion confirmations with persistent mock chat, question choices, written answers, feedback and hints. Preserve the existing visual design. During class is removed from student Study Cave; prior During-class guidance remains a deprecated v2 reference. Backend lesson content supplies Today's objective and Key points. The other existing sections remain outside this backend integration.
