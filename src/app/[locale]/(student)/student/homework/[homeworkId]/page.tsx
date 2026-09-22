@@ -1,13 +1,19 @@
-import { notFound } from "next/navigation";
-import { StudentHomeworkDetail } from "@/features/student-homework/components/student-homework-page";
-import { isHomeworkId } from "@/features/student-homework/homework-data";
+import { notFound } from "next/navigation"
+import { getBackendAccessToken } from "@/features/auth/server/dal"
+import { StudentHomeworkMCQ } from "@/features/student-homework/components/student-homework-mcq"
+import { getMyAssignment } from "@/lib/api"
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ homeworkId: string }>;
-}) {
-  const { homeworkId } = await params;
-  if (!isHomeworkId(homeworkId)) notFound();
-  return <StudentHomeworkDetail homeworkId={homeworkId} />;
+interface Props {
+  params: Promise<{ homeworkId: string }>
+}
+
+export default async function Page({ params }: Props) {
+  const { homeworkId } = await params
+  const token = await getBackendAccessToken()
+  if (!token) notFound()
+
+  const assignment = await getMyAssignment(token, homeworkId).catch(() => null)
+  if (!assignment) notFound()
+
+  return <StudentHomeworkMCQ assignment={assignment} accessToken={token} />
 }

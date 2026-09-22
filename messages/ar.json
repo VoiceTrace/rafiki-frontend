@@ -592,6 +592,97 @@
       "description": "ملخص قصير بعد محاولة حل السؤال.",
       "answer": "تؤثر السيارة والدراجة بالقوة نفسها في بعضهما. يختلف تسارعهما لاختلاف كتلتيهما.",
       "next": "عد إلى السؤال لمراجعة إجابتك أو اطلب دفعة أخرى من رفيقي."
+    },
+    "assignmentStatus": {
+      "assigned": "لم يُبدأ بعد",
+      "in_progress": "قيد التقدم",
+      "submitted": "تم التسليم"
+    },
+    "list": {
+      "eyebrow": "الواجبات الحالية",
+      "title": "الواجبات",
+      "description": "اختر واجباً للعمل عليه.",
+      "label": "قائمة الواجبات الحالية",
+      "empty": "لا توجد واجبات مسندة بعد.",
+      "questions": "أسئلة"
+    },
+    "mcq": {
+      "submit": "تسليم الإجابات",
+      "submitted": "تم التسليم!",
+      "score": "{correct} من {total} صحيح · {percent}%",
+      "submitError": "فشل التسليم. يرجى المحاولة مجدداً."
+    }
+  },
+  "teacherHomework": {
+    "back": "رجوع",
+    "status": {
+      "draft": "مسودة",
+      "distributed": "موزَّع",
+      "closed": "مغلق"
+    },
+    "list": {
+      "eyebrow": "الواجبات",
+      "title": "الواجبات الدراسية",
+      "description": "أنشئ واجبات تحتوي على أسئلة اختيار متعدد ووزِّعها على طلابك.",
+      "new": "واجب جديد",
+      "questionCount": "{count} أسئلة",
+      "empty": {
+        "title": "لا توجد واجبات بعد",
+        "description": "أنشئ واجبك الأول للبدء.",
+        "cta": "إنشاء واجب"
+      }
+    },
+    "create": {
+      "title": "واجب جديد"
+    },
+    "edit": {
+      "title": "تعديل الواجب",
+      "questions": "الأسئلة",
+      "noQuestions": "لم يُضَف أي سؤال بعد.",
+      "correct": "صحيح",
+      "concept": "المفهوم",
+      "delete": "حذف الواجب",
+      "deleteQuestion": "حذف السؤال",
+      "confirmDelete": "هل تريد حذف هذا الواجب؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "form": {
+      "details": "تفاصيل الواجب",
+      "lessonId": "معرّف الحصة",
+      "lessonIdPlaceholder": "مثال: lesson-ch5-forces",
+      "title": "العنوان",
+      "titlePlaceholder": "مثال: مراجعة الفصل الخامس",
+      "description": "الوصف",
+      "descriptionPlaceholder": "وصف اختياري للطلاب",
+      "dueAt": "تاريخ التسليم",
+      "save": "حفظ التغييرات",
+      "create": "إنشاء الواجب"
+    },
+    "question": {
+      "addTitle": "إضافة سؤال",
+      "text": "نص السؤال",
+      "textPlaceholder": "اكتب سؤالك هنا…",
+      "conceptRef": "مرجع المفهوم",
+      "conceptRefPlaceholder": "مثال: newton-third-law",
+      "options": "خيارات الإجابة",
+      "optionPlaceholder": "الخيار {id}",
+      "addOption": "إضافة خيار",
+      "removeOption": "حذف الخيار",
+      "markCorrect": "تحديد الخيار {id} كإجابة صحيحة",
+      "correctHint": "حدد زر الاختيار بجانب الإجابة الصحيحة.",
+      "add": "إضافة السؤال"
+    },
+    "distribute": {
+      "trigger": "توزيع",
+      "title": "توزيع الواجب",
+      "description": "اختر الطلاب الذين سيتلقون هذا الواجب.",
+      "selected": "{count} من {total} محدد",
+      "selectAll": "تحديد الكل",
+      "clearAll": "إلغاء التحديد",
+      "noStudents": "يرجى تحديد طالب واحد على الأقل.",
+      "noStudentsAvailable": "لا يوجد طلاب.",
+      "dueAt": "تجاوز تاريخ التسليم (اختياري)",
+      "cancel": "إلغاء",
+      "confirm": "توزيع على {count}"
     }
   },
   "studyCave": {

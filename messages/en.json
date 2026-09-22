@@ -592,6 +592,97 @@
       "description": "A short summary after you have attempted the question.",
       "answer": "Both the car and the motorbike exert the same force on each other. Their accelerations differ because their masses differ.",
       "next": "Return to Question to revise your answer or ask Rafiqi for another nudge."
+    },
+    "assignmentStatus": {
+      "assigned": "Not started",
+      "in_progress": "In progress",
+      "submitted": "Submitted"
+    },
+    "list": {
+      "eyebrow": "Current homework",
+      "title": "Homework",
+      "description": "Choose an assignment to work on.",
+      "label": "Current homework assignments",
+      "empty": "No homework assigned yet.",
+      "questions": "questions"
+    },
+    "mcq": {
+      "submit": "Submit answers",
+      "submitted": "Submitted!",
+      "score": "{correct} / {total} correct · {percent}%",
+      "submitError": "Failed to submit. Please try again."
+    }
+  },
+  "teacherHomework": {
+    "back": "Back",
+    "status": {
+      "draft": "Draft",
+      "distributed": "Distributed",
+      "closed": "Closed"
+    },
+    "list": {
+      "eyebrow": "Homework",
+      "title": "Homework assignments",
+      "description": "Create assignments with MCQ questions and distribute them to your students.",
+      "new": "New assignment",
+      "questionCount": "{count} questions",
+      "empty": {
+        "title": "No assignments yet",
+        "description": "Create your first assignment to get started.",
+        "cta": "Create assignment"
+      }
+    },
+    "create": {
+      "title": "New assignment"
+    },
+    "edit": {
+      "title": "Edit assignment",
+      "questions": "Questions",
+      "noQuestions": "No questions added yet.",
+      "correct": "Correct",
+      "concept": "Concept",
+      "delete": "Delete assignment",
+      "deleteQuestion": "Delete question",
+      "confirmDelete": "Delete this assignment? This cannot be undone."
+    },
+    "form": {
+      "details": "Assignment details",
+      "lessonId": "Lesson ID",
+      "lessonIdPlaceholder": "e.g. lesson-ch5-forces",
+      "title": "Title",
+      "titlePlaceholder": "e.g. Chapter 5 Review",
+      "description": "Description",
+      "descriptionPlaceholder": "Optional description for students",
+      "dueAt": "Due date",
+      "save": "Save changes",
+      "create": "Create assignment"
+    },
+    "question": {
+      "addTitle": "Add a question",
+      "text": "Question text",
+      "textPlaceholder": "Write your question here…",
+      "conceptRef": "Concept reference",
+      "conceptRefPlaceholder": "e.g. newton-third-law",
+      "options": "Answer options",
+      "optionPlaceholder": "Option {id}",
+      "addOption": "Add option",
+      "removeOption": "Remove option",
+      "markCorrect": "Mark option {id} as correct",
+      "correctHint": "Select the radio button next to the correct answer.",
+      "add": "Add question"
+    },
+    "distribute": {
+      "trigger": "Distribute",
+      "title": "Distribute assignment",
+      "description": "Select which students receive this assignment.",
+      "selected": "{count} of {total} selected",
+      "selectAll": "Select all",
+      "clearAll": "Clear",
+      "noStudents": "Please select at least one student.",
+      "noStudentsAvailable": "No students found.",
+      "dueAt": "Override due date (optional)",
+      "cancel": "Cancel",
+      "confirm": "Distribute to {count}"
     }
   },
   "studyCave": {
