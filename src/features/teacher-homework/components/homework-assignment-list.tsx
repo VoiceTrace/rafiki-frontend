@@ -7,7 +7,6 @@ import type { AssignmentRead } from "@/types/homework"
 
 interface Props {
   assignments: AssignmentRead[]
-  locale: string
 }
 
 const STATUS_STYLES: Record<string, string> = {
@@ -16,7 +15,7 @@ const STATUS_STYLES: Record<string, string> = {
   closed: "bg-muted text-muted-foreground",
 }
 
-export async function HomeworkAssignmentList({ assignments, locale }: Props) {
+export async function HomeworkAssignmentList({ assignments }: Props) {
   const t = await getTranslations("teacherHomework")
 
   return (

@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useTransition } from "react"
+import { useActionState } from "react"
 import { ArrowLeft, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
