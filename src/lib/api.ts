@@ -1,6 +1,10 @@
 import type { User } from "@/types/user"
 
-const API_URL = (process.env.API_URL ?? process.env.AUTH_API_URL)?.replace(/\/$/, "")
+const API_URL = (
+  process.env.API_URL ??
+  process.env.AUTH_API_URL ??
+  process.env.NEXT_PUBLIC_API_URL
+)?.replace(/\/$/, "")
 
 function authHeaders(accessToken: string) {
   return { Authorization: `Bearer ${accessToken}` }
