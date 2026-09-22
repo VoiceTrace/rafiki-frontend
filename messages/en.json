@@ -1255,5 +1255,41 @@
       "learning": "Explanation style",
       "empty": "Still forming"
     }
+  },
+  "reviewChat": {
+    "title": "Rafiqi review companion",
+    "demo": "Demo responses",
+    "description": "Answer a question, ask for help, or explore a hint.",
+    "start": "Start review",
+    "history": "Review conversation",
+    "question": "Question {number}",
+    "check": "Check answer",
+    "written": "Write your answer below, or ask for help.",
+    "hint": "Need a hint?",
+    "anotherHint": "Show another hint",
+    "hintLevel": "Hint {level}",
+    "explain": "Explain this",
+    "next": "Next question",
+    "finish": "Finish review",
+    "complete": "Review complete. You can still ask for help.",
+    "retry": "{attempts} of 3 attempts used. Edit your answer and try again.",
+    "composer": "Ask a question or write your answer…",
+    "send": "Send message",
+    "you": "You",
+    "assistant": "Rafiqi",
+    "retryRequest": "Retry sending",
+    "reload": "Reload saved review",
+    "loadError": "We could not load the lesson review. Please try again.",
+    "empty": "No review lessons are available yet.",
+    "errors": {
+      "request": "Your request could not be confirmed. Retry safely or reload the saved review.",
+      "conflict": "This review changed, or this action is no longer available. Reload to continue.",
+      "auth": "Please sign in with a student account to continue."
+    },
+    "actions": {
+      "hint": "Can you give me a hint?",
+      "help": "Please explain this.",
+      "next": "Let’s continue."
+    }
   }
 }

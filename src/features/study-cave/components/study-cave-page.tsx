@@ -1,16 +1,10 @@
 "use client";
 
-import { type FormEvent, useRef, useState } from "react";
+import { type FormEvent, useState } from "react";
 import {
-  Bot,
   CheckCircle2,
-  ChevronRight,
   FileText,
-  Lightbulb,
-  Pencil,
-  Plus,
-  Radio,
-  Sparkles,
+  ChevronRight,
   Target,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -24,7 +18,8 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import type { ReviewData } from "../review-types";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { AfterClassReview } from "./after-class-review";
 import { StudyCaveHomeworkPanel } from "./study-cave-homework-panel";
 import { StudyCaveCardTitle } from "./study-cave-card-title";
@@ -32,42 +27,23 @@ import { StudyCavePhaseTabs } from "./study-cave-phase-tabs";
 import { StudyCaveQuestionCard, type StudyCaveQuestion } from "./study-cave-question-card";
 import { StudyCaveWarmupPanel } from "./study-cave-warmup-panel";
 import {
-  StudentSessionGate,
-  type StudentSessionState,
-} from "@/features/live-session/components/student-session-gate";
-import {
   studyCavePhases,
   type StudyCavePhase,
 } from "@/features/study-cave/types";
 
 const phases = studyCavePhases;
 
-function SessionContentFrame({
-  enabled,
-  initialState,
-  children,
-}: {
-  enabled: boolean;
-  initialState?: StudentSessionState;
-  children: React.ReactNode;
-}) {
-  return enabled ? (
-    <StudentSessionGate initialState={initialState}>{children}</StudentSessionGate>
-  ) : (
-    <>{children}</>
-  );
-}
-
 export function StudyCavePage({
   initialPhase = "before",
-  showHomeworkState = false,
-  initialSessionState,
+  review,
 }: {
   initialPhase?: StudyCavePhase;
-  showHomeworkState?: boolean;
-  initialSessionState?: StudentSessionState;
+  review: ReviewData;
 }) {
   const t = useTranslations("studyCave");
+  const r = useTranslations("reviewChat");
+  const router = useRouter();
+  const pathname = usePathname();
   const [phase, setPhase] = useState<StudyCavePhase>(initialPhase);
   const [checks, setChecks] = useState([true, true, false, false]);
   const [question, setQuestion] = useState("");
@@ -82,20 +58,11 @@ export function StudyCavePage({
     () =>
       `${t("notes.heading")}\n\n• ${t("notes.one")}\n• ${t("notes.two")}\n• ${t("notes.three")}\n\n${t("notes.examples")}\n\n• ${t("notes.exampleOne")}\n• ${t("notes.exampleTwo")}`,
   );
-  const [added, setAdded] = useState(false);
-  const notesRef = useRef<HTMLTextAreaElement>(null);
   const progress = Math.round(
     (checks.filter(Boolean).length / checks.length) * 100,
   );
-  const values = {
-    subject: ["physics", "chemistry"],
-    chapter: ["forces", "energy"],
-    lesson: ["newton", "balanced"],
-  } as const;
-
   const subtitles: Record<StudyCavePhase, string> = {
     before: t("beforeSubtitle"),
-    during: t("duringSubtitle"),
     after: t("afterSubtitle"),
     homework: t("homeworkSubtitle"),
   };
@@ -129,11 +96,6 @@ export function StudyCavePage({
       setQuestionSuccess(true);
     }, 700);
   }
-  function addToNotes(text: string) {
-    if (!notes.includes(text)) setNotes((current) => `${current}\n\n• ${text}`);
-    setAdded(true);
-    notesRef.current?.focus();
-  }
 
   return (
     <div
@@ -152,30 +114,24 @@ export function StudyCavePage({
         className="grid gap-3 md:grid-cols-3"
         aria-label={t("selectorsLabel")}
       >
-        {(["subject", "chapter", "lesson"] as const).map((key) => (
-          <label
-            className="grid gap-1.5 text-xs font-medium text-muted-foreground"
-            key={key}
-          >
-            {t(key)}
-            <Select defaultValue={values[key][0]}>
-              <SelectTrigger className="h-10 w-full bg-card px-3 text-foreground">
-                <span>{t(`values.${values[key][0]}`)}</span>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {values[key].map((value) => (
-                    <SelectItem value={value} key={value}>
-                      {t(`values.${value}`)}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
+        {(["subject", "chapter", "lesson"] as const).map((key) => {
+          const field = key === "lesson" ? "id" : key;
+          const options = review.lessons.filter((item) => key === "subject" || item.subject === review.lesson?.subject).filter((item) => key !== "lesson" || item.chapter === review.lesson?.chapter);
+          const unique = options.filter((item, index) => options.findIndex((other) => other[field] === item[field]) === index);
+          return <label className="grid gap-1.5 text-xs font-medium text-muted-foreground" key={key}>{t(key)}
+            <Select value={review.lesson?.[field] ?? null} disabled={!unique.length} onValueChange={(value) => {
+              const lesson = unique.find((item) => item[field] === value);
+              if (lesson) router.push(`${pathname}?phase=${phase}&lesson_id=${encodeURIComponent(lesson.id)}`);
+            }}>
+              <SelectTrigger aria-label={t(key)} className="h-10 w-full bg-card px-3 text-foreground"><span>{key === "lesson" ? review.lesson?.title ?? "—" : review.lesson?.[key] ?? "—"}</span></SelectTrigger>
+              <SelectContent><SelectGroup>{unique.map((item) => <SelectItem value={item[field]} key={item[field]}>{key === "lesson" ? item.title : item[field]}</SelectItem>)}</SelectGroup></SelectContent>
             </Select>
-          </label>
-        ))}
+          </label>;
+        })}
       </section>
-      <StudyCavePhaseTabs phases={phases} activePhase={phase} onSelect={setPhase} t={t} />
+      {review.error && <div role="alert" className="rounded-xl border border-destructive/30 bg-card p-4 text-sm"><p>{r("loadError")}</p><Button variant="outline" className="mt-2" onClick={() => router.refresh()}>{r("reload")}</Button></div>}
+      {!review.error && !review.lesson && <p className="rounded-xl bg-card p-4">{r("empty")}</p>}
+      <StudyCavePhaseTabs phases={phases} activePhase={phase} lessonId={review.lesson?.id} onSelect={setPhase} t={t} />
       {phase === "before" ? (
         <section className="grid gap-4 lg:grid-cols-[minmax(0,.95fr)_minmax(20rem,1.05fr)]">
           <div className="grid content-start gap-4">
@@ -273,123 +229,9 @@ export function StudyCavePage({
           </div>
         </section>
       ) : phase === "after" ? (
-        <AfterClassReview notes={notes} onNotesChange={setNotes} />
-      ) : phase === "homework" && showHomeworkState ? (
-        <StudyCaveHomeworkPanel />
+        <AfterClassReview key={review.lesson?.id ?? "empty"} notes={notes} onNotesChange={setNotes} review={review} />
       ) : (
-        <SessionContentFrame
-          enabled={phase === "during"}
-          initialState={initialSessionState}
-        >
-          <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,.9fr)]">
-          <div className="grid content-start gap-4">
-            <Card className="shadow-surface">
-              <CardHeader>
-                <StudyCaveCardTitle icon={Pencil}>{t("notes.title")}</StudyCaveCardTitle>
-                <p className="text-xs text-muted-foreground">
-                  {t("notes.description")}
-                </p>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  ref={notesRef}
-                  value={notes}
-                  onChange={(event) => setNotes(event.target.value)}
-                  className="min-h-70 bg-card text-sm leading-6"
-                  aria-label={t("notes.editorLabel")}
-                />
-                <p className="mt-2 text-end text-xs text-muted-foreground">
-                  {t("notes.saved")}
-                </p>
-              </CardContent>
-            </Card>
-              <StudyCaveQuestionCard
-              t={t}
-              question={question}
-              setQuestion={setQuestion}
-              questions={questions}
-              onSubmit={addQuestion}
-              onUpdate={updateQuestion}
-              onDelete={deleteQuestion}
-              onRetry={retryQuestion}
-              success={questionSuccess}
-            />
-          </div>
-          <div className="grid content-start gap-4">
-            <Card className="border-assistant bg-assistant/35 shadow-surface">
-              <CardHeader>
-                <StudyCaveCardTitle icon={Bot} tone="text-assistant-foreground">
-                  {t("noticed.title")}
-                </StudyCaveCardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="grid gap-3 text-sm">
-                  {["one", "two", "three"].map((key) => (
-                    <li className="flex gap-2" key={key}>
-                      <CheckCircle2 className="size-4 shrink-0 text-success-foreground" />
-                      {t(`noticed.${key}`)}
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="mt-5 w-full bg-card text-secondary-foreground"
-                  onClick={() => addToNotes(t("noticed.highlightText"))}
-                >
-                  <Sparkles />
-                  {added ? t("noticed.highlighted") : t("noticed.highlight")}
-                </Button>
-              </CardContent>
-            </Card>
-            <Card className="shadow-surface">
-              <CardHeader>
-                <StudyCaveCardTitle icon={FileText} tone="text-info-foreground">
-                  {t("matching.title")}
-                </StudyCaveCardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-xl bg-secondary p-4 text-sm">
-                  <ul className="list-disc space-y-1 ps-5">
-                    <li>{t("matching.one")}</li>
-                    <li>{t("matching.two")}</li>
-                    <li>{t("matching.three")}</li>
-                  </ul>
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="mt-2 text-secondary-foreground"
-                  onClick={() => addToNotes(t("matching.text"))}
-                >
-                  <Plus />
-                  {t("matching.add")}
-                </Button>
-              </CardContent>
-            </Card>
-            <Card className="shadow-surface">
-              <CardHeader>
-                <StudyCaveCardTitle icon={Radio} tone="text-assistant-foreground">
-                  {t("context.title")}
-                </StudyCaveCardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm leading-6">{t("context.text")}</p>
-                <div className="mt-4 border-t pt-3">
-                  <div className="flex items-center gap-2 font-semibold">
-                    <Lightbulb className="size-4 text-primary" />
-                    {t("support.title")}
-                  </div>
-                  <ul className="mt-2 list-disc ps-5 text-sm">
-                    <li>{t("support.one")}</li>
-                    <li>{t("support.two")}</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          </section>
-        </SessionContentFrame>
+        <StudyCaveHomeworkPanel />
       )}
     </div>
   );
