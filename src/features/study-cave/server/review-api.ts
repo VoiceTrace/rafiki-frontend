@@ -1,6 +1,6 @@
 import "server-only";
 import { getBackendAccessToken, getSessionUser } from "@/features/auth/server/dal";
-import type { ReviewData, ReviewLesson, ReviewSession } from "../review-types";
+import type { ReviewChapter, ReviewData, ReviewLesson, ReviewSession, ReviewSubject } from "../review-types";
 
 export class ReviewApiError extends Error {
   constructor(public status: number) { super("review_request_failed"); }
@@ -19,22 +19,35 @@ export async function reviewRequest<T>(path: string, init?: RequestInit): Promis
   return response.json() as Promise<T>;
 }
 
-export async function loadReview(locale: string, lessonId?: string): Promise<ReviewData> {
-  let lessons: ReviewLesson[] = [];
-  let lesson: ReviewLesson | null = null;
+export async function loadReview(locale: string, lessonId?: string, subjectId?: string, chapterId?: string): Promise<ReviewData> {
+  const data: ReviewData = { subjects: [], chapters: [], lessons: [], lesson: null, session: null, error: false };
   try {
-    lessons = await reviewRequest<ReviewLesson[]>(`/study-lessons?locale=${locale}`);
-    lesson = lessons.find((item) => item.id === lessonId) ?? (lessonId ? null : lessons[0] ?? null);
-    if (!lesson) return { lessons, lesson: null, session: null, error: Boolean(lessonId) };
-    let session: ReviewSession | null = null;
+    data.subjects = await reviewRequest<ReviewSubject[]>(`/study-subjects?locale=${locale}`);
+    const selected = lessonId ? await reviewRequest<ReviewLesson>(`/study-lessons/${encodeURIComponent(lessonId)}?locale=${locale}`) : null;
+    // A direct lesson link is authoritative and resolves its parent selectors.
+    const subject = selected?.subject_id ?? subjectId;
+    const chapter = selected?.chapter_id ?? chapterId;
+    if (!subject) {
+      if (chapter) throw new ReviewApiError(404);
+      return data;
+    }
+    if (!data.subjects.some((item) => item.id === subject)) throw new ReviewApiError(404);
+    data.subjectId = subject;
+    data.chapters = await reviewRequest<ReviewChapter[]>(`/study-subjects/${encodeURIComponent(subject)}/chapters?locale=${locale}`);
+    if (!chapter) return data;
+    if (!data.chapters.some((item) => item.id === chapter)) throw new ReviewApiError(404);
+    data.chapterId = chapter;
+    data.lessons = await reviewRequest<ReviewLesson[]>(`/study-lessons?chapter_id=${encodeURIComponent(chapter)}&locale=${locale}`);
+    if (!selected) return data;
+    if (!data.lessons.some((item) => item.id === selected.id)) throw new ReviewApiError(404);
     try {
-      session = await reviewRequest<ReviewSession>(`/study-sessions/by-lesson/${encodeURIComponent(lesson.id)}?locale=${locale}`);
+      data.session = await reviewRequest<ReviewSession>(`/study-sessions/by-lesson/${encodeURIComponent(selected.id)}?locale=${locale}`);
     } catch (error) {
       if (!(error instanceof ReviewApiError) || error.status !== 404) throw error;
     }
-    return { lessons, lesson: session?.lesson ?? lesson, session, error: false };
+    data.lesson = data.session?.lesson ?? selected;
+    return data;
   } catch {
-    return { lessons, lesson, session: null, error: true };
+    return { ...data, lesson: null, session: null, error: true };
   }
 }
-

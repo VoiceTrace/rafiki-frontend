@@ -10,7 +10,7 @@ Requires the paired backend review-companion change and its migration. Endpoints
 
 ## Lifecycle
 
-Read-only page loads retrieve content and an existing session without creating one. Start review creates or resumes one permanent student/lesson session. The database enforces uniqueness. Lesson selection is URL-backed; only available backend lessons are offered (initially Newton's Third Law). Unknown lessons, empty catalogs and unavailable services do not fabricate lesson content.
+Read-only page loads retrieve content and an existing session without creating one. Start review creates or resumes one permanent student/lesson session. The database enforces uniqueness. Lesson selection is URL-backed; only available backend lessons are offered through stable subject/chapter/lesson IDs. Unknown lessons, empty catalogs and unavailable services do not fabricate lesson content.
 
 Message actions contain a UUID request ID and expected version. Failed sends retain the draft and request ID for safe retry. Conflict responses offer reload. Reopening the route restores transcript, answers, hints, selected submitted option and completion. Historical messages keep their original language; changing locale translates authored lesson/questions and interface copy.
 
@@ -25,3 +25,15 @@ During class is removed from the Study Cave navigation. Legacy `?phase=during` o
 Keep the current Card, Button and Textarea primitives. Question choices use native radio inputs, and revealed hints use native details/summary for keyboard access. Use logical spacing and translated copy in en/ar. The approved image depicts successive states of one conversation, not three panels or tabs.
 
 Validation: TypeScript after Next route generation; targeted ESLint; production build; live Next MCP/browser checks and the paired backend tests. See PR validation notes for actual results and environment limitations.
+
+## Catalog sequence — 2026-09-23
+
+The server integration loads `/study-subjects`, `/study-subjects/{id}/chapters`, and `/study-lessons?chapter_id=...` in order. Subject/chapter selection is URL-backed (`subject_id`, `chapter_id`); no lesson is auto-selected. Changing a parent clears dependent IDs. A `lesson_id` deep link resolves its parents from the API. Both localized Study Cave routes support this sequence, back/forward navigation, and reload. No session is created until Start review.
+
+Initially chapter/lesson controls are disabled. Loading disables selector interactions and hides stale lesson content. Empty and failed catalog responses are rendered without fabricated content. Language-independent IDs keep selection stable between English and Arabic. Lesson data includes backend concept references, with no additional concept panel required by this design.
+
+The four demo lessons are Newton’s Third Law and Balanced Forces (Physics / Forces and Motion), Kinetic Energy (Physics / Energy), and Equivalent Fractions (Mathematics / Fractions). The non-integrated Newton-specific demo cards and download stay on Newton only; other lessons show their stored objective/key points and companion, with unavailable notices for before-class/homework content. This prevents showing Newton notes/materials under a mathematics lesson.
+
+Backend PR #3's latest catalog migration must run before this frontend version. Existing session UUIDs, history and completion survive the migration. AI stays mocked.
+
+Catalog validation: production build, TypeScript and targeted ESLint passed; Next MCP reports no compilation/runtime errors. Browser checks confirmed initial dependent controls and parent-selection reset. The user took over the remaining manual catalog journey; full catalog browser acceptance is pending. Full repository lint retains the unrelated profile-form.tsx:41 effect error.

@@ -1290,6 +1290,13 @@
       "hint": "Can you give me a hint?",
       "help": "Please explain this.",
       "next": "Let’s continue."
-    }
+    },
+    "selectSubject": "Select a subject",
+    "selectChapter": "Select a chapter",
+    "selectLesson": "Select a lesson",
+    "chooseLesson": "Choose a subject, then a chapter and lesson to open your review.",
+    "loadingCatalog": "Loading catalog…",
+    "beforeUnavailable": "Before-class activities are not available for this demo lesson. Open After class to review it.",
+    "homeworkUnavailable": "Homework is not available for this demo lesson."
   }
 }
