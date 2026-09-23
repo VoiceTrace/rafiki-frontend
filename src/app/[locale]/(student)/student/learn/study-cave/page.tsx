@@ -9,6 +9,6 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   await verifySession(safeLocale, "student");
   const query = await searchParams;
   const routeState = parseStudyCaveRouteState(query);
-  const review = await loadReview(safeLocale, typeof query.lesson_id === "string" ? query.lesson_id : undefined);
-  return <StudyCavePage key={`${review.lesson?.id}:${routeState.initialPhase}`} {...routeState} review={review} />;
+  const review = await loadReview(safeLocale, typeof query.lesson_id === "string" ? query.lesson_id : undefined, typeof query.subject_id === "string" ? query.subject_id : undefined, typeof query.chapter_id === "string" ? query.chapter_id : undefined);
+  return <StudyCavePage key={`${review.subjectId}:${review.chapterId}:${review.lesson?.id}:${routeState.initialPhase}`} {...routeState} review={review} />;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useState, useTransition } from "react";
 import {
   CheckCircle2,
   FileText,
@@ -44,6 +44,7 @@ export function StudyCavePage({
   const r = useTranslations("reviewChat");
   const router = useRouter();
   const pathname = usePathname();
+  const [catalogPending, startCatalogTransition] = useTransition();
   const [phase, setPhase] = useState<StudyCavePhase>(initialPhase);
   const [checks, setChecks] = useState([true, true, false, false]);
   const [question, setQuestion] = useState("");
@@ -115,24 +116,36 @@ export function StudyCavePage({
         aria-label={t("selectorsLabel")}
       >
         {(["subject", "chapter", "lesson"] as const).map((key) => {
-          const field = key === "lesson" ? "id" : key;
-          const options = review.lessons.filter((item) => key === "subject" || item.subject === review.lesson?.subject).filter((item) => key !== "lesson" || item.chapter === review.lesson?.chapter);
-          const unique = options.filter((item, index) => options.findIndex((other) => other[field] === item[field]) === index);
+          const options = key === "subject" ? review.subjects : key === "chapter" ? review.chapters : review.lessons;
+          const value = key === "subject" ? review.subjectId : key === "chapter" ? review.chapterId : review.lesson?.id;
           return <label className="grid gap-1.5 text-xs font-medium text-muted-foreground" key={key}>{t(key)}
-            <Select value={review.lesson?.[field] ?? null} disabled={!unique.length} onValueChange={(value) => {
-              const lesson = unique.find((item) => item[field] === value);
-              if (lesson) router.push(`${pathname}?phase=${phase}&lesson_id=${encodeURIComponent(lesson.id)}`);
+            <Select value={value ?? null} disabled={catalogPending || !options.length} onValueChange={(selected) => {
+              if (!selected) return;
+              const query = new URLSearchParams({ phase });
+              if (key === "subject") query.set("subject_id", selected);
+              else {
+                if (review.subjectId) query.set("subject_id", review.subjectId);
+                if (key === "chapter") query.set("chapter_id", selected);
+                else {
+                  if (review.chapterId) query.set("chapter_id", review.chapterId);
+                  query.set("lesson_id", selected);
+                }
+              }
+              startCatalogTransition(() => router.push(`${pathname}?${query.toString()}`, { scroll: false }));
             }}>
-              <SelectTrigger aria-label={t(key)} className="h-10 w-full bg-card px-3 text-foreground"><span>{key === "lesson" ? review.lesson?.title ?? "—" : review.lesson?.[key] ?? "—"}</span></SelectTrigger>
-              <SelectContent><SelectGroup>{unique.map((item) => <SelectItem value={item[field]} key={item[field]}>{key === "lesson" ? item.title : item[field]}</SelectItem>)}</SelectGroup></SelectContent>
+              <SelectTrigger aria-label={t(key)} className="h-10 w-full bg-card px-3 text-foreground"><span>{options.find((item) => item.id === value)?.title ?? r(`select${key === "subject" ? "Subject" : key === "chapter" ? "Chapter" : "Lesson"}`)}</span></SelectTrigger>
+              <SelectContent><SelectGroup>{options.map((item) => <SelectItem value={item.id} key={item.id}>{item.title}</SelectItem>)}</SelectGroup></SelectContent>
             </Select>
           </label>;
         })}
       </section>
       {review.error && <div role="alert" className="rounded-xl border border-destructive/30 bg-card p-4 text-sm"><p>{r("loadError")}</p><Button variant="outline" className="mt-2" onClick={() => router.refresh()}>{r("reload")}</Button></div>}
-      {!review.error && !review.lesson && <p className="rounded-xl bg-card p-4">{r("empty")}</p>}
-      <StudyCavePhaseTabs phases={phases} activePhase={phase} lessonId={review.lesson?.id} onSelect={setPhase} t={t} />
-      {phase === "before" ? (
+      {catalogPending && <p role="status" className="text-sm text-muted-foreground">{r("loadingCatalog")}</p>}
+      {!review.error && !review.lesson && <p className="rounded-xl bg-card p-4">{r((!review.subjects.length || (review.subjectId && !review.chapters.length) || (review.chapterId && !review.lessons.length)) ? "empty" : "chooseLesson")}</p>}
+      <StudyCavePhaseTabs phases={phases} activePhase={phase} lessonId={review.lesson?.id} subjectId={review.subjectId} chapterId={review.chapterId} onSelect={setPhase} t={t} />
+      {!review.lesson || catalogPending ? null : phase === "before" && review.lesson.id !== "newton-third-law" ? (
+        <p className="rounded-xl bg-card p-4">{r("beforeUnavailable")}</p>
+      ) : phase === "before" ? (
         <section className="grid gap-4 lg:grid-cols-[minmax(0,.95fr)_minmax(20rem,1.05fr)]">
           <div className="grid content-start gap-4">
             <Card className="shadow-surface">
@@ -230,6 +243,8 @@ export function StudyCavePage({
         </section>
       ) : phase === "after" ? (
         <AfterClassReview key={review.lesson?.id ?? "empty"} notes={notes} onNotesChange={setNotes} review={review} />
+      ) : review.lesson.id !== "newton-third-law" ? (
+        <p className="rounded-xl bg-card p-4">{r("homeworkUnavailable")}</p>
       ) : (
         <StudyCaveHomeworkPanel />
       )}

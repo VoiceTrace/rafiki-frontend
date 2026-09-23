@@ -1558,3 +1558,9 @@ Major prototype concepts still awaiting implementation include the teacher curri
 ## Approved review companion integration — 2026-09-22
 
 [Board 41](../design/boards/41-review-companion-chat.md) and [integration contract](review-companion.md) record the user-approved replacement of static After-class companion confirmations with persistent mock chat, question choices, written answers, feedback and hints. Preserve the existing visual design. During class is removed from student Study Cave; prior During-class guidance remains a deprecated v2 reference. Backend lesson content supplies Today's objective and Key points. The other existing sections remain outside this backend integration.
+
+## Approved catalog sequence — 2026-09-23
+
+The user requested a persisted Subject → Chapter → Lesson catalog. Preserve the existing three-selector styling. Start with subject selection; changing a parent clears dependent selections, and no review is shown before a lesson is selected. Stable IDs in URLs survive locale changes. Direct lesson links resolve their parents. Catalog content and concept references are bilingual and AI remains mocked. This supersedes the first-lesson auto-selection documented in the initial integration.
+
+The original Newton demo cards outside the review scope are only shown for Newton’s Third Law. Other lessons show their own stored objective/key points and companion; they must not inherit Newton-specific materials, notes, teacher answers, or homework.

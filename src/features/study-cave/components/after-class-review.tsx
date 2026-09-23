@@ -40,6 +40,7 @@ const materialIcons = [FileText, FileText, Video, ListChecks] as const;
 
 export function AfterClassReview({ notes, onNotesChange, review }: Props) {
   const t = useTranslations("studyCave.afterClass");
+  const hasLegacyDemo = review.lesson?.id === "newton-third-law";
   const [selfChecks, setSelfChecks] = useState([true, true, false, false]);
   const [openQuestion, setOpenQuestion] = useState<number | null>(0);
   const [materials, setMaterials] = useState([true, true, false, false]);
@@ -119,6 +120,7 @@ export function AfterClassReview({ notes, onNotesChange, review }: Props) {
           </ul>
         </ReviewCard>
 
+        {hasLegacyDemo && <>
         <ReviewCard icon={ListChecks} title={t("timeline.title")} tone="text-assistant-foreground">
           <ol className="grid gap-3">
             {timelineKeys.map((key, index) => (
@@ -251,9 +253,11 @@ export function AfterClassReview({ notes, onNotesChange, review }: Props) {
             </div>
           )}
         </ReviewCard>
+        </>}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,.95fr)]">
+      <div className={hasLegacyDemo ? "grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,.95fr)]" : "grid gap-4"}>
+        {hasLegacyDemo && (
         <Card className="shadow-surface">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base font-bold">
@@ -281,10 +285,12 @@ export function AfterClassReview({ notes, onNotesChange, review }: Props) {
           </CardContent>
         </Card>
 
+        )}
+
         {review.lesson && !review.error && <ReviewCompanion key={review.lesson.id} lessonId={review.lesson.id} initialSession={review.session} />}
       </div>
 
-      <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 shadow-surface sm:flex-row sm:items-center sm:justify-between">
+      {hasLegacyDemo && <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 shadow-surface sm:flex-row sm:items-center sm:justify-between">
         <div>
           <strong className="text-sm">{t("download.title")}</strong>
           <p className="text-xs text-muted-foreground">{t("download.description")}</p>
@@ -293,7 +299,7 @@ export function AfterClassReview({ notes, onNotesChange, review }: Props) {
           <Download aria-hidden="true" />
           {t("download.action")}
         </Button>
-      </div>
+      </div>}
     </section>
   );
 }
