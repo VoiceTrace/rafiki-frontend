@@ -26,6 +26,8 @@ Keep the current Card, Button and Textarea primitives. Question choices use nati
 
 ## D6 completion summary — 2026-09-24
 
+Updated placement approved by the user: show the summary in its own full-width card below the notes/chat row. This supersedes the original nested placement described below. Keep the chat composer inside the chat card. Use an auto-fitting concept grid so a single concept fills the card. The chat log establishes a positioning boundary for hidden speaker labels, preventing those labels from extending document scroll height beyond the page and moving the sticky sidebar away.
+
 After Finish review, the companion stays on the same page and replaces the simple completion sentence with a structured summary card. It shows the lesson, total attempts, each concept's student-friendly outcome and supportive message, whether support was used, and the backend-authored next step. It deliberately omits numeric scores, raw assessment taxonomy, confidence, and evidence-window details. English and Arabic use the same structured snapshot; the backend localizes messages for the requested locale. Older completed sessions without a summary retain the existing completion-message fallback.
 
 The summary is read-only and backend-authoritative. Reloading or retrying completion must return the same saved summary rather than generate a second handoff. The frontend does not independently calculate mastery or start profile/homework work.

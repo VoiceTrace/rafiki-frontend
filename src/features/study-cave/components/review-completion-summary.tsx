@@ -14,7 +14,7 @@ export function ReviewCompletionSummary({ summary }: { summary: ReviewSummary })
   const t = useTranslations("reviewChat.summary");
 
   return (
-    <section className="grid gap-4 rounded-2xl border border-success/35 bg-card p-4 shadow-sm sm:p-5" aria-labelledby="review-summary-title" data-testid="review-completion-summary">
+    <section className="col-span-full grid min-w-0 gap-4 rounded-2xl border border-success/35 bg-card p-4 shadow-sm sm:p-5" aria-labelledby="review-summary-title" data-testid="review-completion-summary">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex min-w-0 gap-3">
           <span className="grid size-10 shrink-0 place-items-center rounded-full bg-success text-success-foreground">
@@ -25,12 +25,12 @@ export function ReviewCompletionSummary({ summary }: { summary: ReviewSummary })
             <p className="mt-1 text-sm text-muted-foreground">{t("description", { lesson: summary.lesson_title })}</p>
           </div>
         </div>
-        <span className="w-fit rounded-full bg-success/60 px-3 py-1 text-xs font-semibold text-success-foreground">
+        <span className="w-fit shrink-0 whitespace-nowrap rounded-full bg-success/60 px-3 py-1 text-xs font-semibold text-success-foreground">
           {t("attempts", { count: summary.total_attempts })}
         </span>
       </header>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,16rem),1fr))] gap-3">
         {summary.concepts.map((concept) => (
           <article key={concept.concept_ref} className={`rounded-xl border p-4 ${outcomeStyles[concept.outcome]}`}>
             <div className="flex flex-wrap items-center gap-2">

@@ -256,7 +256,7 @@ export function AfterClassReview({ notes, onNotesChange, review }: Props) {
         </>}
       </div>
 
-      <div className={hasLegacyDemo ? "grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,.95fr)]" : "grid gap-4"}>
+      <div className={hasLegacyDemo ? "grid items-start gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,.95fr)]" : "grid gap-4"}>
         {hasLegacyDemo && (
         <Card className="shadow-surface">
           <CardHeader>

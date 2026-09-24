@@ -130,4 +130,6 @@ Read-only registry audit: inspected official message, bubble and message-scrolle
 
 ## D6 completion handoff — 2026-09-24
 
+The companion now returns the chat and completion summary as sibling cards. The summary spans the parent review grid, while both use the same authoritative session state. The scrollable transcript is positioned relatively to contain absolutely positioned accessibility labels and prevent document-level overflow.
+
 `ReviewSession.summary` is an additive nullable backend field. `ReviewCompanion` renders `ReviewCompletionSummary` only for completed sessions with a saved summary and retains the previous completion sentence as the compatibility fallback. The component presents localized labels around backend-authored, student-friendly content; it does not recompute mastery, interpret assessment taxonomy, or create profile/homework state. The same component and logical-direction layout support English and Arabic.

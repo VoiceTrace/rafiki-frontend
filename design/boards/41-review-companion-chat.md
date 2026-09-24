@@ -12,6 +12,8 @@ This approval supersedes the static three-confirmation companion behavior in S07
 
 ## Completion extension — approved 2026-09-24
 
+Placement revision requested on 2026-09-24: the earlier instruction to nest the summary inside the chat is superseded. Render the summary as a separate sibling card below the chat card, after its composer. Concept cards fill the available width, including when there is only one concept. Keep chat scrolling contained so it cannot create blank document space or displace the sticky sidebar.
+
 When the student selects Finish review, keep them inside the same companion and show the saved D6 completion summary. Reuse the existing card language: a positive completion header, compact concept cards, a visible support indicator when hints or explanation were used, and one clear next-step panel. Use student-friendly outcome labels only; do not expose numeric scores, assessment error codes, confidence, or evidence-window details.
 
 The backend is authoritative for concept outcomes, supportive messages, assistance state, and the next step. The frontend only presents that immutable handoff in English or Arabic and falls back to the existing completion sentence for an older completed session with no summary. This extension adds the final state to the approved continuous conversation; it does not add a page, stage, or independent mastery calculation.
