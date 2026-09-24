@@ -19,6 +19,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { cn } from "cn";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -217,6 +218,7 @@ export function AppShell({
 }) {
   const locale = useLocale();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const t = useTranslations("shell");
   const a11y = useTranslations("accessibility");
   const navT = useTranslations("navigation");
@@ -308,7 +310,12 @@ export function AppShell({
               </DialogContent>
             </Dialog>
             <a
-              href={"/" + (locale === "ar" ? "en" : "ar") + pathname}
+              href={
+                "/" +
+                (locale === "ar" ? "en" : "ar") +
+                pathname +
+                (searchParams.size ? `?${searchParams.toString()}` : "")
+              }
               data-testid="locale-switch"
               className="flex min-h-10 items-center gap-1 rounded-lg px-2 text-xs text-muted-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
               aria-label={
