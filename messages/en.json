@@ -1272,6 +1272,19 @@
     "next": "Next question",
     "finish": "Finish review",
     "complete": "Review complete. You can still ask for help.",
+    "summary": {
+      "title": "Your review summary",
+      "description": "Here is what your work on {lesson} shows right now.",
+      "attempts": "{count, plural, one {# attempt} other {# attempts}}",
+      "outcomes": {
+        "secure": "Secure",
+        "developing": "Developing",
+        "needs_support": "Needs practice"
+      },
+      "withSupport": "Completed with help from a hint or explanation",
+      "nextStep": "Your next step",
+      "notGrade": "This is a learning guide, not a grade. It can change as you practise."
+    },
     "retry": "{attempts} of 3 attempts used. Edit your answer and try again.",
     "composer": "Ask a question or write your answer…",
     "send": "Send message",

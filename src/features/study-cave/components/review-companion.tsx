@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { startReview, sendReviewMessage, reloadReview } from "../actions/review-actions";
 import type { ReviewCommand, ReviewEvent, ReviewSession } from "../review-types";
+import { ReviewCompletionSummary } from "./review-completion-summary";
 
 export function ReviewCompanion({ lessonId, initialSession }: { lessonId: string; initialSession: ReviewSession | null }) {
   const t = useTranslations("reviewChat");
@@ -79,7 +80,10 @@ export function ReviewCompanion({ lessonId, initialSession }: { lessonId: string
           <Button variant="outline" disabled={pending} onClick={() => send("help", t("explain"))}>{t("explain")}</Button>
           {session.resolved && !session.complete && <Button disabled={pending} onClick={() => send("next")}>{session.questions.length === session.total_questions ? t("finish") : t("next")}</Button>}
         </div>
-        {session.complete && <p className="rounded-xl bg-success/60 p-3 text-sm">{t("complete")}</p>}
+        {session.complete ? session.summary
+          ? <ReviewCompletionSummary summary={session.summary} />
+          : <p className="rounded-xl bg-success/60 p-3 text-sm" role="status">{t("complete")}</p>
+        : null}
         {!session.complete && !session.resolved && session.attempts > 0 && <p className="text-xs text-muted-foreground">{t("retry", { attempts: session.attempts })}</p>}
         <form className="flex items-end gap-2" onSubmit={(event) => { event.preventDefault(); if (draft.trim()) send("chat", draft); }}>
           <Textarea aria-label={t("composer")} placeholder={t("composer")} maxLength={2000} value={draft} onChange={(event) => setDraft(event.target.value)} disabled={pending} className="min-h-20 bg-card" />
