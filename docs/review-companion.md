@@ -6,7 +6,7 @@ Approved design: [Board 41](../design/boards/41-review-companion-chat.md). Exist
 
 The two existing localized Study Cave pages call `loadReview` after student verification. The server-only integration reads API_URL/AUTH_API_URL and obtains the encrypted-session bearer token through the existing DAL. Only public lesson/session data is serialized into Client Components. Server Actions validate input with Zod and repeat authorization through the integration layer on every request. No new public API URL or browser token is needed.
 
-Requires the paired backend review-companion change and its migration. Endpoints: GET /study-lessons, GET /study-sessions/by-lesson/{lesson_id}, POST /study-sessions, GET /study-sessions/{id}, POST /study-sessions/{id}/messages. This is not the legacy PR #4/D1 contract. API_URL points to the backend origin without a trailing API prefix.
+Requires the paired backend review-companion change and its migrations. Endpoints: GET /study-lessons, GET /study-sessions/by-lesson/{lesson_id}, POST /study-sessions, GET /study-sessions/{id}, POST /study-sessions/{id}/messages. The session response includes an additive `summary` field, which is `null` until completion and contains the immutable D6 handoff afterward. This is not the legacy PR #4/D1 contract. API_URL points to the backend origin without a trailing API prefix.
 
 ## Lifecycle
 
@@ -14,7 +14,7 @@ Read-only page loads retrieve content and an existing session without creating o
 
 Message actions contain a UUID request ID and expected version. Failed sends retain the draft and request ID for safe retry. Conflict responses offer reload. Reopening the route restores transcript, answers, hints, selected submitted option and completion. Historical messages keep their original language; changing locale translates authored lesson/questions and interface copy.
 
-Demo responses are labelled. Choice scoring is deterministic; written scoring is a mock keyword rule. Help can be requested via the Explain this suggestion or normal chat; help never spends an answer attempt. After three failed attempts an explanation appears. Next question advances; Finish review completes the permanent session. Help remains available afterward. No production mastery/profile update is claimed.
+Demo responses are labelled. Choice scoring is deterministic; written scoring is a mock keyword rule. Help can be requested via the Explain this suggestion or normal chat; help never spends an answer attempt. After three failed attempts an explanation appears. Next question advances; Finish review completes the permanent session, recomputes concept mastery, and returns the saved D6 summary. Help remains available afterward. Profile extraction and homework automation remain deferred.
 
 ## Scope
 
@@ -23,6 +23,12 @@ During class is removed from the Study Cave navigation. Legacy `?phase=during` o
 ## UI composition
 
 Keep the current Card, Button and Textarea primitives. Question choices use native radio inputs, and revealed hints use native details/summary for keyboard access. Use logical spacing and translated copy in en/ar. The approved image depicts successive states of one conversation, not three panels or tabs.
+
+## D6 completion summary — 2026-09-24
+
+After Finish review, the companion stays on the same page and replaces the simple completion sentence with a structured summary card. It shows the lesson, total attempts, each concept's student-friendly outcome and supportive message, whether support was used, and the backend-authored next step. It deliberately omits numeric scores, raw assessment taxonomy, confidence, and evidence-window details. English and Arabic use the same structured snapshot; the backend localizes messages for the requested locale. Older completed sessions without a summary retain the existing completion-message fallback.
+
+The summary is read-only and backend-authoritative. Reloading or retrying completion must return the same saved summary rather than generate a second handoff. The frontend does not independently calculate mastery or start profile/homework work.
 
 Validation: TypeScript after Next route generation; targeted ESLint; production build; live Next MCP/browser checks and the paired backend tests. See PR validation notes for actual results and environment limitations.
 

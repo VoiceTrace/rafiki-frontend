@@ -127,3 +127,7 @@ No shadcn registry components should be installed or copied automatically. Each 
 Approved [Board 41](../design/boards/41-review-companion-chat.md). Route pages remain server components; server/review-api owns bearer authentication and transport; Zod-validated Server Actions own mutations; ReviewCompanion owns local composer/request state. Public response types are feature-local. Backend state is authoritative and resume is URL/lesson-based.
 
 Read-only registry audit: inspected official message, bubble and message-scroller items. Classification: compose existing Card/Button/Textarea and native radio/details elements for the approved bounded, nonstreaming mock chat. Message/bubble are optional future composition choices; message-scroller is unnecessary without streaming/anchored-history requirements. No registry components or dependencies installed. Preserve theme tokens, accessibility and en/ar logical direction.
+
+## D6 completion handoff — 2026-09-24
+
+`ReviewSession.summary` is an additive nullable backend field. `ReviewCompanion` renders `ReviewCompletionSummary` only for completed sessions with a saved summary and retains the previous completion sentence as the compatibility fallback. The component presents localized labels around backend-authored, student-friendly content; it does not recompute mastery, interpret assessment taxonomy, or create profile/homework state. The same component and logical-direction layout support English and Arabic.
