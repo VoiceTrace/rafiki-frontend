@@ -1165,6 +1165,12 @@ The student and teacher live-session states remain local bilingual demo layers w
 | D5 | Next step and hint ladder | Student | Select bounded assistance, prevent immediate answer extraction, and record hint level as learning signal. |
 | D6 | Session close and handoff | Student / Foundation — blocker | Show a summary and verifiably update profile extraction and mastery; replaces C8 in v1. |
 
+### D4/D6 MVP decision — approved 2026-09-24
+
+Completion placement revision: the user approved a separate, full-width summary card below the notes/chat row. This supersedes nesting the summary inside the companion chat; the lesson page, content, and backend handoff remain the same. See Board 41's placement revision.
+
+For the current MVP, completing a Review Companion session recomputes concept-level mastery and creates one immutable, idempotent session summary. The student sees friendly concept outcomes, supportive explanations, whether assistance was used, and a recommended next step inside the existing companion. Numeric grades, raw assessment taxonomy, confidence, and evidence-window policy are not student-facing. Profile extraction, homework generation, and class aggregation remain later work; the D6 handoff preserves a stable boundary for those consumers without starting them now.
+
 ## Epic E — Homework
 
 | ID | Ticket | User / type | Purpose |
