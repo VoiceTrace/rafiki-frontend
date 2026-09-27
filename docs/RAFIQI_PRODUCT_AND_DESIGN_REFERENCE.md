@@ -1493,8 +1493,9 @@ The Newton's Third Law page includes:
 - Before-tab compact session strip: scheduled/ready status, join count, and Start class while objectives, warm-up questions, materials, lesson flow, and checks remain available.
 - During-tab live session UI: ready lobby, students joining, connected status, reconnecting/failed recovery, end-class confirmation, and locked completion state.
 - During-tab classroom-support cards: Student questions, Class readiness, Participation & engagement, My notes, Highlight these, and a consent-labeled Classroom observation demo with a permission-denied/retry state.
+- After-tab teacher review connected to completed Study Cave evidence: class selector, lesson completion coverage, lesson-filtered mastery, support usage, mastery distribution, concepts needing support, ranked misconceptions, student results, links to T09 student details, and a review-session summary dialog.
 
-Current limitation: the teacher session states and classroom-support data are frontend-only demo state. They do not start a real class, connect students, synchronize questions, access a camera, or lock a persisted session record. Homework recommendations and persisted lesson results remain outside this implementation.
+Current limitation: the Before/During teacher session states and classroom-support data are frontend-only demo state. They do not start a real class, connect students, synchronize questions, access a camera, or lock a persisted session record. The After tab uses persisted review evidence, but intentionally omits the T05 board’s attendance, general engagement, homework approval, lesson rhythm, and teacher-note controls until those backend domains exist.
 
 ## 3. Teacher routes currently blank
 
