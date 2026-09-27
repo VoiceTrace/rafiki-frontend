@@ -91,6 +91,8 @@ _Source: `design/COVERAGE.md`_
 
 ## Teacher core flow
 
+**Teacher evidence implementation decision (2026-09-27):** the first connected T09/T06/T05 release uses persisted class enrollment, review completion, mastery, attempts, assistance and misconception evidence. Attendance, general engagement, grades, family notes, homework approval and lesson-rhythm metrics shown in the wider boards remain future domains and must not be represented with demo values in connected teacher screens.
+
 T01 Today → T03 Prepare lesson → T04 During class → T05 Review → T18 Homework/parent follow-up.
 
 Supporting loops: T07 Curriculum → T03 Lesson; T08 Library ↔ T14 Material editor; T05 Review → T09 Student → T10 Conversation; T06 Insights → T09 Student; T01 Schedule → T02 Calendar → T16 Add class; T01 Tasks → T15 Task editor; T10 Connect → T17 Groups/rooms or T12 Development Club.

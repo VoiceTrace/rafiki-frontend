@@ -1,0 +1,11 @@
+export type TeacherClass = { id: string; name: string; grade_level: string; subject_id: string; academic_year: string; student_count: number };
+export type EnrolledStudent = { id: string; full_name: string; email: string; avatar_url: string | null };
+export type MasteryBand = "needs_support" | "developing" | "secure";
+export type StudentMasteryRow = { student_id: string; full_name: string; avatar_url: string | null; mastery_score: number | null; mastery_band: MasteryBand | null; concept_count: number; evidence_count: number; attempt_count: number; assisted_evidence_count: number; dominant_error_type: string | null; last_attempt_at: string | null };
+export type ConceptMastery = { concept_ref: string; title: string; mastery_score: number; mastery_band: MasteryBand; evidence_count: number; attempt_count: number; assisted_evidence_count: number; dominant_error_type: string | null; last_attempt_at: string };
+export type ClassMastery = { class_id: string; class_name: string; enrolled_student_count: number; students_with_evidence: number; average_mastery: number | null; students: StudentMasteryRow[]; concepts: ConceptMastery[] };
+export type StudentMastery = { class_id: string; student: StudentMasteryRow; concepts: ConceptMastery[] };
+export type ReviewSessionItem = { session_id: string; lesson_id: string; lesson_title: string; concepts: { concept_ref: string; title: string; outcome: MasteryBand; completed_with_support: boolean }[]; total_attempts: number; dominant_error_type: string | null; completed_at: string };
+export type ReviewSessionPage = { items: ReviewSessionItem[]; total: number; page: number; page_size: number };
+export type TeacherStudentsData = { classes: TeacherClass[]; selectedClass: TeacherClass | null; roster: EnrolledStudent[]; mastery: ClassMastery | null; error: boolean };
+export type TeacherStudentDetailData = { classes: TeacherClass[]; selectedClass: TeacherClass | null; mastery: StudentMastery | null; sessions: ReviewSessionPage | null; error: boolean };
