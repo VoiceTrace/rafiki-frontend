@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { addQuestionAction } from "../actions/homework-actions"
+import { addQuestionAction, type HomeworkActionState } from "../actions/homework-actions"
 
 interface Props {
   assignmentId: string
@@ -31,18 +31,32 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
   const locale = useLocale()
   const [options, setOptions] = useState<OptionRow[]>(DEFAULT_OPTIONS)
   const [correctAnswer, setCorrectAnswer] = useState("a")
-  const [state, formAction, isPending] = useActionState(addQuestionAction, null)
+  const [questionText, setQuestionText] = useState("")
+  const [conceptRef, setConceptRef] = useState("")
+  const [formVersion, setFormVersion] = useState(0)
+  const [state, formAction, isPending] = useActionState(async (prev: HomeworkActionState | null, form: FormData) => {
+    const result = await addQuestionAction(prev, form)
+    if (result.success) {
+      setOptions(DEFAULT_OPTIONS)
+      setCorrectAnswer("a")
+      setQuestionText("")
+      setConceptRef("")
+      setFormVersion((version) => version + 1)
+    }
+    return result
+  }, null)
 
   function addOption() {
     if (options.length >= 6) return
-    const nextId = String.fromCharCode(97 + options.length) // a, b, c, ...
+    const nextId = ["a", "b", "c", "d", "e", "f"].find((id) => !options.some((option) => option.id === id))!
     setOptions((prev) => [...prev, { id: nextId, text: "" }])
   }
 
   function removeOption(idx: number) {
     if (options.length <= 2) return
-    setOptions((prev) => prev.filter((_, i) => i !== idx))
-    if (correctAnswer === options[idx].id) setCorrectAnswer(options[0]?.id ?? "a")
+    const remaining = options.filter((_, i) => i !== idx)
+    setOptions(remaining)
+    if (correctAnswer === options[idx].id) setCorrectAnswer(remaining[0].id)
   }
 
   return (
@@ -51,7 +65,8 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
         <CardTitle>{t("question.addTitle")}</CardTitle>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="grid gap-4">
+        <form key={formVersion} action={formAction} className="grid gap-4">
+          <fieldset disabled={isPending} className="grid min-w-0 gap-4">
           <input type="hidden" name="locale" value={locale} />
           <input type="hidden" name="assignment_id" value={assignmentId} />
           <input type="hidden" name="order" value={nextOrder} />
@@ -63,9 +78,12 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
           ))}
 
           <div className="grid gap-1.5">
-            <label className="text-sm font-semibold">{t("question.text")} *</label>
+            <label htmlFor="question_text" className="text-sm font-semibold">{t("question.text")} *</label>
             <Textarea
+              id="question_text"
               name="question_text"
+              value={questionText}
+              onChange={(event) => setQuestionText(event.target.value)}
               required
               rows={3}
               placeholder={t("question.textPlaceholder")}
@@ -73,8 +91,8 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
           </div>
 
           <div className="grid gap-1.5">
-            <label className="text-sm font-semibold">{t("question.conceptRef")}</label>
-            <Input name="concept_ref" placeholder={t("question.conceptRefPlaceholder")} />
+            <label htmlFor="concept_ref" className="text-sm font-semibold">{t("question.conceptRef")}</label>
+            <Input id="concept_ref" name="concept_ref" value={conceptRef} onChange={(event) => setConceptRef(event.target.value)} maxLength={200} placeholder={t("question.conceptRefPlaceholder")} />
           </div>
 
           <fieldset className="grid gap-2">
@@ -95,6 +113,7 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
                   {opt.id.toUpperCase()}
                 </span>
                 <Input
+                  aria-label={t("question.optionPlaceholder", { id: opt.id.toUpperCase() })}
                   name={`option_text_${idx}`}
                   required
                   value={opt.text}
@@ -132,13 +151,15 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
           </fieldset>
 
           {state?.error && (
-            <p role="alert" className="text-sm text-destructive">{state.error}</p>
+            <p role="alert" className="text-sm text-destructive">{t(`errors.${state.error}`)}</p>
           )}
+          {state?.success && <p role="status" className="text-sm text-success-foreground">{t("question.added")}</p>}
 
           <Button type="submit" disabled={isPending} className="w-full sm:w-auto sm:self-end">
             {isPending && <Loader2 className="animate-spin" />}
             {t("question.add")}
           </Button>
+          </fieldset>
         </form>
       </CardContent>
     </Card>

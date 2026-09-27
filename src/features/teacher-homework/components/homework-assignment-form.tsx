@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
 import { ArrowLeft, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
@@ -8,31 +8,42 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Link } from "@/i18n/navigation"
-import { createAssignmentAction, updateAssignmentAction } from "../actions/homework-actions"
+import { createAssignmentAction, updateAssignmentAction, type HomeworkActionState } from "../actions/homework-actions"
+import { HomeworkDueDate, normalizeDueDate } from "./homework-due-date"
 import type { AssignmentRead } from "@/types/homework"
 
 interface Props {
   assignment?: AssignmentRead
+  embedded?: boolean
+  onSaved?: () => void
 }
 
-export function HomeworkAssignmentForm({ assignment }: Props) {
+export function HomeworkAssignmentForm({ assignment, embedded = false, onSaved }: Props) {
   const t = useTranslations("teacherHomework")
   const locale = useLocale()
   const isEdit = Boolean(assignment)
 
   const action = isEdit ? updateAssignmentAction : createAssignmentAction
-  const [state, formAction, isPending] = useActionState(action, null)
+  const [title, setTitle] = useState(assignment?.title ?? "")
+  const [lessonId, setLessonId] = useState(assignment?.lesson_id ?? "")
+  const [description, setDescription] = useState(assignment?.description ?? "")
+  const [state, formAction, isPending] = useActionState(async (prev: HomeworkActionState | null, form: FormData) => {
+    normalizeDueDate(form)
+    const result = await action(prev, form)
+    if (result.success) onSaved?.()
+    return result
+  }, null)
 
   return (
-    <div className="mx-auto flex w-full max-w-160 flex-col gap-5 pb-20">
-      <header className="flex items-center gap-2">
+    <div className={embedded ? "w-full" : "mx-auto flex w-full max-w-160 flex-col gap-5 pb-20"}>
+      {!embedded && <header className="flex items-center gap-2">
         <Button render={<Link href="/teacher/homework" />} nativeButton={false} variant="ghost" size="icon" aria-label={t("back")}>
           <ArrowLeft className="rtl:-scale-x-100" />
         </Button>
         <h1 className="font-heading text-section font-bold">
           {isEdit ? t("edit.title") : t("create.title")}
         </h1>
-      </header>
+      </header>}
 
       <Card>
         <CardHeader>
@@ -40,6 +51,7 @@ export function HomeworkAssignmentForm({ assignment }: Props) {
         </CardHeader>
         <CardContent>
           <form action={formAction} className="grid gap-4">
+            <fieldset disabled={isPending} className="grid min-w-0 gap-4">
             <input type="hidden" name="locale" value={locale} />
             {isEdit && <input type="hidden" name="assignment_id" value={assignment!.id} />}
 
@@ -51,7 +63,9 @@ export function HomeworkAssignmentForm({ assignment }: Props) {
                 id="lesson_id"
                 name="lesson_id"
                 required
-                defaultValue={assignment?.lesson_id ?? ""}
+                maxLength={100}
+                value={lessonId}
+                onChange={(event) => setLessonId(event.target.value)}
                 placeholder={t("form.lessonIdPlaceholder")}
                 disabled={isEdit}
               />
@@ -66,7 +80,8 @@ export function HomeworkAssignmentForm({ assignment }: Props) {
                 name="title"
                 required
                 maxLength={500}
-                defaultValue={assignment?.title ?? ""}
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
                 placeholder={t("form.titlePlaceholder")}
               />
             </div>
@@ -79,7 +94,8 @@ export function HomeworkAssignmentForm({ assignment }: Props) {
                 id="description"
                 name="description"
                 rows={3}
-                defaultValue={assignment?.description ?? ""}
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
                 placeholder={t("form.descriptionPlaceholder")}
               />
             </div>
@@ -88,28 +104,21 @@ export function HomeworkAssignmentForm({ assignment }: Props) {
               <label htmlFor="due_at" className="text-sm font-semibold">
                 {t("form.dueAt")}
               </label>
-              <Input
-                id="due_at"
-                name="due_at"
-                type="datetime-local"
-                defaultValue={
-                  assignment?.due_at
-                    ? new Date(assignment.due_at).toISOString().slice(0, 16)
-                    : ""
-                }
-              />
+              <HomeworkDueDate id="due_at" value={assignment?.due_at} />
             </div>
 
             {state?.error && (
               <p role="alert" className="text-sm text-destructive">
-                {state.error}
+                {t(`errors.${state.error}`)}
               </p>
             )}
 
-            <Button type="submit" disabled={isPending} className="w-full sm:w-auto sm:self-end">
+            {state?.success && <p role="status">{t("form.saved")}</p>}
+            <Button type="submit" disabled={isPending || !title.trim() || !lessonId.trim()} className="w-full sm:w-auto sm:self-end">
               {isPending && <Loader2 className="animate-spin" />}
               {isEdit ? t("form.save") : t("form.create")}
             </Button>
+            </fieldset>
           </form>
         </CardContent>
       </Card>

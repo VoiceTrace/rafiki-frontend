@@ -12,6 +12,12 @@ Desktop reference for **E1 Student Homework** — the results view shown immedia
 
 ## Required UI
 
+2026-09-27 approved clarification: results must survive reload and return visits.
+The submit-response-only restriction below is deprecated in favor of the
+[manual MCQ maintenance scope](../../docs/RAFIQI_PRODUCT_AND_DESIGN_REFERENCE.md#approved-homework-maintenance-scope--2026-09-27):
+an authenticated, student-owned results endpoint may return the saved feedback
+after submission. Pre-submission GET responses still exclude the answer key.
+
 ### Score banner
 - Green success container at top of page.
 - Check-circle icon.

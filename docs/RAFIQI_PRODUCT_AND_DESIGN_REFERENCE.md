@@ -1167,6 +1167,32 @@ The student and teacher live-session states remain local bilingual demo layers w
 
 ## Epic E — Homework
 
+### Approved homework maintenance scope — 2026-09-27
+
+The owner approved preserving the current manual MCQ flow while fixing bugs.
+Boards 36–40 remain the reference for these routes. For this maintenance scope,
+the following supersedes conflicting descriptions of the current implementation;
+the fuller Epic E plan below remains future product work, not a claim of delivery.
+
+- Teachers author a shared question set and explicitly distribute it to selected
+  active students in their school. Class membership and mastery-generated,
+  differentiated question sets are outside this change.
+- Keep the existing two-to-six option authoring controls; four options is the
+  default, not a fixed count. Option IDs and the selected correct answer must stay
+  valid after removing or adding options.
+- Restore the metadata editor already specified by board 38, including clearing
+  an optional description/deadline. Keep the approved cards and visual language.
+- Persist submitted feedback across reloads and return visits. A separate
+  student-owned results endpoint can reveal answers only after submission;
+  pre-submission question responses must continue to omit the answer key.
+- Fix localized error handling, accessible control composition, narrow-screen
+  wrapping, and date/time conversion without introducing a new design system.
+- Keep backend bearer tokens server-only; student submission uses a Server Action.
+
+The owner also approved the built-in browser and seeded test-account login in
+place of `agent-browser` for this verification session. Retain Next.js MCP checks,
+English/Arabic checks, and desktop/mobile inspection.
+
 | ID | Ticket | User / type | Purpose |
 | --- | --- | --- | --- |
 | E1 | HomeworkAssignment schema | Foundation | Link class and per-student work to lessons, concepts, and the MasteryRecord evidence that selected each item. |

@@ -3,160 +3,117 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { getBackendAccessToken } from "@/features/auth/server/dal"
-import {
-  createAssignment,
-  deleteAssignment,
-  updateAssignment,
-  addQuestion,
-  deleteQuestion,
-  distributeAssignment,
-} from "@/lib/api"
-import type {
-  AddQuestionRequest,
-  CreateAssignmentRequest,
-  DistributeRequest,
-  UpdateAssignmentRequest,
-} from "@/types/homework"
+import { createAssignment, deleteAssignment, updateAssignment, addQuestion, deleteQuestion, distributeAssignment } from "@/lib/api"
+import { assignmentSchema, updateAssignmentSchema, questionSchema, distributeSchema, idSchema, localeSchema } from "../schemas/homework"
 
-function getLocale(formData: FormData): string {
-  return (formData.get("locale") as string | null) ?? "en"
+export type HomeworkActionState = { error?: "auth" | "validation" | "create" | "update" | "delete" | "addQuestion" | "deleteQuestion" | "distribute"; success?: boolean }
+
+function localeFrom(value: unknown) {
+  return localeSchema.safeParse(value).data ?? "en"
 }
 
-export async function createAssignmentAction(
-  _prev: { error?: string } | null,
-  formData: FormData,
-): Promise<{ error?: string }> {
-  const token = await getBackendAccessToken()
-  if (!token) return { error: "Not authenticated" }
-
-  const data: CreateAssignmentRequest = {
-    lesson_id: formData.get("lesson_id") as string,
-    title: formData.get("title") as string,
-    description: (formData.get("description") as string) || undefined,
-    due_at: (formData.get("due_at") as string) || undefined,
-  }
-
-  try {
-    const assignment = await createAssignment(token, data)
-    const locale = getLocale(formData)
-    redirect(`/${locale}/teacher/homework/${assignment.id}/edit`)
-  } catch (e) {
-    if ((e as { digest?: string }).digest?.startsWith("NEXT_REDIRECT")) throw e
-    return { error: "Failed to create assignment" }
-  }
+function refreshAssignment(locale: string, id: string) {
+  revalidatePath(`/${locale}/teacher/homework`)
+  revalidatePath(`/${locale}/teacher/homework/${id}/edit`)
 }
 
-export async function updateAssignmentAction(
-  _prev: { error?: string } | null,
-  formData: FormData,
-): Promise<{ error?: string }> {
+export async function createAssignmentAction(_prev: HomeworkActionState | null, form: FormData): Promise<HomeworkActionState> {
   const token = await getBackendAccessToken()
-  if (!token) return { error: "Not authenticated" }
-
-  const assignmentId = formData.get("assignment_id") as string
-  const data: UpdateAssignmentRequest = {
-    title: (formData.get("title") as string) || undefined,
-    description: (formData.get("description") as string) || undefined,
-    due_at: (formData.get("due_at") as string) || undefined,
-  }
-
+  if (!token) return { error: "auth" }
+  const parsed = assignmentSchema.safeParse({
+    lesson_id: form.get("lesson_id"), title: form.get("title"),
+    description: form.get("description") || undefined, due_at: form.get("due_at") || undefined,
+  })
+  if (!parsed.success) return { error: "validation" }
+  let assignment
   try {
-    await updateAssignment(token, assignmentId, data)
-    const locale = getLocale(formData)
-    revalidatePath(`/${locale}/teacher/homework/${assignmentId}/edit`)
-    return {}
+    assignment = await createAssignment(token, {
+      ...parsed.data, description: parsed.data.description ?? undefined, due_at: parsed.data.due_at ?? undefined,
+    })
   } catch {
-    return { error: "Failed to update assignment" }
+    return { error: "create" }
+  }
+  const locale = localeFrom(form.get("locale"))
+  revalidatePath(`/${locale}/teacher/homework`)
+  redirect(`/${locale}/teacher/homework/${assignment.id}/edit`)
+}
+
+export async function updateAssignmentAction(_prev: HomeworkActionState | null, form: FormData): Promise<HomeworkActionState> {
+  const token = await getBackendAccessToken()
+  if (!token) return { error: "auth" }
+  const id = idSchema.safeParse(form.get("assignment_id"))
+  const parsed = updateAssignmentSchema.safeParse({
+    title: form.get("title"), description: form.get("description") || null, due_at: form.get("due_at") || null,
+  })
+  if (!id.success || !parsed.success) return { error: "validation" }
+  try {
+    await updateAssignment(token, id.data, parsed.data)
+    refreshAssignment(localeFrom(form.get("locale")), id.data)
+    return { success: true }
+  } catch {
+    return { error: "update" }
   }
 }
 
-export async function deleteAssignmentAction(
-  assignmentId: string,
-  locale: string,
-): Promise<{ error?: string }> {
+export async function deleteAssignmentAction(assignmentId: string, locale: string): Promise<HomeworkActionState> {
   const token = await getBackendAccessToken()
-  if (!token) return { error: "Not authenticated" }
+  if (!token) return { error: "auth" }
+  if (!idSchema.safeParse(assignmentId).success) return { error: "validation" }
   try {
     await deleteAssignment(token, assignmentId)
-    revalidatePath(`/${locale}/teacher/homework`)
-    redirect(`/${locale}/teacher/homework`)
-  } catch (e) {
-    if ((e as { digest?: string }).digest?.startsWith("NEXT_REDIRECT")) throw e
-    return { error: "Failed to delete assignment" }
-  }
-}
-
-export async function addQuestionAction(
-  _prev: { error?: string } | null,
-  formData: FormData,
-): Promise<{ error?: string }> {
-  const token = await getBackendAccessToken()
-  if (!token) return { error: "Not authenticated" }
-
-  const assignmentId = formData.get("assignment_id") as string
-  const locale = getLocale(formData)
-
-  // Parse options from form: option_id_0..N, option_text_0..N
-  const options: Array<{ id: string; text: string }> = []
-  let i = 0
-  while (formData.has(`option_id_${i}`)) {
-    options.push({
-      id: formData.get(`option_id_${i}`) as string,
-      text: formData.get(`option_text_${i}`) as string,
-    })
-    i++
-  }
-
-  const data: AddQuestionRequest = {
-    question_text: formData.get("question_text") as string,
-    options,
-    correct_answer: formData.get("correct_answer") as string,
-    concept_ref: (formData.get("concept_ref") as string) || undefined,
-    order: Number(formData.get("order") ?? 0),
-  }
-
-  try {
-    await addQuestion(token, assignmentId, data)
-    revalidatePath(`/${locale}/teacher/homework/${assignmentId}/edit`)
-    return {}
   } catch {
-    return { error: "Failed to add question" }
+    return { error: "delete" }
+  }
+  const language = localeFrom(locale)
+  revalidatePath(`/${language}/teacher/homework`)
+  redirect(`/${language}/teacher/homework`)
+}
+
+export async function addQuestionAction(_prev: HomeworkActionState | null, form: FormData): Promise<HomeworkActionState> {
+  const token = await getBackendAccessToken()
+  if (!token) return { error: "auth" }
+  const id = idSchema.safeParse(form.get("assignment_id"))
+  const options = []
+  for (let i = 0; i < 7 && form.has(`option_id_${i}`); i++) {
+    options.push({ id: form.get(`option_id_${i}`), text: form.get(`option_text_${i}`) })
+  }
+  const parsed = questionSchema.safeParse({
+    question_text: form.get("question_text"), options, correct_answer: form.get("correct_answer"),
+    concept_ref: form.get("concept_ref") || undefined, order: Number(form.get("order")),
+  })
+  if (!id.success || !parsed.success) return { error: "validation" }
+  try {
+    await addQuestion(token, id.data, parsed.data)
+    refreshAssignment(localeFrom(form.get("locale")), id.data)
+    return { success: true }
+  } catch {
+    return { error: "addQuestion" }
   }
 }
 
-export async function deleteQuestionAction(
-  assignmentId: string,
-  questionId: string,
-  locale: string,
-): Promise<{ error?: string }> {
+export async function deleteQuestionAction(assignmentId: string, questionId: string, locale: string): Promise<HomeworkActionState> {
   const token = await getBackendAccessToken()
-  if (!token) return { error: "Not authenticated" }
+  if (!token) return { error: "auth" }
+  if (!idSchema.safeParse(assignmentId).success || !idSchema.safeParse(questionId).success) return { error: "validation" }
   try {
     await deleteQuestion(token, assignmentId, questionId)
-    revalidatePath(`/${locale}/teacher/homework/${assignmentId}/edit`)
-    return {}
+    refreshAssignment(localeFrom(locale), assignmentId)
+    return { success: true }
   } catch {
-    return { error: "Failed to delete question" }
+    return { error: "deleteQuestion" }
   }
 }
 
-export async function distributeAssignmentAction(
-  assignmentId: string,
-  studentIds: string[],
-  dueAt: string | undefined,
-  locale: string,
-): Promise<{ error?: string }> {
+export async function distributeAssignmentAction(assignmentId: string, studentIds: string[], dueAt: string | undefined, locale: string): Promise<HomeworkActionState> {
   const token = await getBackendAccessToken()
-  if (!token) return { error: "Not authenticated" }
-
-  const data: DistributeRequest = { student_ids: studentIds, due_at: dueAt }
-
+  if (!token) return { error: "auth" }
+  const parsed = distributeSchema.safeParse({ student_ids: studentIds, due_at: dueAt })
+  if (!idSchema.safeParse(assignmentId).success || !parsed.success) return { error: "validation" }
   try {
-    await distributeAssignment(token, assignmentId, data)
-    revalidatePath(`/${locale}/teacher/homework`)
-    revalidatePath(`/${locale}/teacher/homework/${assignmentId}/edit`)
-    return {}
+    await distributeAssignment(token, assignmentId, parsed.data)
+    refreshAssignment(localeFrom(locale), assignmentId)
+    return { success: true }
   } catch {
-    return { error: "Failed to distribute assignment" }
+    return { error: "distribute" }
   }
 }

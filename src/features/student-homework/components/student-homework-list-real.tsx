@@ -1,5 +1,5 @@
 import { BookOpenCheck, CalendarDays, ChevronRight, ClipboardList } from "lucide-react"
-import { getTranslations } from "next-intl/server"
+import { getFormatter, getTranslations } from "next-intl/server"
 import { Card, CardContent } from "@/components/ui/card"
 import { Link } from "@/i18n/navigation"
 import type { StudentAssignmentRead } from "@/types/homework"
@@ -15,6 +15,7 @@ const STATUS_STYLES: Record<string, string> = {
 }
 
 export async function StudentHomeworkListReal({ assignments }: Props) {
+  const format = await getFormatter()
   const t = await getTranslations("studentHomework")
 
   return (
@@ -48,7 +49,7 @@ export async function StudentHomeworkListReal({ assignments }: Props) {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-2">
-                      <strong className="text-base">{sa.title}</strong>
+                      <strong className="break-words text-base">{sa.title}</strong>
                       <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_STYLES[sa.status] ?? STATUS_STYLES.assigned}`}>
                         {t(`assignmentStatus.${sa.status}`)}
                       </span>
@@ -65,7 +66,7 @@ export async function StudentHomeworkListReal({ assignments }: Props) {
                           {" · "}
                           <span className="inline-flex items-center gap-1">
                             <CalendarDays className="size-3.5" />
-                            {new Date(sa.due_at).toLocaleDateString()}
+                            {format.dateTime(new Date(sa.due_at), { dateStyle: "medium", timeZone: "Asia/Riyadh" })}
                           </span>
                         </>
                       )}

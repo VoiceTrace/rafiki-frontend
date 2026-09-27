@@ -13,6 +13,10 @@ Desktop reference for **E1 Teacher Homework** — the full edit page where a tea
 
 ## Required UI
 
+2026-09-27 approved clarification: the earlier fixed four-option wording below
+is deprecated in favor of the [manual MCQ maintenance scope](../../docs/RAFIQI_PRODUCT_AND_DESIGN_REFERENCE.md#approved-homework-maintenance-scope--2026-09-27).
+Keep four options by default and allow two to six unique options.
+
 ### Assignment header
 - Title, description, lesson ID, due date displayed at top.
 - **Edit** button to update metadata (inline or modal).

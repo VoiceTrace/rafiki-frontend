@@ -108,8 +108,8 @@ export interface CreateAssignmentRequest {
 
 export interface UpdateAssignmentRequest {
   title?: string
-  description?: string
-  due_at?: string
+  description?: string | null
+  due_at?: string | null
 }
 
 export interface AddQuestionRequest {

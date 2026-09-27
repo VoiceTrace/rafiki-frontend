@@ -1,6 +1,4 @@
 // Screenshot script — Epic E Homework flow
-const { chromium } = require('playwright');
-const fs = require('fs');
 
 const BASE = 'http://localhost:3000';
 const API  = 'http://localhost:8000';
@@ -40,6 +38,7 @@ async function shot(page, name, full = false) {
 }
 
 async function main() {
+  const { chromium } = await import("playwright");
   // ── Seed data via API ────────────────────────────────────────────────────
   console.log('\n── API setup ──');
   const { access_token: tToken } = await apiFetch('/auth/login', {
@@ -58,7 +57,7 @@ async function main() {
   console.log('  created assignment', asn.id);
 
   // Add 3 questions
-  const q1 = await apiFetch(`/homework/assignments/${asn.id}/questions`, {
+  await apiFetch(`/homework/assignments/${asn.id}/questions`, {
     method: 'POST', headers: th,
     body: JSON.stringify({
       question_text: 'If cart A pushes cart B with 6N, how much force does cart B exert on cart A?',
@@ -72,7 +71,7 @@ async function main() {
       concept_ref: 'newton3-reaction-pairs',
     }),
   });
-  const q2 = await apiFetch(`/homework/assignments/${asn.id}/questions`, {
+  await apiFetch(`/homework/assignments/${asn.id}/questions`, {
     method: 'POST', headers: th,
     body: JSON.stringify({
       question_text: 'Which of the following is a pair of Newton\'s Third Law forces?',
@@ -86,7 +85,7 @@ async function main() {
       concept_ref: 'newton3-action-reaction-identification',
     }),
   });
-  const q3 = await apiFetch(`/homework/assignments/${asn.id}/questions`, {
+  await apiFetch(`/homework/assignments/${asn.id}/questions`, {
     method: 'POST', headers: th,
     body: JSON.stringify({
       question_text: 'Two ice skaters push off each other. Skater A (60 kg) moves at 2 m/s. What can we say about Skater B\'s momentum?',

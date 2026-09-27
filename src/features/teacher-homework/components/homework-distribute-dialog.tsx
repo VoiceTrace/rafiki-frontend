@@ -58,11 +58,11 @@ export function HomeworkDistributeDialog({ assignmentId, students, disabled }: P
       const result = await distributeAssignmentAction(
         assignmentId,
         Array.from(selectedIds),
-        dueAt || undefined,
+        dueAt ? new Date(dueAt).toISOString() : undefined,
         locale,
       )
       if (result?.error) {
-        setError(result.error)
+        setError(t(`errors.${result.error}`))
       } else {
         setOpen(false)
       }
@@ -70,14 +70,12 @@ export function HomeworkDistributeDialog({ assignmentId, students, disabled }: P
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button disabled={disabled} size="sm" type="button">
+    <Dialog open={open} onOpenChange={(value) => { if (!isPending) { setOpen(value); setError(null) } }}>
+      <DialogTrigger disabled={disabled} render={<Button size="sm" type="button" />}>
           <Send className="size-4" />
           {t("distribute.trigger")}
-        </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-lg" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>{t("distribute.title")}</DialogTitle>
           <DialogDescription>{t("distribute.description")}</DialogDescription>
@@ -89,11 +87,11 @@ export function HomeworkDistributeDialog({ assignmentId, students, disabled }: P
               {t("distribute.selected", { count: selectedIds.size, total: students.length })}
             </span>
             <div className="flex gap-2">
-              <button type="button" className="text-primary hover:underline" onClick={selectAll}>
+              <button type="button" disabled={isPending} className="text-primary hover:underline" onClick={selectAll}>
                 {t("distribute.selectAll")}
               </button>
               <span className="text-muted-foreground">·</span>
-              <button type="button" className="text-muted-foreground hover:underline" onClick={clearAll}>
+              <button type="button" disabled={isPending} className="text-muted-foreground hover:underline" onClick={clearAll}>
                 {t("distribute.clearAll")}
               </button>
             </div>
@@ -107,6 +105,7 @@ export function HomeworkDistributeDialog({ assignmentId, students, disabled }: P
               >
                 <input
                   type="checkbox"
+                  disabled={isPending}
                   className="accent-primary"
                   checked={selectedIds.has(student.id)}
                   onChange={() => toggle(student.id)}
@@ -120,9 +119,11 @@ export function HomeworkDistributeDialog({ assignmentId, students, disabled }: P
           </div>
 
           <div className="grid gap-1.5">
-            <label className="text-sm font-semibold">{t("distribute.dueAt")}</label>
+            <label htmlFor="distribute_due_at" className="text-sm font-semibold">{t("distribute.dueAt")}</label>
             <input
+              id="distribute_due_at"
               type="datetime-local"
+              disabled={isPending}
               value={dueAt}
               onChange={(e) => setDueAt(e.target.value)}
               className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"

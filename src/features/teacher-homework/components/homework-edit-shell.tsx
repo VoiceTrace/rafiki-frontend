@@ -2,11 +2,12 @@
 
 import { useTransition, useState } from "react"
 import { ArrowLeft, Loader2, Trash2 } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import { useFormatter, useLocale, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Link } from "@/i18n/navigation"
-import { deleteQuestionAction, deleteAssignmentAction } from "../actions/homework-actions"
+import { deleteQuestionAction, deleteAssignmentAction, type HomeworkActionState } from "../actions/homework-actions"
+import { HomeworkAssignmentForm } from "./homework-assignment-form"
 import { HomeworkQuestionForm } from "./homework-question-form"
 import { HomeworkDistributeDialog } from "./homework-distribute-dialog"
 import type { AssignmentWithQuestions } from "@/types/homework"
@@ -26,44 +27,55 @@ const STATUS_STYLES: Record<string, string> = {
 export function HomeworkEditShell({ assignment, students }: Props) {
   const t = useTranslations("teacherHomework")
   const locale = useLocale()
+  const format = useFormatter()
   const [isPending, startTransition] = useTransition()
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [editing, setEditing] = useState(false)
+  const [error, setError] = useState<HomeworkActionState["error"]>()
+  const [saved, setSaved] = useState(false)
 
   const isDraft = assignment.status === "draft"
 
   function handleDeleteAssignment() {
     if (!confirm(t("edit.confirmDelete"))) return
     startTransition(async () => {
-      await deleteAssignmentAction(assignment.id, locale)
+      const result = await deleteAssignmentAction(assignment.id, locale)
+      setError(result.error)
     })
   }
 
   function handleDeleteQuestion(questionId: string) {
     setDeletingId(questionId)
     startTransition(async () => {
-      await deleteQuestionAction(assignment.id, questionId, locale)
+      const result = await deleteQuestionAction(assignment.id, questionId, locale)
+      setError(result.error)
       setDeletingId(null)
     })
   }
 
   return (
     <div className="mx-auto flex w-full max-w-270 flex-col gap-5 pb-20">
-      <header className="flex items-center gap-3">
+      <header className="flex flex-wrap items-center gap-3">
         <Button render={<Link href="/teacher/homework" />} nativeButton={false} variant="ghost" size="icon" aria-label={t("back")}>
           <ArrowLeft className="rtl:-scale-x-100" />
         </Button>
-        <div className="min-w-0 flex-1">
-          <h1 className="font-heading text-section font-bold">{assignment.title}</h1>
-          <p className="text-sm text-muted-foreground">{assignment.lesson_id}</p>
+        <div className="min-w-0 flex-1 basis-40">
+          <h1 className="break-words font-heading text-section font-bold">{assignment.title}</h1>
+          <p className="break-words text-sm text-muted-foreground">{assignment.lesson_id}</p>
         </div>
         <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[assignment.status] ?? STATUS_STYLES.draft}`}>
           {t(`status.${assignment.status}`)}
         </span>
         {isDraft && (
+          <Button variant="outline" size="sm" disabled={isPending} onClick={() => { setEditing(!editing); setSaved(false) }}>
+            {editing ? t("edit.cancel") : t("edit.editDetails")}
+          </Button>
+        )}
+        {isDraft && (
           <HomeworkDistributeDialog
             assignmentId={assignment.id}
             students={students}
-            disabled={assignment.question_count === 0}
+            disabled={assignment.question_count === 0 || isPending || editing}
           />
         )}
         {isDraft && (
@@ -72,6 +84,11 @@ export function HomeworkEditShell({ assignment, students }: Props) {
           </Button>
         )}
       </header>
+      {assignment.description && <p className="whitespace-pre-wrap break-words text-sm text-muted-foreground">{assignment.description}</p>}
+      {assignment.due_at && <p className="text-sm text-muted-foreground">{t("form.dueAt")}: {format.dateTime(new Date(assignment.due_at), { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Riyadh" })} ({t("form.timeZone")})</p>}
+      {error && <p role="alert" className="text-sm text-destructive">{t(`errors.${error}`)}</p>}
+      {saved && <p role="status" className="text-sm text-success-foreground">{t("form.saved")}</p>}
+      {editing && <HomeworkAssignmentForm assignment={assignment} embedded onSaved={() => { setEditing(false); setSaved(true) }} />}
 
       {/* Question list */}
       <Card>
@@ -91,7 +108,7 @@ export function HomeworkEditShell({ assignment, students }: Props) {
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold">
+                    <p className="break-words text-sm font-semibold">
                       {idx + 1}. {q.question_text}
                     </p>
                     <ul className="mt-2 grid gap-1">
@@ -105,7 +122,7 @@ export function HomeworkEditShell({ assignment, students }: Props) {
                           }`}
                         >
                           <span className="font-mono text-xs">{opt.id.toUpperCase()}</span>
-                          {opt.text}
+                          <span className="min-w-0 break-words">{opt.text}</span>
                           {opt.id === q.correct_answer && (
                             <span className="ms-auto text-xs">{t("edit.correct")}</span>
                           )}
@@ -120,7 +137,7 @@ export function HomeworkEditShell({ assignment, students }: Props) {
                     <Button
                       variant="ghost"
                       size="icon"
-                      disabled={deletingId === q.id}
+                      disabled={isPending}
                       onClick={() => handleDeleteQuestion(q.id)}
                       aria-label={t("edit.deleteQuestion")}
                     >
@@ -137,7 +154,7 @@ export function HomeworkEditShell({ assignment, students }: Props) {
       {isDraft && (
         <HomeworkQuestionForm
           assignmentId={assignment.id}
-          nextOrder={assignment.question_count}
+          nextOrder={Math.max(-1, ...assignment.questions.map((question) => question.order)) + 1}
         />
       )}
     </div>

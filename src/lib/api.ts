@@ -1,4 +1,12 @@
+import "server-only"
 import type { User } from "@/types/user"
+
+export class ApiError extends Error {
+  constructor(public readonly status: number, message: string) {
+    super(message)
+    this.name = "ApiError"
+  }
+}
 
 const API_URL = (
   process.env.API_URL ??
@@ -41,7 +49,6 @@ export async function uploadAvatar(accessToken: string, file: File): Promise<Use
     body: form,
   })
   if (!res.ok) {
-    const body = (await res.json().catch(() => null)) as { detail?: unknown } | null
     throw new Error(res.status === 413 ? "too_large" : res.status === 400 ? "bad_type" : "upload_failed")
   }
   return res.json() as Promise<User>
@@ -117,7 +124,7 @@ export async function getAssignment(
     headers: authHeaders(accessToken),
     cache: "no-store",
   })
-  if (!res.ok) throw new Error("Failed to get assignment")
+  if (!res.ok) throw new ApiError(res.status, "Failed to get assignment")
   return res.json() as Promise<AssignmentWithQuestions>
 }
 
@@ -235,7 +242,7 @@ export async function getMyAssignment(
     headers: authHeaders(accessToken),
     cache: "no-store",
   })
-  if (!res.ok) throw new Error("Failed to get assignment")
+  if (!res.ok) throw new ApiError(res.status, "Failed to get assignment")
   return res.json() as Promise<StudentAssignmentWithQuestions>
 }
 
@@ -253,5 +260,16 @@ export async function submitHomework(
     },
   )
   if (!res.ok) throw new Error("Failed to submit homework")
+  return res.json() as Promise<SubmissionResult>
+}
+
+export async function getMySubmission(
+  accessToken: string,
+  studentAssignmentId: string,
+): Promise<SubmissionResult> {
+  const res = await fetch(`${API_URL}/homework/me/assignments/${studentAssignmentId}/results`, {
+    headers: authHeaders(accessToken), cache: "no-store",
+  })
+  if (!res.ok) throw new ApiError(res.status, "Failed to load homework results")
   return res.json() as Promise<SubmissionResult>
 }

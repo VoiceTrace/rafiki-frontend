@@ -1,5 +1,5 @@
 import { BookOpenCheck, CalendarDays, ChevronRight, ClipboardList, Plus } from "lucide-react"
-import { getTranslations } from "next-intl/server"
+import { getFormatter, getTranslations } from "next-intl/server"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Link } from "@/i18n/navigation"
@@ -16,11 +16,12 @@ const STATUS_STYLES: Record<string, string> = {
 }
 
 export async function HomeworkAssignmentList({ assignments }: Props) {
+  const format = await getFormatter()
   const t = await getTranslations("teacherHomework")
 
   return (
     <div className="mx-auto flex w-full max-w-270 flex-col gap-5 pb-20">
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-primary">
             <ClipboardList className="size-4" />
@@ -62,7 +63,7 @@ export async function HomeworkAssignmentList({ assignments }: Props) {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-2">
-                      <strong className="text-base">{a.title}</strong>
+                      <strong className="break-words text-base">{a.title}</strong>
                       <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_STYLES[a.status] ?? STATUS_STYLES.draft}`}>
                         {t(`status.${a.status}`)}
                       </span>
@@ -74,7 +75,7 @@ export async function HomeworkAssignmentList({ assignments }: Props) {
                           {" · "}
                           <span className="inline-flex items-center gap-1">
                             <CalendarDays className="size-3.5" />
-                            {new Date(a.due_at).toLocaleDateString()}
+                            {format.dateTime(new Date(a.due_at), { dateStyle: "medium", timeZone: "Asia/Riyadh" })}
                           </span>
                         </>
                       )}

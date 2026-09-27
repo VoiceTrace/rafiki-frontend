@@ -2,44 +2,47 @@
 
 import { useState, useTransition } from "react"
 import { ArrowLeft, CheckCircle2, Loader2, XCircle } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Link } from "@/i18n/navigation"
-import { submitHomework } from "@/lib/api"
+import { submitHomeworkAction } from "../actions/submit-homework"
 import type { StudentAssignmentWithQuestions, SubmissionResult } from "@/types/homework"
 
 interface Props {
   assignment: StudentAssignmentWithQuestions
-  accessToken: string
+  initialResult: SubmissionResult | null
 }
 
-export function StudentHomeworkMCQ({ assignment, accessToken }: Props) {
+export function StudentHomeworkMCQ({ assignment, initialResult }: Props) {
   const t = useTranslations("studentHomework")
+  const locale = useLocale() as "en" | "ar"
   const [selected, setSelected] = useState<Record<string, string>>({})
-  const [result, setResult] = useState<SubmissionResult | null>(null)
+  const [result, setResult] = useState<SubmissionResult | null>(initialResult)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
   const isSubmitted = assignment.status === "submitted"
-  const allAnswered = assignment.questions.every((q) => q.id in selected)
+  const allAnswered = assignment.questions.length > 0 && assignment.questions.every((q) => q.id in selected)
 
   function handleSelect(questionId: string, optionId: string) {
-    if (isSubmitted || result) return
+    if (isSubmitted || result || isPending) return
     setSelected((prev) => ({ ...prev, [questionId]: optionId }))
   }
 
   function handleSubmit() {
+    if (!allAnswered || isPending || isSubmitted || result) return
     setError(null)
     startTransition(async () => {
       try {
-        const res = await submitHomework(accessToken, assignment.id, {
+        const res = await submitHomeworkAction({ assignmentId: assignment.id, locale,
           answers: Object.entries(selected).map(([question_id, selected_option]) => ({
             question_id,
             selected_option,
           })),
         })
-        setResult(res)
+        if (res.error) setError(t("mcq.submitError"))
+        else setResult(res.result)
       } catch {
         setError(t("mcq.submitError"))
       }
@@ -57,7 +60,7 @@ export function StudentHomeworkMCQ({ assignment, accessToken }: Props) {
           <ArrowLeft className="rtl:-scale-x-100" />
         </Button>
         <div className="min-w-0 flex-1">
-          <h1 className="font-heading text-section font-bold">{assignment.title}</h1>
+          <h1 className="break-words font-heading text-section font-bold">{assignment.title}</h1>
           {assignment.description && (
             <p className="text-sm text-muted-foreground">{assignment.description}</p>
           )}
@@ -66,7 +69,7 @@ export function StudentHomeworkMCQ({ assignment, accessToken }: Props) {
 
       {/* Score banner after submit */}
       {result && (
-        <div className="flex items-center gap-3 rounded-2xl border border-success bg-success/20 p-4">
+        <div role="status" className="flex items-center gap-3 rounded-2xl border border-success bg-success/20 p-4">
           <CheckCircle2 className="size-6 shrink-0 text-success-foreground" />
           <div>
             <strong>{t("mcq.submitted")}</strong>
@@ -87,7 +90,7 @@ export function StudentHomeworkMCQ({ assignment, accessToken }: Props) {
           return (
             <Card key={q.id}>
               <CardHeader>
-                <CardTitle className="text-base font-semibold leading-snug">
+                <CardTitle className="break-words text-base font-semibold leading-snug">
                   {idx + 1}. {q.question_text}
                 </CardTitle>
               </CardHeader>
@@ -109,12 +112,14 @@ export function StudentHomeworkMCQ({ assignment, accessToken }: Props) {
                     <button
                       key={opt.id}
                       type="button"
-                      disabled={Boolean(result) || isSubmitted}
+                      disabled={Boolean(result) || isSubmitted || isPending}
+                      aria-pressed={attempt ? wasSelected : isSelected}
+                      aria-label={`${opt.id.toUpperCase()}. ${opt.text}${attempt && isCorrect ? ` — ${t("mcq.correctAnswer")}` : attempt && wasSelected ? ` — ${t("mcq.yourAnswer")}` : ""}`}
                       onClick={() => handleSelect(q.id, opt.id)}
                       className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-start text-sm transition-colors ${style}`}
                     >
                       <span className="shrink-0 font-mono text-xs font-bold">{opt.id.toUpperCase()}</span>
-                      <span className="flex-1">{opt.text}</span>
+                      <span className="min-w-0 flex-1 break-words">{opt.text}</span>
                       {attempt && isCorrect && <CheckCircle2 className="size-4 shrink-0 text-success-foreground" />}
                       {attempt && wasSelected && !isCorrect && <XCircle className="size-4 shrink-0 text-destructive" />}
                     </button>
