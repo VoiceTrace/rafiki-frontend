@@ -1503,7 +1503,7 @@ The following routes exist but return no UI:
 - Teaching overview
 - Students list
 - Individual student profile
-- Resources
+- Resources library — implemented as a bilingual frontend demo; see [Teacher resource library decision](../design/teacher-resource-library.md).
 - Connect overview
 - Connect Messages
 - Connect Companions
