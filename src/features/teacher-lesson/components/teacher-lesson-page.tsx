@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { LessonStageTabs } from "@/components/shared/lesson-stage-tabs";
 import { TeacherLiveSessionPanel } from "@/features/live-session/components/teacher-live-session-panel";
 import { TeacherBeforeClassPreparation } from "./teacher-before-class-preparation";
+import { TeacherAfterClassReview } from "./teacher-after-class-review";
+import type { TeacherLessonReviewData } from "../server/teacher-lesson-review-api";
 
 function TeacherDuringContent() {
   const t = useTranslations("teacherLesson.during");
@@ -28,10 +30,10 @@ function TeacherDuringContent() {
   </section>;
 }
 
-export function TeacherLessonPage() {
+export function TeacherLessonPage({reviewData, initialTab}: {reviewData: TeacherLessonReviewData; initialTab?: "after"}) {
   const t = useTranslations("teacherLesson");
-  const [tab, setTab] = useState("before");
+  const [tab, setTab] = useState(initialTab ?? "before");
   return <div className="mx-auto flex w-full max-w-300 flex-col gap-4 pb-24"><header className="flex items-center gap-2"><Button variant="ghost" size="icon" aria-label={t("back")}><ArrowLeft className="rtl:-scale-x-100" /></Button><div className="min-w-0 flex-1"><h1 className="font-heading text-section font-bold">{t("title")}</h1><p className="text-sm text-muted-foreground">{t("subtitle")}</p></div><Button variant="ghost" size="icon" aria-label={t("more")}><MoreHorizontal /></Button></header><LessonStageTabs active={tab} ariaLabel={t("stagesLabel")} onChange={setTab} items={(["before", "during", "after"] as const).map((value) => ({ value, label: t(`tabs.${value}`) }))} />
-    {tab === "during" ? <><TeacherLiveSessionPanel variant="during" /><TeacherDuringContent /></> : <><TeacherLiveSessionPanel variant="before" /><TeacherBeforeClassPreparation /></>}
-    <footer className="fixed inset-x-0 bottom-0 z-20 flex gap-2 border-t border-border bg-card p-3 md:static md:border-0 md:bg-transparent"><Button variant="outline" className="flex-1">{t("save")}</Button><Button className="flex-1">{t("prepare")}</Button></footer></div>;
+    {tab === "during" ? <><TeacherLiveSessionPanel variant="during" /><TeacherDuringContent /></> : tab === "after" ? <TeacherAfterClassReview data={reviewData}/> : <><TeacherLiveSessionPanel variant="before" /><TeacherBeforeClassPreparation /></>}
+    {tab !== "after" ? <footer className="fixed inset-x-0 bottom-0 z-20 flex gap-2 border-t border-border bg-card p-3 md:static md:border-0 md:bg-transparent"><Button variant="outline" className="flex-1">{t("save")}</Button><Button className="flex-1">{t("prepare")}</Button></footer> : null}</div>;
 }

@@ -91,6 +91,8 @@ _Source: `design/COVERAGE.md`_
 
 ## Teacher core flow
 
+**Teacher evidence implementation decision (2026-09-27):** the first connected T09/T06/T05 release uses persisted class enrollment, review completion, mastery, attempts, assistance and misconception evidence. Attendance, general engagement, grades, family notes, homework approval and lesson-rhythm metrics shown in the wider boards remain future domains and must not be represented with demo values in connected teacher screens.
+
 T01 Today → T03 Prepare lesson → T04 During class → T05 Review → T18 Homework/parent follow-up.
 
 Supporting loops: T07 Curriculum → T03 Lesson; T08 Library ↔ T14 Material editor; T05 Review → T09 Student → T10 Conversation; T06 Insights → T09 Student; T01 Schedule → T02 Calendar → T16 Add class; T01 Tasks → T15 Task editor; T10 Connect → T17 Groups/rooms or T12 Development Club.
@@ -1491,8 +1493,9 @@ The Newton's Third Law page includes:
 - Before-tab compact session strip: scheduled/ready status, join count, and Start class while objectives, warm-up questions, materials, lesson flow, and checks remain available.
 - During-tab live session UI: ready lobby, students joining, connected status, reconnecting/failed recovery, end-class confirmation, and locked completion state.
 - During-tab classroom-support cards: Student questions, Class readiness, Participation & engagement, My notes, Highlight these, and a consent-labeled Classroom observation demo with a permission-denied/retry state.
+- After-tab teacher review connected to completed Study Cave evidence: class selector, lesson completion coverage, lesson-filtered mastery, support usage, mastery distribution, concepts needing support, ranked misconceptions, student results, links to T09 student details, and a review-session summary dialog.
 
-Current limitation: the teacher session states and classroom-support data are frontend-only demo state. They do not start a real class, connect students, synchronize questions, access a camera, or lock a persisted session record. Homework recommendations and persisted lesson results remain outside this implementation.
+Current limitation: the Before/During teacher session states and classroom-support data are frontend-only demo state. They do not start a real class, connect students, synchronize questions, access a camera, or lock a persisted session record. The After tab uses persisted review evidence, but intentionally omits the T05 board’s attendance, general engagement, homework approval, lesson rhythm, and teacher-note controls until those backend domains exist.
 
 ## 3. Teacher routes currently blank
 
