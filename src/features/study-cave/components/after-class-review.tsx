@@ -1,331 +1,88 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-  Check,
-  CheckCircle2,
-  ChevronDown,
-  Circle,
-  Download,
-  FileText,
-  ListChecks,
-  MessageCircleQuestion,
-  NotebookPen,
-  Play,
-  Target,
-  UserRoundCheck,
-  Video,
-  X,
-} from "lucide-react";
+import { BookOpen, Check, ChevronDown, Download, FileText, Lightbulb, MessageCircleQuestion, NotebookPen, Play, Target, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { cn } from "cn";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ReviewCompanion } from "./review-companion";
 import type { ReviewData } from "../review-types";
-import { Textarea } from "@/components/ui/textarea";
 
-type Props = {
-  review: ReviewData;
-  notes: string;
-  onNotesChange: (value: string) => void;
-};
-
-const selfCheckKeys = ["pairs", "objects", "apply", "explain"] as const;
-const timelineKeys = ["examples", "pairs", "scenarios", "problems"] as const;
+type Props = { review: ReviewData; notes: string; onNotesChange: (value: string) => void };
+const materialKeys = ["video", "reading", "practice"] as const;
+const materialIcons = [Play, BookOpen, FileText] as const;
 const questionKeys = ["cancel", "effect", "rest"] as const;
-const materialKeys = ["slides", "reading", "video", "practice"] as const;
-const materialIcons = [FileText, FileText, Video, ListChecks] as const;
 
-export function AfterClassReview({ notes, onNotesChange, review }: Props) {
+export function AfterClassReview({ notes, review }: Props) {
   const t = useTranslations("studyCave.afterClass");
   const hasLegacyDemo = review.lesson?.id === "newton-third-law";
-  const [selfChecks, setSelfChecks] = useState([true, true, false, false]);
-  const [openQuestion, setOpenQuestion] = useState<number | null>(0);
-  const [materials, setMaterials] = useState([true, true, false, false]);
-  const [openedMaterial, setOpenedMaterial] = useState<number | null>(null);
-
-  const summary = useMemo(
-    () =>
-      [
-        t("download.documentTitle"),
-        "",
-        t("objective.title"),
-        review.lesson?.objective ?? "",
-        "",
-        t("keyPoints.title"),
-        ...(review.lesson?.key_points ?? []).map((point) => `• ${point}`),
-        "",
-        t("timeline.title"),
-        ...timelineKeys.map(
-          (key, index) => `${index + 1}. ${t(`timeline.${key}`)}`,
-        ),
-        "",
-        t("questions.title"),
-        ...questionKeys.flatMap((key) => [
-          `• ${t(`questions.${key}.question`)}`,
-          `  ${t(`questions.${key}.answer`)}`,
-        ]),
-        "",
-        t("selfCheck.title"),
-        ...selfCheckKeys.map(
-          (key, index) => `${selfChecks[index] ? "[x]" : "[ ]"} ${t(`selfCheck.${key}`)}`,
-        ),
-        "",
-        t("materials.title"),
-        ...materialKeys.map(
-          (key, index) => `${materials[index] ? "[x]" : "[ ]"} ${t(`materials.${key}.title`)}`,
-        ),
-        "",
-        t("notes.title"),
-        notes,
-        "",
-        t("feedback.title"),
-        t("feedback.text"),
-        "",
-        t("companion.misconception"),
-        t("companion.correction"),
-      ].join("\n"),
-    [materials, notes, selfChecks, t, review.lesson],
-  );
+  const [materials, setMaterials] = useState([true, true, true]);
+  const summary = useMemo(() => [
+    t("download.documentTitle"), "", t("keyPoints.title"),
+    ...(review.lesson?.key_points ?? []).map((point) => `• ${point}`),
+    ...(hasLegacyDemo ? [
+      "", t("materials.title"),
+      ...materialKeys.map((key, index) => `${materials[index] ? "[x]" : "[ ]"} ${t(`materials.${key}.title`)}`),
+      "", t("questions.title"), ...questionKeys.flatMap((key) => [`• ${t(`questions.${key}.question`)}`, `  ${t(`questions.${key}.answer`)}`]),
+      "", t("notes.title"), notes, "", t("companion.misconception"), t("companion.correction"),
+      "", t("feedback.title"), t("feedback.text"),
+    ] : []),
+  ].join("\n"), [hasLegacyDemo, materials, notes, review.lesson, t]);
 
   function downloadSummary() {
     const blob = new Blob([summary], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "newtons-third-law-review.txt";
+    anchor.download = `${review.lesson?.id ?? "lesson"}-summary.txt`;
     anchor.click();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   return (
-    <section className="grid gap-4" aria-label={t("workspaceLabel")}>
-      <div className="grid gap-4 lg:grid-cols-2">
-        <ReviewCard icon={Target} title={t("objective.title")} tone="text-info-foreground">
-          <p className="leading-6 text-muted-foreground">{review.lesson?.objective ?? "—"}</p>
-        </ReviewCard>
-
-        <ReviewCard icon={FileText} title={t("keyPoints.title")} tone="text-info-foreground">
-          <ul className="grid gap-2">
-            {(review.lesson?.key_points ?? []).map((point) => (
-              <li className="flex gap-2 leading-5" key={point}>
-                <span className="mt-0.5 grid size-4 shrink-0 place-items-center rounded-full bg-success text-success-foreground">
-                  <Check className="size-3" aria-hidden="true" />
-                </span>
-                {point}
-              </li>
-            ))}
-          </ul>
-        </ReviewCard>
-
-        {hasLegacyDemo && <>
-        <ReviewCard icon={ListChecks} title={t("timeline.title")} tone="text-assistant-foreground">
-          <ol className="grid gap-3">
-            {timelineKeys.map((key, index) => (
-              <li className="grid grid-cols-[1.75rem_1fr] items-start gap-2" key={key}>
-                <span className="grid size-7 place-items-center rounded-full bg-assistant text-xs font-bold text-assistant-foreground">
-                  {index + 1}
-                </span>
-                <span className="pt-1 leading-5">{t(`timeline.${key}`)}</span>
-              </li>
-            ))}
-          </ol>
-        </ReviewCard>
-
-        <ReviewCard icon={CheckCircle2} title={t("selfCheck.title")} tone="text-success-foreground">
-          <ul className="grid gap-3">
-            {selfCheckKeys.map((key, index) => (
-              <li key={key}>
-                <label className="flex cursor-pointer items-start gap-3 leading-5">
-                  <Checkbox
-                    checked={selfChecks[index]}
-                    onCheckedChange={() =>
-                      setSelfChecks((current) =>
-                        current.map((value, item) => (item === index ? !value : value)),
-                      )
-                    }
-                  />
-                  <span>{t(`selfCheck.${key}`)}</span>
-                </label>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 text-xs font-medium text-muted-foreground" aria-live="polite">
-            {t("selfCheck.progress", {
-              complete: selfChecks.filter(Boolean).length,
-              total: selfChecks.length,
-            })}
-          </p>
-        </ReviewCard>
-
-        <ReviewCard icon={MessageCircleQuestion} title={t("questions.title")} tone="text-assistant-foreground">
-          <div className="mb-4 flex items-center gap-3 rounded-xl bg-muted p-3">
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-secondary font-semibold text-secondary-foreground">
-              A
-            </span>
-            <div>
-              <strong className="text-sm">{t("questions.teacher")}</strong>
-              <p className="text-xs text-muted-foreground">{t("questions.description")}</p>
-            </div>
-          </div>
-          <div className="overflow-hidden rounded-xl border border-border">
-            {questionKeys.map((key, index) => {
-              const open = openQuestion === index;
-              return (
-                <div className="border-b border-border last:border-b-0" key={key}>
-                  <button
-                    type="button"
-                    className="flex w-full items-center justify-between gap-3 px-3 py-3 text-start text-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
-                    aria-expanded={open}
-                    onClick={() => setOpenQuestion(open ? null : index)}
-                  >
-                    <span>{t(`questions.${key}.question`)}</span>
-                    <ChevronDown className={cn("size-4 shrink-0 transition-transform", open && "rotate-180")} />
-                  </button>
-                  {open ? (
-                    <p className="border-t border-border bg-muted/60 px-3 py-3 text-sm leading-6 text-muted-foreground">
-                      {t(`questions.${key}.answer`)}
-                    </p>
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        </ReviewCard>
-
-        <ReviewCard icon={FileText} title={t("materials.title")} tone="text-info-foreground">
-          <ul className="overflow-hidden rounded-xl border border-border">
-            {materialKeys.map((key, index) => {
-              const Icon = materialIcons[index];
-              const complete = materials[index];
-              return (
-                <li className="flex items-center gap-3 border-b border-border px-3 py-2.5 last:border-b-0" key={key}>
-                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-info text-info-foreground">
-                    {key === "video" ? <Play className="size-4 fill-current" /> : <Icon className="size-4" />}
-                  </span>
-                  <button
-                    type="button"
-                    className="min-w-0 flex-1 text-start outline-none focus-visible:underline"
-                    aria-expanded={openedMaterial === index}
-                    onClick={() => setOpenedMaterial(openedMaterial === index ? null : index)}
-                  >
-                    <strong className="block truncate text-sm">{t(`materials.${key}.title`)}</strong>
-                    <span className="text-xs text-muted-foreground">{t(`materials.${key}.meta`)}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={cn(
-                      "grid size-7 shrink-0 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                      complete ? "bg-success text-success-foreground" : "border border-border text-muted-foreground",
-                    )}
-                    aria-label={t(complete ? "materials.markIncomplete" : "materials.markComplete")}
-                    onClick={() =>
-                      setMaterials((current) =>
-                        current.map((value, item) => (item === index ? !value : value)),
-                      )
-                    }
-                  >
-                    {complete ? <Check className="size-4" /> : <Circle className="size-3" />}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-          {openedMaterial === null ? (
-            <p className="mt-3 text-xs text-muted-foreground">{t("materials.helper")}</p>
-          ) : (
-            <div className="mt-3 rounded-xl border border-info bg-info/50 p-4" aria-live="polite">
-              <div className="flex items-start justify-between gap-3">
-                <strong className="text-sm">{t(`materials.${materialKeys[openedMaterial]}.previewTitle`)}</strong>
-                <button
-                  type="button"
-                  className="rounded-md p-1 text-muted-foreground hover:bg-card focus-visible:ring-2 focus-visible:ring-ring"
-                  aria-label={t("materials.closePreview")}
-                  onClick={() => setOpenedMaterial(null)}
-                >
-                  <X className="size-4" aria-hidden="true" />
-                </button>
-              </div>
-              <p className="mt-2 text-sm leading-6">{t(`materials.${materialKeys[openedMaterial]}.preview`)}</p>
-              <p className="mt-3 text-xs text-info-foreground">{t("materials.attachmentPending")}</p>
-            </div>
-          )}
-        </ReviewCard>
-        </>}
-      </div>
-
-      <div className={hasLegacyDemo ? "grid items-start gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,.95fr)]" : "grid gap-4"}>
-        {hasLegacyDemo && (
-        <Card className="shadow-surface">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base font-bold">
-              <NotebookPen className="size-5 text-primary" aria-hidden="true" />
-              {t("notes.title")}
-            </CardTitle>
-            <p className="text-xs text-muted-foreground">{t("notes.description")}</p>
-          </CardHeader>
-          <CardContent className="grid gap-3">
-            <Textarea
-              value={notes}
-              onChange={(event) => onNotesChange(event.target.value)}
-              className="min-h-36 bg-card text-sm leading-6"
-              aria-label={t("notes.editorLabel")}
-            />
-            <div className="rounded-xl border border-success bg-success/70 p-3">
-              <div className="flex items-center gap-2 font-semibold text-success-foreground">
-                <UserRoundCheck className="size-4" aria-hidden="true" />
-                {t("feedback.title")}
-              </div>
-              <p className="mt-1 text-sm leading-6 text-foreground">{t("feedback.text")}</p>
-              <p className="mt-1 text-xs text-success-foreground">{t("feedback.private")}</p>
-            </div>
-            <p className="text-end text-xs text-muted-foreground">{t("notes.saved")}</p>
-          </CardContent>
-        </Card>
-
-        )}
-
-        {review.lesson && !review.error && <ReviewCompanion key={review.lesson.id} lessonId={review.lesson.id} initialSession={review.session} />}
-      </div>
-
-      {hasLegacyDemo && <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 shadow-surface sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <strong className="text-sm">{t("download.title")}</strong>
-          <p className="text-xs text-muted-foreground">{t("download.description")}</p>
-        </div>
-        <Button type="button" variant="outline" className="bg-card" onClick={downloadSummary}>
-          <Download aria-hidden="true" />
-          {t("download.action")}
-        </Button>
-      </div>}
+    <section className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(20rem,1fr)]" aria-label={t("workspaceLabel")}>
+      {review.lesson && !review.error ? <ReviewCompanion className="min-h-[34rem] lg:min-h-[42rem]" key={review.lesson.id} lessonId={review.lesson.id} initialSession={review.session} /> : null}
+      <Card className="min-w-0 shadow-surface">
+        <CardHeader className="gap-1 border-b border-border pb-4">
+          <CardTitle className="text-lg font-bold">{t("lessonSummary.title")}</CardTitle>
+          <p className="text-sm leading-5 text-muted-foreground">{t("lessonSummary.description")}</p>
+        </CardHeader>
+        <CardContent className="grid gap-2 pt-0">
+          <SummarySection icon={Target} title={t("lessonSummary.keyPoints")} tone="bg-secondary text-primary" open>
+            <ul className="divide-y divide-border">
+              {(review.lesson?.key_points ?? []).map((point) => <li className="flex gap-3 py-3 first:pt-1 last:pb-1" key={point}><span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" /><span className="text-sm leading-6 text-muted-foreground">{point}</span></li>)}
+            </ul>
+          </SummarySection>
+          {hasLegacyDemo ? <><SummarySection icon={Play} title={t("lessonSummary.materials")} tone="bg-assistant text-assistant-foreground" open>
+            <span className="mb-2 inline-flex rounded-lg bg-success px-2.5 py-1 text-xs font-semibold text-success-foreground">{t("lessonSummary.materialProgress", { complete: materials.filter(Boolean).length, total: materials.length })}</span>
+            <ul className="overflow-hidden rounded-xl border border-border">
+              {materialKeys.map((key, index) => {
+                const Icon = materialIcons[index]; const complete = materials[index];
+                return <li className="flex items-center gap-2 border-b border-border px-2.5 py-2 last:border-b-0" key={key}>
+                  <button type="button" className={complete ? "grid size-6 shrink-0 place-items-center rounded-full bg-success text-success-foreground" : "grid size-6 shrink-0 place-items-center rounded-full border border-border text-muted-foreground"} aria-label={t(complete ? "materials.markIncomplete" : "materials.markComplete")} onClick={() => setMaterials((current) => current.map((value, item) => item === index ? !value : value))}>{complete ? <Check className="size-3.5" aria-hidden="true" /> : null}</button>
+                  <Icon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                  <span className={complete ? "min-w-0 flex-1 truncate text-xs text-muted-foreground line-through" : "min-w-0 flex-1 truncate text-xs"}>{t(`materials.${key}.title`)}</span>
+                  <span className="rounded-full bg-info px-2 py-1 text-[0.65rem] font-semibold text-info-foreground">{t(index < 2 ? "lessonSummary.required" : "lessonSummary.extra")}</span>
+                </li>;
+              })}
+            </ul>
+          </SummarySection>
+          <SummarySection icon={MessageCircleQuestion} title={t("lessonSummary.questions")}>
+            <ul className="grid gap-3">{questionKeys.map((key) => <li className="text-sm leading-5" key={key}><strong className="block">{t(`questions.${key}.question`)}</strong><span className="mt-1 block text-muted-foreground">{t(`questions.${key}.answer`)}</span></li>)}</ul>
+          </SummarySection>
+          <SummarySection icon={NotebookPen} title={t("lessonSummary.notes")}><p className="whitespace-pre-wrap text-sm leading-6 text-muted-foreground">{notes}</p></SummarySection>
+          <SummarySection icon={Lightbulb} title={t("lessonSummary.misconceptions")} tone="bg-success text-success-foreground"><p className="text-sm leading-6 text-muted-foreground">{t("companion.correction")}</p></SummarySection>
+          <SummarySection icon={UserRound} title={t("lessonSummary.teacherNote")} tone="bg-secondary text-secondary-foreground"><p className="text-sm leading-6 text-muted-foreground">{t("feedback.text")}</p></SummarySection></> : null}
+          <Button type="button" variant="outline" className="mt-1 w-full bg-card text-primary" onClick={downloadSummary}><Download aria-hidden="true" />{t("download.action")}</Button>
+        </CardContent>
+      </Card>
     </section>
   );
 }
 
-function ReviewCard({
-  icon: Icon,
-  title,
-  tone,
-  children,
-}: {
-  icon: typeof Target;
-  title: string;
-  tone: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Card className="shadow-surface">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base font-bold">
-          <span className="grid size-8 place-items-center rounded-lg bg-muted">
-            <Icon className={cn("size-4", tone)} aria-hidden="true" />
-          </span>
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-    </Card>
-  );
+function SummarySection({ children, icon: Icon, open = false, title, tone = "bg-muted text-foreground" }: { children: React.ReactNode; icon: typeof Target; open?: boolean; title: string; tone?: string }) {
+  return <details className="group overflow-hidden rounded-xl border border-border bg-card" open={open}>
+    <summary className="flex cursor-pointer list-none items-center gap-2 px-3 py-3 font-semibold marker:content-none"><span className={`grid size-8 shrink-0 place-items-center rounded-lg ${tone}`}><Icon className="size-4" aria-hidden="true" /></span><span className="min-w-0 flex-1 text-sm">{title}</span><ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" aria-hidden="true" /></summary>
+    <div className="border-t border-border px-3 py-3">{children}</div>
+  </details>;
 }

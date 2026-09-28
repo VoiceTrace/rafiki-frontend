@@ -1364,7 +1364,9 @@ The page includes subject, chapter, and lesson selectors and four phase tabs: Be
 
 ### After class and Homework
 
-The tabs are selectable, but they currently reuse a generic phase layout rather than the richer original-prototype summaries. The generic layout includes editable notes, questions, noticed/matching/context cards, and phase-specific explanatory copy. The lock icons are visual; the implementation does not prevent opening these phases.
+After class uses the approved [Board 42](../design/boards/42-s07-simple-chat-lesson-summary.md) layout: the persistent Rafiqi review conversation fills the wider column and one compact lesson-summary card fills the side column. The summary groups key points, materials, questions and answers, collected notes, corrected misconceptions and the teacher note into accordions. Key points and materials begin expanded. The layout stacks chat before summary on mobile and mirrors correctly in Arabic RTL.
+
+The existing Before class, After class and Homework phase tabs remain unchanged. Homework keeps its existing guided layout.
 
 All edits and session-state transitions are client-side state and are not persisted or synchronized with a teacher.
 
@@ -1564,6 +1566,10 @@ Major prototype concepts still awaiting implementation include the teacher curri
 ## Approved review companion integration — 2026-09-22
 
 [Board 41](../design/boards/41-review-companion-chat.md) and [integration contract](review-companion.md) record the user-approved replacement of static After-class companion confirmations with persistent mock chat, question choices, written answers, feedback and hints. Preserve the existing visual design. During class is removed from student Study Cave; prior During-class guidance remains a deprecated v2 reference. Backend lesson content supplies Today's objective and Key points. The other existing sections remain outside this backend integration.
+
+## Approved simple After-class composition — 2026-09-28
+
+[Board 42](../design/boards/42-s07-simple-chat-lesson-summary.md) adopts the original student HTML prototype's simple chat-and-summary composition using the current Rafiqi design system. Keep the lesson-phase tabs unchanged. The continuous review chat remains the implementation from Board 41, including its separate completion summary. The adjacent Lesson summary is a single accordion card with key points and materials expanded by default and four supporting sections collapsed. This supersedes the previous multi-card After-class page composition without modifying or replacing the original HTML snapshot.
 
 ## Approved catalog sequence — 2026-09-23
 

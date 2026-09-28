@@ -819,6 +819,19 @@
     },
     "afterClass": {
       "workspaceLabel": "After-class lesson review",
+      "lessonSummary": {
+        "title": "Lesson summary",
+        "description": "Everything from this lesson, in one place — the same summary you see on your map.",
+        "keyPoints": "Key points to focus on",
+        "materials": "Material to watch & study",
+        "materialProgress": "{complete} of {total} done",
+        "required": "Required",
+        "extra": "Extra",
+        "questions": "Your questions & answers",
+        "notes": "Notes you collected",
+        "misconceptions": "Misconceptions you fixed",
+        "teacherNote": "A note from your teacher"
+      },
       "objective": {
         "title": "Today’s objective",
         "text": "Understand and apply Newton’s Third Law: when one object exerts a force on a second object, the second object exerts an equal and opposite force on the first."
@@ -1257,7 +1270,7 @@
     }
   },
   "reviewChat": {
-    "title": "Rafiqi review companion",
+    "title": "Rafiqi · revise together",
     "demo": "Demo responses",
     "description": "Answer a question, ask for help, or explore a hint.",
     "start": "Start review",
@@ -1288,6 +1301,7 @@
     "retry": "{attempts} of 3 attempts used. Edit your answer and try again.",
     "composer": "Ask a question or write your answer…",
     "send": "Send message",
+    "sendShort": "Send",
     "you": "You",
     "assistant": "Rafiqi",
     "retryRequest": "Retry sending",

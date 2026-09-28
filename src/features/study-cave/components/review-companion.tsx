@@ -9,8 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { startReview, sendReviewMessage, reloadReview } from "../actions/review-actions";
 import type { ReviewCommand, ReviewEvent, ReviewSession } from "../review-types";
 import { ReviewCompletionSummary } from "./review-completion-summary";
+import { cn } from "cn";
 
-export function ReviewCompanion({ lessonId, initialSession }: { lessonId: string; initialSession: ReviewSession | null }) {
+export function ReviewCompanion({ className, lessonId, initialSession }: { className?: string; lessonId: string; initialSession: ReviewSession | null }) {
   const t = useTranslations("reviewChat");
   const locale = useLocale() === "ar" ? "ar" : "en";
   const [session, setSession] = useState(initialSession);
@@ -46,23 +47,22 @@ export function ReviewCompanion({ lessonId, initialSession }: { lessonId: string
       <summary className="cursor-pointer font-semibold text-assistant-foreground"><Lightbulb className="me-2 inline size-4" />{t("hintLevel", { level: event.level ?? 1 })}</summary>
       <p dir="auto" className="mt-2 whitespace-pre-wrap text-start">{text}</p>
     </details>;
-    return <div key={index} className={`w-fit max-w-[92%] whitespace-pre-wrap rounded-xl p-3 ${event.role === "student" ? "ms-auto bg-secondary" : event.kind === "feedback" && event.score === 1 ? "bg-success/60" : "bg-card"}`}>
+    return <div key={index} className={`w-fit max-w-[92%] whitespace-pre-wrap rounded-xl p-3 ${event.role === "student" ? "ms-auto bg-secondary" : event.kind === "feedback" && event.score === 1 ? "bg-success/60" : "bg-assistant/50"}`}>
       <span className="sr-only">{event.role === "student" ? t("you") : t("assistant")}: </span><p dir="auto" className="text-start">{text}</p>
     </div>;
   }
 
-  return <>
-    <Card className="min-w-0 border-assistant bg-assistant/25 shadow-surface" data-testid="review-chat-card">
-    <CardHeader>
+  return <div className={cn("grid min-w-0 gap-4", className)}>
+    <Card className="min-w-0 flex-1 gap-0 shadow-surface" data-testid="review-chat-card">
+    <CardHeader className="border-b border-border pb-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <CardTitle className="flex items-center gap-2 text-base font-bold"><Bot className="size-5 text-assistant-foreground" />{t("title")}</CardTitle>
+        <CardTitle className="flex items-center gap-2 text-base font-bold"><span className="grid size-9 place-items-center rounded-lg bg-assistant"><Bot className="size-5 text-assistant-foreground" /></span>{t("title")}</CardTitle>
         <span className="rounded-full bg-assistant px-3 py-1 text-xs text-assistant-foreground">{t("demo")}</span>
       </div>
-      <p className="text-xs text-muted-foreground">{t("description")}</p>
     </CardHeader>
-    <CardContent className="grid gap-3">
+    <CardContent className="flex flex-1 flex-col gap-3 pt-4">
       {!session ? <Button disabled={pending} onClick={() => startTransition(async () => { accept(await startReview(lessonId, locale)); })}>{pending ? <Loader2 className="size-4 animate-spin" /> : null}{t("start")}</Button> : <>
-        <div ref={transcript} role="log" aria-label={t("history")} tabIndex={0} className="relative grid max-h-96 gap-3 overflow-y-auto overscroll-contain rounded-lg p-1 text-sm leading-6">
+        <div ref={transcript} role="log" aria-label={t("history")} tabIndex={0} className="relative grid max-h-96 min-h-32 content-start gap-3 overflow-y-auto overscroll-contain rounded-lg p-1 text-sm leading-6 lg:flex-1">
           {session.messages.map(message)}
         </div>
         {!session.complete && question && <fieldset disabled={pending || session.resolved} className="grid min-w-0 gap-3 rounded-xl border border-border bg-card p-4">
@@ -83,9 +83,9 @@ export function ReviewCompanion({ lessonId, initialSession }: { lessonId: string
         </div>
         {session.complete && !session.summary ? <p className="rounded-xl bg-success/60 p-3 text-sm" role="status">{t("complete")}</p> : null}
         {!session.complete && !session.resolved && session.attempts > 0 && <p className="text-xs text-muted-foreground">{t("retry", { attempts: session.attempts })}</p>}
-        <form className="flex items-end gap-2" onSubmit={(event) => { event.preventDefault(); if (draft.trim()) send("chat", draft); }}>
-          <Textarea aria-label={t("composer")} placeholder={t("composer")} maxLength={2000} value={draft} onChange={(event) => setDraft(event.target.value)} disabled={pending} className="min-h-20 bg-card" />
-          <Button type="submit" size="icon" disabled={pending || !draft.trim()} aria-label={t("send")}>{pending ? <Loader2 className="size-4 animate-spin" /> : <SendHorizontal className="rtl:-scale-x-100" />}</Button>
+        <form className="mt-auto flex items-end gap-2 border-t border-border pt-4" onSubmit={(event) => { event.preventDefault(); if (draft.trim()) send("chat", draft); }}>
+          <Textarea aria-label={t("composer")} placeholder={t("composer")} maxLength={2000} value={draft} onChange={(event) => setDraft(event.target.value)} disabled={pending} className="min-h-12 resize-none bg-card" />
+          <Button type="submit" className="h-12 px-5" disabled={pending || !draft.trim()} aria-label={t("send")}>{pending ? <Loader2 className="size-4 animate-spin" /> : <SendHorizontal className="rtl:-scale-x-100" />}{t("sendShort")}</Button>
         </form>
       </>}
       {error && <div role="alert" className="grid gap-2 text-sm text-destructive"><p>{error}</p>
@@ -97,5 +97,5 @@ export function ReviewCompanion({ lessonId, initialSession }: { lessonId: string
     </CardContent>
     </Card>
     {session?.complete && session.summary ? <ReviewCompletionSummary summary={session.summary} /> : null}
-  </>;
+  </div>;
 }
