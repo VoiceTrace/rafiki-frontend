@@ -40,8 +40,8 @@ export function AfterClassReview({ notes, review }: Props) {
   }
 
   return (
-    <section className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(20rem,1fr)]" aria-label={t("workspaceLabel")}>
-      {review.lesson && !review.error ? <ReviewCompanion className="min-h-[34rem] lg:min-h-[42rem]" key={review.lesson.id} lessonId={review.lesson.id} initialSession={review.session} /> : null}
+    <section className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(20rem,1fr)]" aria-label={t("workspaceLabel")}>
+      {review.lesson && !review.error ? <ReviewCompanion key={review.lesson.id} lessonId={review.lesson.id} initialSession={review.session} /> : null}
       <Card className="min-w-0 shadow-surface">
         <CardHeader className="gap-1 border-b border-border pb-4">
           <CardTitle className="text-lg font-bold">{t("lessonSummary.title")}</CardTitle>

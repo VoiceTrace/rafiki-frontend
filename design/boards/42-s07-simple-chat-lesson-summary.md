@@ -9,6 +9,8 @@ Use the simple two-column composition from the original student HTML reference f
 - Use the current Rafiqi design system: orange primary actions, lavender assistant accents, sage completion states, semantic tokens, Lucide icons, shared cards and controls.
 - Stack chat before summary on narrow screens. English uses LTR and Arabic uses RTL with logical spacing.
 - Keep the separate immutable completion summary from Board 41 beneath the conversation when the review is finished.
+- Expanding any number of Lesson summary sections must grow only the summary column. It must not stretch the chat card or create blank space between the conversation and composer.
+- In the composer, Enter sends the message and Shift+Enter inserts a new line.
 
 Backend lesson content remains authoritative for lesson key points and review-session content. The existing Newton-only demo material, notes, teacher Q&A and teacher note remain demo content and must not leak into other lessons when those sources are unavailable.
 

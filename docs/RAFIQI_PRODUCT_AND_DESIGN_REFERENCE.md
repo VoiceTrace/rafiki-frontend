@@ -1571,6 +1571,8 @@ Major prototype concepts still awaiting implementation include the teacher curri
 
 [Board 42](../design/boards/42-s07-simple-chat-lesson-summary.md) adopts the original student HTML prototype's simple chat-and-summary composition using the current Rafiqi design system. Keep the lesson-phase tabs unchanged. The continuous review chat remains the implementation from Board 41, including its separate completion summary. The adjacent Lesson summary is a single accordion card with key points and materials expanded by default and four supporting sections collapsed. This supersedes the previous multi-card After-class page composition without modifying or replacing the original HTML snapshot.
 
+The chat and summary columns size independently: expanding summary sections must not stretch the chat or add blank space above its composer. Enter sends a chat message; Shift+Enter adds a line break.
+
 ## Approved catalog sequence — 2026-09-23
 
 The user requested a persisted Subject → Chapter → Lesson catalog. Preserve the existing three-selector styling. Start with subject selection; changing a parent clears dependent selections, and no review is shown before a lesson is selected. Stable IDs in URLs survive locale changes. Direct lesson links resolve their parents. Catalog content and concept references are bilingual and AI remains mocked. This supersedes the first-lesson auto-selection documented in the initial integration.

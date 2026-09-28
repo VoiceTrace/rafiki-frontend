@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { type KeyboardEvent, useRef, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Bot, Lightbulb, Loader2, SendHorizontal } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,6 +39,17 @@ export function ReviewCompanion({ className, lessonId, initialSession }: { class
       const result = await sendReviewMessage(session.id, command);
       if (accept(result)) { setDraft(""); if (action === "next") setSelected(""); }
     });
+  }
+
+  function submitDraft() {
+    const text = draft.trim();
+    if (text) send("chat", text);
+  }
+
+  function handleComposerKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing) return;
+    event.preventDefault();
+    submitDraft();
   }
 
   function message(event: ReviewEvent, index: number) {
@@ -83,8 +94,8 @@ export function ReviewCompanion({ className, lessonId, initialSession }: { class
         </div>
         {session.complete && !session.summary ? <p className="rounded-xl bg-success/60 p-3 text-sm" role="status">{t("complete")}</p> : null}
         {!session.complete && !session.resolved && session.attempts > 0 && <p className="text-xs text-muted-foreground">{t("retry", { attempts: session.attempts })}</p>}
-        <form className="mt-auto flex items-end gap-2 border-t border-border pt-4" onSubmit={(event) => { event.preventDefault(); if (draft.trim()) send("chat", draft); }}>
-          <Textarea aria-label={t("composer")} placeholder={t("composer")} maxLength={2000} value={draft} onChange={(event) => setDraft(event.target.value)} disabled={pending} className="min-h-12 resize-none bg-card" />
+        <form className="flex items-end gap-2 border-t border-border pt-4" onSubmit={(event) => { event.preventDefault(); submitDraft(); }}>
+          <Textarea aria-label={t("composer")} placeholder={t("composer")} maxLength={2000} value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={handleComposerKeyDown} disabled={pending} className="min-h-12 resize-none bg-card" />
           <Button type="submit" className="h-12 px-5" disabled={pending || !draft.trim()} aria-label={t("send")}>{pending ? <Loader2 className="size-4 animate-spin" /> : <SendHorizontal className="rtl:-scale-x-100" />}{t("sendShort")}</Button>
         </form>
       </>}
