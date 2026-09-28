@@ -8,7 +8,12 @@ import type {
 
 type LoginInput = { email: string; password: string; role: UserRole }
 type SignUpInput = LoginInput & { name: string }
-type AccessTokenLoginResponse = { access_token: string }
+type BackendTokenResponse = {
+  access_token: string
+  refresh_token: string
+  token_type: string
+  expires_in: number
+}
 type BackendUser = {
   id: string
   email: string
@@ -116,7 +121,7 @@ export async function authenticateUser(
     return { user: mockUser(input) }
   }
 
-  const response = await request<AccessTokenLoginResponse>("/auth/login", {
+  const response = await request<BackendTokenResponse>("/auth/login", {
     method: "POST",
     body: JSON.stringify({ email: input.email, password: input.password }),
   })
@@ -138,18 +143,42 @@ export async function authenticateUser(
       emailVerified: true,
     },
     accessToken: response.access_token,
+    refreshToken: response.refresh_token,
+    accessTokenExpiresAt: Date.now() + response.expires_in * 1000,
   }
 }
 
+type RefreshedSession = {
+  accessToken: string
+  refreshToken: string
+  accessTokenExpiresAt: number
+}
+
+const pendingRefreshes = new Map<string, Promise<RefreshedSession>>()
+
 export async function refreshAuthSession(refreshToken: string): Promise<{
   accessToken: string
-  refreshToken?: string
+  refreshToken: string
   accessTokenExpiresAt: number
 }> {
-  return request("/auth/refresh", {
+  const pending = pendingRefreshes.get(refreshToken)
+  if (pending) return pending
+
+  const refresh = request<BackendTokenResponse>("/auth/refresh", {
     method: "POST",
-    body: JSON.stringify({ refreshToken }),
-  })
+    body: JSON.stringify({ refresh_token: refreshToken }),
+  }).then((response) => ({
+    accessToken: response.access_token,
+    refreshToken: response.refresh_token,
+    accessTokenExpiresAt: Date.now() + response.expires_in * 1000,
+  }))
+  pendingRefreshes.set(refreshToken, refresh)
+  const clearPending = () => setTimeout(
+    () => pendingRefreshes.delete(refreshToken),
+    5_000,
+  )
+  void refresh.then(clearPending, clearPending)
+  return refresh
 }
 
 export async function revokeAuthSession(refreshToken: string): Promise<void> {
@@ -157,7 +186,7 @@ export async function revokeAuthSession(refreshToken: string): Promise<void> {
 
   await request<void>("/auth/logout", {
     method: "POST",
-    body: JSON.stringify({ refreshToken }),
+    body: JSON.stringify({ refresh_token: refreshToken }),
   })
 }
 
