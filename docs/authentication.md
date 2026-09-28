@@ -10,17 +10,19 @@ The backend currently implements this authentication and self-profile surface:
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| POST | `/auth/login` | Accepts `{ email, password }` and returns `{ access_token, token_type }`. |
+| POST | `/auth/login` | Accepts `{ email, password }` and returns an access token, rotating refresh token, token type, and `expires_in`. |
+| POST | `/auth/refresh` | Rotates a valid refresh token and returns a new token pair. |
+| POST | `/auth/logout` | Revokes the supplied refresh token. |
 | GET | `/users/me` | Returns the authenticated `UserRead` record. |
 | PATCH | `/users/me` | Updates the authenticated user's `full_name` and/or `password`. |
 | PUT | `/users/me/avatar` | Uploads JPEG, PNG, or WebP in multipart field `file`, maximum 5 MB. |
 | DELETE | `/users/me/avatar` | Removes the authenticated user's avatar. |
 
-The access token is a six-hour bearer JWT. Its claims include `sub`, `school_id`, `role`, and `exp`. The backend remains authoritative for identity, role, school scope, and authorization.
+The access token is a short-lived bearer JWT (30 minutes by default). Its claims include `sub`, `school_id`, `role`, and `exp`. The backend remains authoritative for identity, role, school scope, and authorization.
 
 `UserRead` contains `id`, `school_id`, `email`, `full_name`, `role`, `is_active`, `avatar_url`, `created_at`, and `updated_at`.
 
-The current backend does not implement refresh, token revocation/logout, registration, password recovery, or email verification endpoints.
+The current backend does not implement registration, password recovery, or email verification endpoints.
 
 ## Frontend behavior that must be preserved
 
@@ -29,25 +31,25 @@ The current backend does not implement refresh, token revocation/logout, registr
 - After login, the frontend calls `GET /users/me` with the new bearer token. The returned role, name, email, and ID replace any client assumptions.
 - The backend token is stored in the encrypted, HTTP-only Auth.js JWT cookie. Do not copy it to `session.user` or pass it to Client Components.
 - Server-only backend calls obtain the token through `getBackendAccessToken()` in `src/features/auth/server/dal.ts`.
-- `verifySession(locale, requiredRole)` remains the authoritative server-side route guard for teacher and student layouts. `src/proxy.ts` is only an early redirect layer.
+- `verifySession(locale, requiredRole)` remains the authoritative server-side route guard and the single refresh owner for teacher and student layouts. `src/proxy.ts` only decodes the encrypted Auth.js JWT for early redirects; it must not rotate the single-use backend refresh token.
 - Localized auth pages stay under `src/app/[locale]/(auth)`. Do not recreate `src/app/[locale]/login/page.tsx`.
 - Preserve the teacher and student profile routes, `ProfileForm`, `UserMenu`, and the `/users/me` profile operations added by PR #2.
 - `src/lib/api.ts` accepts either `API_URL` or `AUTH_API_URL` as the backend origin so auth and profile calls use the same service.
 - Relative avatar paths returned by the backend are joined with the server-configured backend origin before being passed to the profile UI.
-- The existing refresh and backend logout code is dormant for the current login response because no refresh token or expiry metadata is returned. Do not fabricate those values from the access JWT.
+- Login stores the access token, refresh token, and computed expiry only inside the encrypted Auth.js JWT. The refresh token rotates through `POST /auth/refresh` before access expiry and sign-out revokes the current token through `POST /auth/logout`.
 - `isEmailVerified` is currently a frontend compatibility placeholder. It must not be treated as a backend-verified fact until the backend exposes verification state.
 
 ## Current limitations
 
 The sign-up, forgot-password, reset-password, and verify-email screens came from `main`, but their real API endpoints do not exist in the current backend. They may be used as mock UI in local development. Do not claim these flows work against the real backend.
 
-Auth.js sign-out currently clears the local encrypted session. It cannot revoke a backend session because the backend issues no refresh token and exposes no revocation endpoint.
+Auth.js sign-out clears the local encrypted session and asks the backend to revoke the current refresh token.
 
-## Backend work for stronger authentication
+## Implemented stronger authentication
 
 ### Refresh-token rotation
 
-Add `POST /auth/refresh`. A recommended request and response are:
+The implemented `POST /auth/refresh` request and response are:
 
 ```json
 {
@@ -60,7 +62,7 @@ Add `POST /auth/refresh`. A recommended request and response are:
   "access_token": "<JWT>",
   "refresh_token": "<new opaque refresh token>",
   "token_type": "bearer",
-  "expires_in": 21600
+  "expires_in": 1800
 }
 ```
 
@@ -68,7 +70,7 @@ Store only refresh-token hashes. Rotate on every refresh, invalidate the previou
 
 ### Logout and revocation
 
-Add `POST /auth/logout` to revoke the supplied refresh-token family. It should be idempotent. Consider `POST /auth/logout-all` to revoke every active session after password changes or account compromise.
+`POST /auth/logout` idempotently revokes the supplied refresh token. Consider `POST /auth/logout-all` later to revoke every active session after password changes or account compromise.
 
 When `PATCH /users/me` changes the password, revoke existing refresh-token sessions and record a security audit event without storing passwords or tokens.
 
