@@ -903,6 +903,10 @@
         "helper": "Select a material for its lesson preview, or mark it complete.",
         "closePreview": "Close material preview",
         "attachmentPending": "Teacher-uploaded files and video will open here when connected to the lesson.",
+        "questionLabel": "Question",
+        "openLink": "Open resource",
+        "download": "Download",
+        "types": { "question": "Question", "article": "Article", "link": "Link", "image": "Image", "video": "Video", "file": "File" },
         "markComplete": "Mark complete",
         "markIncomplete": "Mark incomplete"
       },
@@ -981,6 +985,7 @@
     "noResults": "No materials found",
     "noResultsHelp": "Try a different search or material type.",
     "preview": "Resource preview",
+    "downloadMaterial": "Download file",
     "previewIllustration": "Illustration of two skateboarders pushing away from each other",
     "source": "Source",
     "targetAudience": "Target audience",

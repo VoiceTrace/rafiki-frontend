@@ -28,3 +28,13 @@ The T08 wireframe's tabs-first page, filter/library split, and selected-material
 ## Implementation boundary
 
 The frontend uses the school-scoped resources API. Library records are separate from class/lesson assignments; completion is stored for the student and assignment, independent of review-session state. File uploads use a private storage path and authenticated download proxy.
+
+## Approved resource viewing in teacher preview and After class — 2026-09-29
+
+The user requested that the selected teacher resource be viewable or downloadable in **Resource preview**, and that students can open every assigned material from the same lesson in **After class**. Keep the current T08/T14 library and Board 42 After-class compositions; extend their existing preview/material rows with type-aware content and actions.
+
+- Questions show the prompt to the student; the teacher preview also shows the teacher's answer.
+- Articles show their description, and links open their source in a new tab.
+- Uploaded images and videos have inline previews where the browser supports them, plus a download action. Other uploaded files offer open/preview and download actions based on their media type.
+- Student file access stays assignment-scoped; teacher library access stays owner-scoped. Private asset URLs use the authenticated proxy. Student payloads never include the answer field.
+- Required/optional badges and the per-student completion control remain visible beside every material.
