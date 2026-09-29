@@ -33,6 +33,7 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
   const [correctAnswer, setCorrectAnswer] = useState("a")
   const [questionText, setQuestionText] = useState("")
   const [conceptRef, setConceptRef] = useState("")
+  const [hints, setHints] = useState(["", "", ""])
   const [formVersion, setFormVersion] = useState(0)
   const [state, formAction, isPending] = useActionState(async (prev: HomeworkActionState | null, form: FormData) => {
     const result = await addQuestionAction(prev, form)
@@ -41,6 +42,7 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
       setCorrectAnswer("a")
       setQuestionText("")
       setConceptRef("")
+      setHints(["", "", ""])
       setFormVersion((version) => version + 1)
     }
     return result
@@ -89,6 +91,28 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
               placeholder={t("question.textPlaceholder")}
             />
           </div>
+
+          <fieldset className="grid gap-2 rounded-xl border border-border bg-secondary/20 p-3">
+            <legend className="px-1 text-sm font-semibold">{t("question.hints")} *</legend>
+            <p className="text-xs text-muted-foreground">{t("question.hintsDescription")}</p>
+            {hints.map((hint, index) => (
+              <div key={index} className="grid gap-1.5">
+                <label htmlFor={`hint_${index}`} className="text-sm font-medium">
+                  {t("question.hintLabel", { number: index + 1 })}
+                </label>
+                <Textarea
+                  id={`hint_${index}`}
+                  name={`hint_${index}`}
+                  value={hint}
+                  onChange={(event) => setHints((current) => current.map((value, hintIndex) => hintIndex === index ? event.target.value : value))}
+                  required
+                  maxLength={500}
+                  rows={2}
+                  placeholder={t("question.hintPlaceholder", { number: index + 1 })}
+                />
+              </div>
+            ))}
+          </fieldset>
 
           <div className="grid gap-1.5">
             <label htmlFor="concept_ref" className="text-sm font-semibold">{t("question.conceptRef")}</label>

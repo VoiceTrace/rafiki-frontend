@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { ArrowLeft, CheckCircle2, Loader2, XCircle } from "lucide-react"
+import { ArrowLeft, CheckCircle2, Lightbulb, Loader2, XCircle } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,6 +18,7 @@ export function StudentHomeworkMCQ({ assignment, initialResult }: Props) {
   const t = useTranslations("studentHomework")
   const locale = useLocale() as "en" | "ar"
   const [selected, setSelected] = useState<Record<string, string>>({})
+  const [revealedHints, setRevealedHints] = useState<Record<string, number>>({})
   const [result, setResult] = useState<SubmissionResult | null>(initialResult)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
@@ -28,6 +29,14 @@ export function StudentHomeworkMCQ({ assignment, initialResult }: Props) {
   function handleSelect(questionId: string, optionId: string) {
     if (isSubmitted || result || isPending) return
     setSelected((prev) => ({ ...prev, [questionId]: optionId }))
+  }
+
+  function revealNextHint(questionId: string, hintCount: number) {
+    if (isSubmitted || result || isPending) return
+    setRevealedHints((previous) => ({
+      ...previous,
+      [questionId]: Math.min((previous[questionId] ?? 0) + 1, hintCount),
+    }))
   }
 
   function handleSubmit() {
@@ -87,6 +96,7 @@ export function StudentHomeworkMCQ({ assignment, initialResult }: Props) {
       <div className="grid gap-4">
         {assignment.questions.map((q, idx) => {
           const attempt = resultMap?.[q.id]
+          const shownHintCount = revealedHints[q.id] ?? 0
           return (
             <Card key={q.id}>
               <CardHeader>
@@ -95,6 +105,27 @@ export function StudentHomeworkMCQ({ assignment, initialResult }: Props) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid gap-2">
+                {q.hints.slice(0, shownHintCount).map((hint, hintIndex) => (
+                  <div key={hintIndex} className="flex gap-2 rounded-xl border border-primary/20 bg-primary/5 p-3 text-sm">
+                    <Lightbulb className="mt-0.5 size-4 shrink-0 text-primary" />
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-primary">{t("mcq.hintLabel", { number: hintIndex + 1 })}</p>
+                      <p className="break-words">{hint}</p>
+                    </div>
+                  </div>
+                ))}
+                {!attempt && !isSubmitted && shownHintCount < q.hints.length && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-fit"
+                    disabled={isPending}
+                    onClick={() => revealNextHint(q.id, q.hints.length)}
+                  >
+                    <Lightbulb />
+                    {t("mcq.revealHint", { number: shownHintCount + 1 })}
+                  </Button>
+                )}
                 {q.options.map((opt) => {
                   const isSelected = selected[q.id] === opt.id
                   const isCorrect = attempt?.correct_answer === opt.id

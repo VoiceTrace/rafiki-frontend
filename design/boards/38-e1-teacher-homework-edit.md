@@ -11,6 +11,10 @@ Desktop reference for **E1 Teacher Homework** — the full edit page where a tea
 
 **Implemented and live (2026-09-22).** Corresponds to route `/teacher/homework/{assignmentId}/edit`.
 
+**2026-09-29 approved extension:** Homework is a teacher-authored assessment,
+not a chat surface. Each question requires exactly three teacher-written static
+hints. This extends the fields below.
+
 ## Required UI
 
 2026-09-27 approved clarification: the earlier fixed four-option wording below
@@ -33,6 +37,7 @@ Fields:
 - Option A, B, C, D — one text input each.
 - `correct_answer` — radio or select (A/B/C/D).
 - `concept_ref` — the mastery concept this question maps to (for gap-digest aggregation).
+- `hints` — exactly three required static hints, entered and ordered by the teacher.
 - **Add question** submit button.
 
 ### Distribute dialog

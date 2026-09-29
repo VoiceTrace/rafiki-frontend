@@ -11,6 +11,10 @@ Desktop reference for **E1 Student Homework** — the quiz-taking view where a s
 
 **Implemented and live (2026-09-22).** Corresponds to route `/student/homework/{studentAssignmentId}`.
 
+**2026-09-29 approved extension:** Homework has no chat or AI controls. Each
+question exposes three teacher-authored static hints progressively, before
+submission.
+
 ## Required UI
 
 ### Header
@@ -22,6 +26,8 @@ Desktop reference for **E1 Student Homework** — the quiz-taking view where a s
 - Question stem in card header.
 - Options A–D as full-width buttons, each showing the letter prefix and option text.
 - Clicking an option highlights it with a primary-color border and fill; previous selection for that question is cleared.
+- A student can reveal hint 1, then hint 2, then hint 3. Hints are static content
+  authored with the question; they do not call an AI service.
 
 ### Answer states (before submission)
 - Unselected: neutral border, light secondary fill.

@@ -41,6 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /.next-production/
+/.next-verification/
 .playwright-cli/
 verification/
 verification/ar-teacher-mobile.png

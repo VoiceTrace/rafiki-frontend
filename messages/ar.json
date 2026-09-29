@@ -600,7 +600,9 @@
       "score": "{correct} من {total} صحيح · {percent}%",
       "submitError": "فشل التسليم. يرجى المحاولة مجدداً.",
       "correctAnswer": "الإجابة الصحيحة",
-      "yourAnswer": "إجابتك"
+      "yourAnswer": "إجابتك",
+      "revealHint": "إظهار التلميح {number}",
+      "hintLabel": "التلميح {number}"
     }
   },
   "teacherHomework": {
@@ -657,6 +659,10 @@
       "textPlaceholder": "اكتب سؤالك هنا…",
       "conceptRef": "مرجع المفهوم",
       "conceptRefPlaceholder": "مثال: newton-third-law",
+      "hints": "ثلاثة تلميحات للطالب",
+      "hintsDescription": "اكتب ثلاثة تلميحات قصيرة. يستطيع الطالب إظهارها واحداً تلو الآخر قبل التسليم.",
+      "hintLabel": "التلميح {number}",
+      "hintPlaceholder": "اكتب التلميح {number}",
       "options": "خيارات الإجابة",
       "optionPlaceholder": "الخيار {id}",
       "addOption": "إضافة خيار",

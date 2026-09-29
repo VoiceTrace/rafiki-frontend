@@ -129,6 +129,14 @@ export function HomeworkEditShell({ assignment, students }: Props) {
                         </li>
                       ))}
                     </ul>
+                    <div className="mt-3 grid gap-1.5 rounded-lg bg-secondary/30 p-3">
+                      <p className="text-xs font-semibold text-muted-foreground">{t("question.hints")}</p>
+                      {q.hints.map((hint, hintIndex) => (
+                        <p key={hintIndex} className="break-words text-sm">
+                          {t("question.hintLabel", { number: hintIndex + 1 })}: {hint}
+                        </p>
+                      ))}
+                    </div>
                     {q.concept_ref && (
                       <p className="mt-2 text-xs text-muted-foreground">{t("edit.concept")}: {q.concept_ref}</p>
                     )}

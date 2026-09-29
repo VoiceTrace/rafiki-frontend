@@ -600,7 +600,9 @@
       "score": "{correct} / {total} correct · {percent}%",
       "submitError": "Failed to submit. Please try again.",
       "correctAnswer": "Correct answer",
-      "yourAnswer": "Your answer"
+      "yourAnswer": "Your answer",
+      "revealHint": "Show hint {number}",
+      "hintLabel": "Hint {number}"
     }
   },
   "teacherHomework": {
@@ -657,6 +659,10 @@
       "textPlaceholder": "Write your question here…",
       "conceptRef": "Concept reference",
       "conceptRefPlaceholder": "e.g. newton-third-law",
+      "hints": "Three student hints",
+      "hintsDescription": "Write three short hints. Students can reveal them one at a time before submitting.",
+      "hintLabel": "Hint {number}",
+      "hintPlaceholder": "Write hint {number}",
       "options": "Answer options",
       "optionPlaceholder": "Option {id}",
       "addOption": "Add option",

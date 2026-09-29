@@ -17,6 +17,7 @@ export interface QuestionTeacher {
   format: QuestionFormat
   options: MCQOption[]
   concept_ref: string | null
+  hints: string[]
   order: number
   correct_answer: string
 }
@@ -29,6 +30,7 @@ export interface QuestionStudent {
   format: QuestionFormat
   options: MCQOption[]
   concept_ref: string | null
+  hints: string[]
   order: number
 }
 
@@ -116,6 +118,7 @@ export interface AddQuestionRequest {
   question_text: string
   options: MCQOption[]
   correct_answer: string
+  hints: string[]
   concept_ref?: string
   order?: number
 }
@@ -124,6 +127,7 @@ export interface UpdateQuestionRequest {
   question_text?: string
   options?: MCQOption[]
   correct_answer?: string
+  hints?: string[]
   concept_ref?: string
   order?: number
 }

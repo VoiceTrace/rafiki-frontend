@@ -223,6 +223,21 @@ _Source: `design/WIREFRAMES.md`_
 
 ## Approved state extensions
 
+### Approved homework assessment scope — 2026-09-29
+
+Homework is a teacher-authored assessment. It contains no chat or AI interaction
+on the teacher or student homework screens. Each MCQ question has a teacher-written
+stem, answer options, one correct answer, and exactly three static hints. Students
+can reveal the hints progressively before submitting. The question, answers, and
+hints are persisted as homework data for later Rafiqi understanding analysis; no
+AI generation or validation happens in this flow.
+
+- The teacher question builder requires all three hints before a question can be saved.
+- Student homework shows only the question, options, and progressive hints before
+  submission. Correct answers remain hidden until submission.
+- This extends Boards 38 and 39 and supersedes any implication that homework has
+  a conversational assistant.
+
 - [Board 29 — S11 first-open profile onboarding](../design/boards/29-s11-first-open-profile.md) extends S11 and S16 with a voluntary first-time conversation, live learner-profile updates, **Confident** / **Still forming** labels, correction controls, and a mobile Arabic RTL direction. It does not replace the canonical S11/S16 wireframes.
 
 - [Board 34 — Selected professional first-login onboarding](../design/boards/34-first-login-onboarding-selected.md) defines the welcome screen, overall visual language, routing, completion behavior, and the retained form-step rollback reference.

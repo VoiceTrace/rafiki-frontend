@@ -14,6 +14,7 @@ export const questionSchema = z.object({
   question_text: z.string().trim().min(1),
   options: z.array(z.object({ id: z.string().min(1).max(10), text: z.string().trim().min(1) })).min(2).max(6),
   correct_answer: z.string().min(1).max(10),
+  hints: z.array(z.string().trim().min(1).max(500)).length(3),
   concept_ref: z.string().trim().max(200).optional(),
   order: z.number().int().nonnegative(),
 }).refine(({ options, correct_answer }) =>

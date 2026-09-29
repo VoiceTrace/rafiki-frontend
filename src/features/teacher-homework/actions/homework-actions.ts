@@ -79,6 +79,7 @@ export async function addQuestionAction(_prev: HomeworkActionState | null, form:
   }
   const parsed = questionSchema.safeParse({
     question_text: form.get("question_text"), options, correct_answer: form.get("correct_answer"),
+    hints: [form.get("hint_0"), form.get("hint_1"), form.get("hint_2")],
     concept_ref: form.get("concept_ref") || undefined, order: Number(form.get("order")),
   })
   if (!id.success || !parsed.success) return { error: "validation" }
