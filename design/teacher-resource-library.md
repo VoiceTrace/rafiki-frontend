@@ -42,3 +42,7 @@ The user requested that the selected teacher resource be viewable or downloadabl
 ## Mobile viewport clipping fix — 2026-09-29
 
 The supplied mobile screenshot showed the shared header and resource page shifted beyond the left edge, with the library actions and cards wider than the visible viewport. This is a responsive implementation defect against the approved narrow-screen stacked layout above. Preserve the same content and library hierarchy; constrain the shell and page to the viewport and arrange the page actions for narrow widths.
+
+## Drag-and-drop file uploads — 2026-09-29
+
+The user requested that the resource upload control accept PDF, JPG, PNG, WebP, MP4, and WebM files up to 20 MB and support drag and drop. Keep the existing T14 type-specific picker and server validation; add a keyboard-accessible drop target with early client-side type, MIME, empty-file, and size feedback. Server-side validation remains authoritative.
