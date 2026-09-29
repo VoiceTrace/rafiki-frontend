@@ -1057,6 +1057,7 @@
     "createClass": "إنشاء فصل",
     "className": "اسم الفصل",
     "classLabel": "الفصل",
+    "allClasses": "كل الفصول",
     "chooseClass": "اختر فصلًا",
     "chooseLesson": "اختر درسًا",
     "createClassFirst": "أنشئ فصلًا أو اختر فصلًا لعرض دروس صفه.",

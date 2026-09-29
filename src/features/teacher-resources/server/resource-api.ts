@@ -2,7 +2,7 @@ import "server-only";
 import { getBackendAccessToken, getSessionUser } from "@/features/auth/server/dal";
 
 export type ResourceType = "question" | "article" | "link" | "image" | "video" | "file";
-export type LibraryResource = { id: string; type: ResourceType; title: string; description: string; question: string | null; answer: string | null; source_url: string | null; original_filename: string | null; media_type: string | null; byte_size: number | null; created_at: string; download_url?: string | null };
+export type LibraryResource = { id: string; type: ResourceType; title: string; description: string; question: string | null; answer: string | null; source_url: string | null; original_filename: string | null; media_type: string | null; byte_size: number | null; created_at: string; assigned_class_ids: string[]; download_url?: string | null };
 export type ResourceClass = { id: string; name: string; grade_id: string; grade_title: string; student_count: number };
 export type Grade = { id: string; title: string };
 export type CurriculumLesson = { id: string; title: string; chapter_id: string; chapter: string; subject_id: string; subject: string; grade_id: string };
