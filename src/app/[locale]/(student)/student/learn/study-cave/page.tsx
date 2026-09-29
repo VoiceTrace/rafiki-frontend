@@ -1,15 +1,5 @@
-import { StudyCavePage } from "@/features/study-cave/components/study-cave-page";
-import {
-  parseStudyCaveRouteState,
-  type StudyCaveSearchParams,
-} from "@/features/study-cave/types";
+import { redirect } from "next/navigation";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<StudyCaveSearchParams>;
-}) {
-  const routeState = parseStudyCaveRouteState(await searchParams);
-
-  return <StudyCavePage {...routeState} showHomeworkState />;
+export default function Page() {
+  redirect("/student/study-cave");
 }

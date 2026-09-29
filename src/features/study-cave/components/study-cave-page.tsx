@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AfterClassReview } from "./after-class-review";
-import { StudyCaveHomeworkPanel } from "./study-cave-homework-panel";
+import { StudyCaveHomeworkWorkspace } from "./study-cave-homework-workspace";
 import { StudyCaveCardTitle } from "./study-cave-card-title";
 import { StudyCavePhaseTabs } from "./study-cave-phase-tabs";
 import { StudyCaveQuestionCard, type StudyCaveQuestion } from "./study-cave-question-card";
@@ -39,6 +39,7 @@ import {
   studyCavePhases,
   type StudyCavePhase,
 } from "@/features/study-cave/types";
+import type { StudentAssignmentRead, StudentAssignmentWithQuestions, SubmissionResult } from "@/types/homework";
 
 const phases = studyCavePhases;
 
@@ -60,12 +61,16 @@ function SessionContentFrame({
 
 export function StudyCavePage({
   initialPhase = "before",
-  showHomeworkState = false,
   initialSessionState,
+  homeworkAssignments = [],
+  selectedHomework = null,
+  initialHomeworkResult = null,
 }: {
   initialPhase?: StudyCavePhase;
-  showHomeworkState?: boolean;
   initialSessionState?: StudentSessionState;
+  homeworkAssignments?: StudentAssignmentRead[];
+  selectedHomework?: StudentAssignmentWithQuestions | null;
+  initialHomeworkResult?: SubmissionResult | null;
 }) {
   const t = useTranslations("studyCave");
   const [phase, setPhase] = useState<StudyCavePhase>(initialPhase);
@@ -148,7 +153,7 @@ export function StudyCavePage({
           {subtitles[phase]}
         </p>
       </header>
-      <section
+      {phase !== "homework" && <section
         className="grid gap-3 md:grid-cols-3"
         aria-label={t("selectorsLabel")}
       >
@@ -174,7 +179,7 @@ export function StudyCavePage({
             </Select>
           </label>
         ))}
-      </section>
+      </section>}
       <StudyCavePhaseTabs phases={phases} activePhase={phase} onSelect={setPhase} t={t} />
       {phase === "before" ? (
         <section className="grid gap-4 lg:grid-cols-[minmax(0,.95fr)_minmax(20rem,1.05fr)]">
@@ -274,8 +279,8 @@ export function StudyCavePage({
         </section>
       ) : phase === "after" ? (
         <AfterClassReview notes={notes} onNotesChange={setNotes} />
-      ) : phase === "homework" && showHomeworkState ? (
-        <StudyCaveHomeworkPanel />
+      ) : phase === "homework" ? (
+        <StudyCaveHomeworkWorkspace assignments={homeworkAssignments} selectedAssignment={selectedHomework} initialResult={initialHomeworkResult} />
       ) : (
         <SessionContentFrame
           enabled={phase === "during"}

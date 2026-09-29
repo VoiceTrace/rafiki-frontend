@@ -238,6 +238,19 @@ AI generation or validation happens in this flow.
 - This extends Boards 38 and 39 and supersedes any implication that homework has
   a conversational assistant.
 
+### Approved Study Cave homework journey — 2026-09-29
+
+The student opens homework from the **Homework** phase inside Study Cave. That
+phase shows only active assigned assessments, with subject, chapter, and lesson
+selectors. Selecting a lesson opens its assigned MCQ in the same Study Cave
+context. Each question keeps its teacher-authored hints in an expandable panel.
+The mobile **More** menu does not contain a separate Homework destination;
+legacy homework links redirect to the Study Cave homework phase.
+
+This replaces the sample-only Study Cave homework panel and the separate student
+homework list/detail journey. Teacher-created assignment context is persisted as
+subject, chapter, and lesson data; no AI or chat is included in this flow.
+
 - [Board 29 — S11 first-open profile onboarding](../design/boards/29-s11-first-open-profile.md) extends S11 and S16 with a voluntary first-time conversation, live learner-profile updates, **Confident** / **Still forming** labels, correction controls, and a mobile Arabic RTL direction. It does not replace the canonical S11/S16 wireframes.
 
 - [Board 34 — Selected professional first-login onboarding](../design/boards/34-first-login-onboarding-selected.md) defines the welcome screen, overall visual language, routing, completion behavior, and the retained form-step rollback reference.

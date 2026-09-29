@@ -15,10 +15,15 @@ Desktop reference for **E1 Student Homework** — the quiz-taking view where a s
 question exposes three teacher-authored static hints progressively, before
 submission.
 
+**2026-09-29 approved placement:** The assessment is opened from the Homework
+phase in Study Cave. That phase filters active work by subject, chapter, and
+lesson; the MCQ stays in that context and hints use expandable panels. The
+mobile More menu no longer provides a separate homework destination.
+
 ## Required UI
 
 ### Header
-- Back arrow → `/student/homework` list.
+- Back arrow → the Study Cave Homework phase.
 - Assignment title and optional description.
 
 ### Question cards

@@ -30,6 +30,7 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
   const t = useTranslations("teacherHomework")
   const locale = useLocale()
   const [options, setOptions] = useState<OptionRow[]>(DEFAULT_OPTIONS)
+  const [format, setFormat] = useState<"mcq" | "short_note">("mcq")
   const [correctAnswer, setCorrectAnswer] = useState("a")
   const [questionText, setQuestionText] = useState("")
   const [conceptRef, setConceptRef] = useState("")
@@ -39,6 +40,7 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
     const result = await addQuestionAction(prev, form)
     if (result.success) {
       setOptions(DEFAULT_OPTIONS)
+      setFormat("mcq")
       setCorrectAnswer("a")
       setQuestionText("")
       setConceptRef("")
@@ -72,6 +74,7 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
           <input type="hidden" name="locale" value={locale} />
           <input type="hidden" name="assignment_id" value={assignmentId} />
           <input type="hidden" name="order" value={nextOrder} />
+          <input type="hidden" name="format" value={format} />
           <input type="hidden" name="correct_answer" value={correctAnswer} />
 
           {/* Inject option id/text pairs for the server action parser */}
@@ -91,6 +94,11 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
               placeholder={t("question.textPlaceholder")}
             />
           </div>
+
+          <fieldset className="flex gap-4 text-sm font-semibold">
+            <label><input type="radio" checked={format === "mcq"} onChange={() => setFormat("mcq")} /> MCQ</label>
+            <label><input type="radio" checked={format === "short_note"} onChange={() => setFormat("short_note")} /> {locale === "ar" ? "إجابة قصيرة" : "Short note"}</label>
+          </fieldset>
 
           <fieldset className="grid gap-2 rounded-xl border border-border bg-secondary/20 p-3">
             <legend className="px-1 text-sm font-semibold">{t("question.hints")} *</legend>
@@ -119,7 +127,7 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
             <Input id="concept_ref" name="concept_ref" value={conceptRef} onChange={(event) => setConceptRef(event.target.value)} maxLength={200} placeholder={t("question.conceptRefPlaceholder")} />
           </div>
 
-          <fieldset className="grid gap-2">
+          {format === "mcq" && <fieldset className="grid gap-2">
             <legend className="text-sm font-semibold">{t("question.options")} *</legend>
             {options.map((opt, idx) => (
               <div key={opt.id} className="flex items-center gap-2">
@@ -172,7 +180,7 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
               <Plus className="size-4" />
               {t("question.addOption")}
             </Button>
-          </fieldset>
+          </fieldset>}
 
           {state?.error && (
             <p role="alert" className="text-sm text-destructive">{t(`errors.${state.error}`)}</p>

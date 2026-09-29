@@ -20,6 +20,7 @@ export type StudyCaveRouteState = {
 export type StudyCaveSearchParams = {
   phase?: string | string[];
   session?: string | string[];
+  homeworkId?: string | string[];
 };
 
 const phaseSet = new Set<string>(studyCavePhases);
@@ -39,4 +40,8 @@ export function parseStudyCaveRouteState(
       : undefined;
 
   return { initialPhase, initialSessionState };
+}
+
+export function parseHomeworkId(searchParams: StudyCaveSearchParams): string | undefined {
+  return typeof searchParams.homeworkId === "string" ? searchParams.homeworkId : undefined;
 }

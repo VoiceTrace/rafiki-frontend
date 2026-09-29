@@ -71,6 +71,9 @@ export function HomeworkEditShell({ assignment, students }: Props) {
             {editing ? t("edit.cancel") : t("edit.editDetails")}
           </Button>
         )}
+        {!isDraft && <Button render={<Link href={`/teacher/homework/${assignment.id}/submissions`} />} nativeButton={false} variant="outline" size="sm">
+          {locale === "ar" ? "مراجعة التسليمات" : "Review submissions"}
+        </Button>}
         {isDraft && (
           <HomeworkDistributeDialog
             assignmentId={assignment.id}

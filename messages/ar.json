@@ -601,6 +601,7 @@
       "submitError": "فشل التسليم. يرجى المحاولة مجدداً.",
       "correctAnswer": "الإجابة الصحيحة",
       "yourAnswer": "إجابتك",
+      "hintsSummary": "التلميحات",
       "revealHint": "إظهار التلميح {number}",
       "hintLabel": "التلميح {number}"
     }
@@ -641,6 +642,10 @@
     },
     "form": {
       "details": "تفاصيل الواجب",
+    "subject": "المادة",
+    "subjectPlaceholder": "مثال: الفيزياء",
+    "chapter": "الفصل",
+    "chapterPlaceholder": "مثال: القوى والحركة",
       "lessonId": "معرّف الحصة",
       "lessonIdPlaceholder": "مثال: lesson-ch5-forces",
       "title": "العنوان",
@@ -697,6 +702,15 @@
     }
   },
   "studyCave": {
+    "homeworkWorkspace": {
+      "title": "الواجبات",
+      "description": "اختر درسًا نشطًا لإكمال التقييم الذي حدده معلمك.",
+      "empty": "لا توجد تقييمات واجب نشطة الآن.",
+      "subject": "المادة",
+      "chapter": "الفصل",
+      "lesson": "الدرس",
+      "chooseLesson": "اختر درسًا"
+    },
     "homeworkPanel": {
       "title": "واجب هذه الحصة",
       "description": "واجبك الحالي في قانون نيوتن الثالث.",

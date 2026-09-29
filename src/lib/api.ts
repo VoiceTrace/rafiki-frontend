@@ -223,6 +223,18 @@ export async function getGapDigest(
   return res.json() as Promise<GapDigestRead>
 }
 
+export async function listHomeworkSubmissions(accessToken: string, assignmentId: string): Promise<import("@/types/homework").TeacherSubmission[]> {
+  const res = await fetch(`${API_URL}/homework/assignments/${assignmentId}/submissions`, { headers: authHeaders(accessToken), cache: "no-store" })
+  if (!res.ok) throw new Error("Failed to load homework submissions")
+  return res.json()
+}
+
+export async function gradeHomeworkSubmission(accessToken: string, assignmentId: string, studentAssignmentId: string, data: { grades: { question_id: string; score: number; comment?: string }[]; approve: boolean }): Promise<import("@/types/homework").TeacherSubmission> {
+  const res = await fetch(`${API_URL}/homework/assignments/${assignmentId}/submissions/${studentAssignmentId}/grade`, { method: "POST", headers: { ...authHeaders(accessToken), "Content-Type": "application/json" }, body: JSON.stringify(data) })
+  if (!res.ok) throw new Error("Failed to grade homework submission")
+  return res.json()
+}
+
 export async function listMyAssignments(
   accessToken: string,
 ): Promise<StudentAssignmentRead[]> {
@@ -261,6 +273,16 @@ export async function submitHomework(
   )
   if (!res.ok) throw new Error("Failed to submit homework")
   return res.json() as Promise<SubmissionResult>
+}
+
+export async function revealHomeworkHint(
+  accessToken: string, studentAssignmentId: string, questionId: string,
+): Promise<{ question_id: string; hint_index: number; hint: string }> {
+  const res = await fetch(`${API_URL}/homework/me/assignments/${studentAssignmentId}/questions/${questionId}/hints/reveal`, {
+    method: "POST", headers: authHeaders(accessToken),
+  })
+  if (!res.ok) throw new Error("Failed to reveal hint")
+  return res.json() as Promise<{ question_id: string; hint_index: number; hint: string }>
 }
 
 export async function getMySubmission(

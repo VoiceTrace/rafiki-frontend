@@ -1,8 +1,8 @@
-export type QuestionFormat = "mcq"
+export type QuestionFormat = "mcq" | "short_note"
 
 export type AssignmentStatus = "draft" | "distributed" | "closed"
 
-export type StudentAssignmentStatus = "assigned" | "in_progress" | "submitted"
+export type StudentAssignmentStatus = "assigned" | "in_progress" | "submitted" | "graded" | "approved"
 
 export interface MCQOption {
   id: string
@@ -19,7 +19,7 @@ export interface QuestionTeacher {
   concept_ref: string | null
   hints: string[]
   order: number
-  correct_answer: string
+  correct_answer: string | null
 }
 
 // Student-facing question (no correct answer until after submission)
@@ -30,7 +30,8 @@ export interface QuestionStudent {
   format: QuestionFormat
   options: MCQOption[]
   concept_ref: string | null
-  hints: string[]
+  hint_count: number
+  revealed_hint_count: number
   order: number
 }
 
@@ -38,6 +39,9 @@ export interface AssignmentRead {
   id: string
   school_id: string
   teacher_id: string
+  grade_level: string
+  subject: string
+  chapter: string
   lesson_id: string
   title: string
   description: string | null
@@ -55,6 +59,9 @@ export interface AssignmentWithQuestions extends AssignmentRead {
 export interface StudentAssignmentRead {
   id: string
   assignment_id: string
+  grade_level: string
+  subject: string
+  chapter: string
   lesson_id: string
   title: string
   description: string | null
@@ -71,18 +78,27 @@ export interface StudentAssignmentWithQuestions extends StudentAssignmentRead {
 
 export interface AttemptResult {
   question_id: string
-  selected_option: string
-  is_correct: boolean
-  correctness_score: number
-  correct_answer: string
+  answer: string
+  teacher_score: number | null
+  teacher_comment: string | null
 }
 
 export interface SubmissionResult {
   student_assignment_id: string
-  score: number
-  correct_count: number
-  total_count: number
+  status: StudentAssignmentStatus
+  score: number | null
   results: AttemptResult[]
+}
+
+export interface TeacherSubmission {
+  student_assignment_id: string
+  student_id: string
+  student_name: string
+  status: StudentAssignmentStatus
+  score: number | null
+  submitted_at: string | null
+  approved_at: string | null
+  attempts: { question_id: string; question_text: string; format: QuestionFormat; answer: string; correct_answer: string | null; hints_revealed: number; teacher_score: number | null; teacher_comment: string | null }[]
 }
 
 export interface ConceptGap {
@@ -102,6 +118,9 @@ export interface GapDigestRead {
 
 // Request shapes
 export interface CreateAssignmentRequest {
+  grade_level: string
+  subject: string
+  chapter: string
   lesson_id: string
   title: string
   description?: string
@@ -109,6 +128,9 @@ export interface CreateAssignmentRequest {
 }
 
 export interface UpdateAssignmentRequest {
+  grade_level?: string
+  subject?: string
+  chapter?: string
   title?: string
   description?: string | null
   due_at?: string | null
@@ -116,8 +138,9 @@ export interface UpdateAssignmentRequest {
 
 export interface AddQuestionRequest {
   question_text: string
+  format: QuestionFormat
   options: MCQOption[]
-  correct_answer: string
+  correct_answer?: string | null
   hints: string[]
   concept_ref?: string
   order?: number
@@ -133,13 +156,12 @@ export interface UpdateQuestionRequest {
 }
 
 export interface DistributeRequest {
-  student_ids: string[]
   due_at?: string
 }
 
 export interface AnswerInput {
   question_id: string
-  selected_option: string
+  answer: string
 }
 
 export interface SubmitHomeworkRequest {

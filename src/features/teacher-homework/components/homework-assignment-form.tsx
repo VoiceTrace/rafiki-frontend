@@ -25,6 +25,9 @@ export function HomeworkAssignmentForm({ assignment, embedded = false, onSaved }
 
   const action = isEdit ? updateAssignmentAction : createAssignmentAction
   const [title, setTitle] = useState(assignment?.title ?? "")
+  const [gradeLevel, setGradeLevel] = useState(assignment?.grade_level ?? "")
+  const [subject, setSubject] = useState(assignment?.subject ?? "")
+  const [chapter, setChapter] = useState(assignment?.chapter ?? "")
   const [lessonId, setLessonId] = useState(assignment?.lesson_id ?? "")
   const [description, setDescription] = useState(assignment?.description ?? "")
   const [state, formAction, isPending] = useActionState(async (prev: HomeworkActionState | null, form: FormData) => {
@@ -54,6 +57,21 @@ export function HomeworkAssignmentForm({ assignment, embedded = false, onSaved }
             <fieldset disabled={isPending} className="grid min-w-0 gap-4">
             <input type="hidden" name="locale" value={locale} />
             {isEdit && <input type="hidden" name="assignment_id" value={assignment!.id} />}
+
+            <div className="grid gap-1.5 sm:grid-cols-2">
+              <div className="grid gap-1.5">
+                <label htmlFor="grade_level" className="text-sm font-semibold">{locale === "ar" ? "الصف" : "Grade"} <span aria-hidden="true">*</span></label>
+                <Input id="grade_level" name="grade_level" required maxLength={100} value={gradeLevel} onChange={(event) => setGradeLevel(event.target.value)} placeholder={locale === "ar" ? "مثال: الصف العاشر" : "For example, Grade 10"} />
+              </div>
+              <div className="grid gap-1.5">
+                <label htmlFor="subject" className="text-sm font-semibold">{t("form.subject")} <span aria-hidden="true">*</span></label>
+                <Input id="subject" name="subject" required maxLength={255} value={subject} onChange={(event) => setSubject(event.target.value)} placeholder={t("form.subjectPlaceholder")} />
+              </div>
+              <div className="grid gap-1.5">
+                <label htmlFor="chapter" className="text-sm font-semibold">{t("form.chapter")} <span aria-hidden="true">*</span></label>
+                <Input id="chapter" name="chapter" required maxLength={255} value={chapter} onChange={(event) => setChapter(event.target.value)} placeholder={t("form.chapterPlaceholder")} />
+              </div>
+            </div>
 
             <div className="grid gap-1.5">
               <label htmlFor="lesson_id" className="text-sm font-semibold">
@@ -114,7 +132,7 @@ export function HomeworkAssignmentForm({ assignment, embedded = false, onSaved }
             )}
 
             {state?.success && <p role="status">{t("form.saved")}</p>}
-            <Button type="submit" disabled={isPending || !title.trim() || !lessonId.trim()} className="w-full sm:w-auto sm:self-end">
+            <Button type="submit" disabled={isPending || !gradeLevel.trim() || !subject.trim() || !chapter.trim() || !title.trim() || !lessonId.trim()} className="w-full sm:w-auto sm:self-end">
               {isPending && <Loader2 className="animate-spin" />}
               {isEdit ? t("form.save") : t("form.create")}
             </Button>

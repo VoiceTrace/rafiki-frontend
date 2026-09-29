@@ -601,6 +601,7 @@
       "submitError": "Failed to submit. Please try again.",
       "correctAnswer": "Correct answer",
       "yourAnswer": "Your answer",
+      "hintsSummary": "Hints",
       "revealHint": "Show hint {number}",
       "hintLabel": "Hint {number}"
     }
@@ -641,6 +642,10 @@
     },
     "form": {
       "details": "Assignment details",
+    "subject": "Subject",
+    "subjectPlaceholder": "e.g. Physics",
+    "chapter": "Chapter",
+    "chapterPlaceholder": "e.g. Forces and motion",
       "lessonId": "Lesson ID",
       "lessonIdPlaceholder": "e.g. lesson-ch5-forces",
       "title": "Title",
@@ -697,6 +702,15 @@
     }
   },
   "studyCave": {
+    "homeworkWorkspace": {
+      "title": "Homework",
+      "description": "Choose an active lesson to complete your teacher-assigned assessment.",
+      "empty": "There are no active homework assessments right now.",
+      "subject": "Subject",
+      "chapter": "Chapter",
+      "lesson": "Lesson",
+      "chooseLesson": "Choose a lesson"
+    },
     "homeworkPanel": {
       "title": "Homework for this lesson",
       "description": "Your current assignment for Newton’s Third Law.",
