@@ -12,6 +12,7 @@ The supplied resource-library image is the visual reference for this route. It r
 
 - A page title and short description sit beside a prominent **Add material** action.
 - Search and class filters share a panel. The class selects the authoritative grade, while the target lesson list is filtered to lessons mapped to that grade.
+- Class choices are ordered by ascending grade number, then by class name. Changing class updates the available lesson choices for that grade; the reusable library list remains available across classes.
 - Type filters cover All materials, Questions, Articles, Links, Images, Videos, and Files.
 - The content area places the matching library material list beside a selected-resource preview. Required or optional is set on each class/lesson assignment, not on the reusable library record.
 - The preview supports attaching an existing resource to the selected class and lesson. Add to library can also create a new record and assign it directly to a selected lesson as required or optional.
