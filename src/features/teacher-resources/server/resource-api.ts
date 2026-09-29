@@ -8,6 +8,11 @@ export type Grade = { id: string; title: string };
 export type CurriculumLesson = { id: string; title: string; chapter_id: string; chapter: string; subject_id: string; subject: string; grade_id: string };
 export type SchoolStudent = { id: string; full_name: string; email: string };
 
+function sortResourceClasses(classes: ResourceClass[], locale: string) {
+  const gradeNumber = (gradeId: string) => Number(gradeId.match(/\d+/)?.[0] ?? Number.MAX_SAFE_INTEGER);
+  return [...classes].sort((a, b) => gradeNumber(a.grade_id) - gradeNumber(b.grade_id) || a.name.localeCompare(b.name, locale, { numeric: true, sensitivity: "base" }));
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const [user, token] = await Promise.all([getSessionUser(), getBackendAccessToken()]);
   if (!token || user?.role !== "teacher") throw new Error("teacher_auth_required");
@@ -26,7 +31,7 @@ export async function loadTeacherResources(locale: string) {
     request<SchoolStudent[]>("/users?role=student"),
   ]);
   const gradeLessons = await Promise.all(grades.map(async (grade) => [grade.id, await request<CurriculumLesson[]>(`/teacher/resource-grades/${grade.id}/lessons?locale=${locale}`)] as const));
-  return { resources: resources.map((item) => ({ ...item, download_url: item.original_filename ? `/api/teacher/resources/${encodeURIComponent(item.id)}/download` : null })), classes, grades, students: students.map(({ id, full_name, email }) => ({ id, full_name, email })), curriculum: Object.fromEntries(gradeLessons) as Record<string, CurriculumLesson[]> };
+  return { resources: resources.map((item) => ({ ...item, download_url: item.original_filename ? `/api/teacher/resources/${encodeURIComponent(item.id)}/download` : null })), classes: sortResourceClasses(classes, locale), grades, students: students.map(({ id, full_name, email }) => ({ id, full_name, email })), curriculum: Object.fromEntries(gradeLessons) as Record<string, CurriculumLesson[]> };
 }
 
 export async function saveLibraryResource(input: { type: ResourceType; title: string; description: string; question?: string; answer?: string; source_url?: string }) {
@@ -42,7 +47,7 @@ export async function assignLibraryResource(input: { class_id: string; lesson_id
 }
 
 export async function createTeacherClass(input: { name: string; grade_id: string }) {
-  return request<ResourceClass[]>("/teacher/classes", { method: "POST", body: JSON.stringify(input) });
+  return sortResourceClasses(await request<ResourceClass[]>("/teacher/classes", { method: "POST", body: JSON.stringify(input) }), "en");
 }
 
 export async function loadClassRoster(classId: string) {
