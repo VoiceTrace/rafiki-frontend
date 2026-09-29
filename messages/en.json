@@ -603,7 +603,8 @@
       "yourAnswer": "Your answer",
       "hintsSummary": "Hints",
       "revealHint": "Show hint {number}",
-      "hintLabel": "Hint {number}"
+      "hintLabel": "Hint {number}",
+      "awaitingReview": "Awaiting your teacher's review."
     }
   },
   "teacherHomework": {
@@ -642,10 +643,10 @@
     },
     "form": {
       "details": "Assignment details",
-    "subject": "Subject",
-    "subjectPlaceholder": "e.g. Physics",
-    "chapter": "Chapter",
-    "chapterPlaceholder": "e.g. Forces and motion",
+      "subject": "Subject",
+      "subjectPlaceholder": "e.g. Physics",
+      "chapter": "Chapter",
+      "chapterPlaceholder": "e.g. Forces and motion",
       "lessonId": "Lesson ID",
       "lessonIdPlaceholder": "e.g. lesson-ch5-forces",
       "title": "Title",

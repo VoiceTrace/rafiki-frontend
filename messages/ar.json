@@ -603,7 +603,8 @@
       "yourAnswer": "إجابتك",
       "hintsSummary": "التلميحات",
       "revealHint": "إظهار التلميح {number}",
-      "hintLabel": "التلميح {number}"
+      "hintLabel": "التلميح {number}",
+      "awaitingReview": "بانتظار مراجعة معلمك."
     }
   },
   "teacherHomework": {
@@ -642,10 +643,10 @@
     },
     "form": {
       "details": "تفاصيل الواجب",
-    "subject": "المادة",
-    "subjectPlaceholder": "مثال: الفيزياء",
-    "chapter": "الفصل",
-    "chapterPlaceholder": "مثال: القوى والحركة",
+      "subject": "المادة",
+      "subjectPlaceholder": "مثال: الفيزياء",
+      "chapter": "الفصل",
+      "chapterPlaceholder": "مثال: القوى والحركة",
       "lessonId": "معرّف الحصة",
       "lessonIdPlaceholder": "مثال: lesson-ch5-forces",
       "title": "العنوان",

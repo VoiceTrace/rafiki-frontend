@@ -7,7 +7,9 @@ export async function loadHomeworkWorkspace(homeworkId?: string) {
   try {
     const assignments = await listMyAssignments(token)
     const selectedHomework = homeworkId ? await getMyAssignment(token, homeworkId) : null
-    const initialHomeworkResult = selectedHomework?.status === "submitted"
+    // Results are only released once the teacher approves; asking any earlier returns
+    // 409 and would blank the whole workspace through the catch below.
+    const initialHomeworkResult = selectedHomework?.status === "approved"
       ? await getMySubmission(token, homeworkId!)
       : null
     return { assignments, selectedHomework, initialHomeworkResult }
