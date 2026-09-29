@@ -38,3 +38,7 @@ The user requested that the selected teacher resource be viewable or downloadabl
 - Uploaded images and videos have inline previews where the browser supports them, plus a download action. Other uploaded files offer open/preview and download actions based on their media type.
 - Student file access stays assignment-scoped; teacher library access stays owner-scoped. Private asset URLs use the authenticated proxy. Student payloads never include the answer field.
 - Required/optional badges and the per-student completion control remain visible beside every material.
+
+## Mobile viewport clipping fix — 2026-09-29
+
+The supplied mobile screenshot showed the shared header and resource page shifted beyond the left edge, with the library actions and cards wider than the visible viewport. This is a responsive implementation defect against the approved narrow-screen stacked layout above. Preserve the same content and library hierarchy; constrain the shell and page to the viewport and arrange the page actions for narrow widths.

@@ -231,7 +231,7 @@ export function AppShell({
   );
   return (
     <div
-      className="flex min-h-dvh bg-background text-foreground"
+      className="flex min-h-dvh w-full max-w-full overflow-x-clip bg-background text-foreground"
       data-testid="application-shell"
     >
       <a
@@ -356,7 +356,7 @@ export function AppShell({
         <main
           id="main-content"
           tabIndex={-1}
-          className="min-h-[calc(100dvh-var(--spacing-header))] p-4 pb-[calc(var(--spacing-bottom-nav)+env(safe-area-inset-bottom)+1rem)] outline-none md:p-6 xl:p-8"
+          className="min-w-0 min-h-[calc(100dvh-var(--spacing-header))] overflow-x-clip p-4 pb-[calc(var(--spacing-bottom-nav)+env(safe-area-inset-bottom)+1rem)] outline-none md:p-6 xl:p-8"
         >
           {children}
         </main>
