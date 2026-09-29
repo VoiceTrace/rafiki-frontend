@@ -18,7 +18,7 @@ export const questionSchema = z.object({
   format: z.enum(["mcq", "short_note"]),
   options: z.array(z.object({ id: z.string().min(1).max(10), text: z.string().trim().min(1) })).max(6),
   correct_answer: z.string().min(1).max(10).nullable(),
-  hints: z.array(z.string().trim().min(1).max(500)).length(3),
+  hints: z.array(z.string().trim().min(1).max(500)).max(3),
   concept_ref: z.string().trim().max(200).optional(),
   order: z.number().int().nonnegative(),
 }).superRefine(({ format, options, correct_answer }, ctx) => {

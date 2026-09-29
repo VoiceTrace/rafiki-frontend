@@ -32,6 +32,7 @@ export interface QuestionStudent {
   concept_ref: string | null
   hint_count: number
   revealed_hint_count: number
+  revealed_hints: string[]
   order: number
 }
 

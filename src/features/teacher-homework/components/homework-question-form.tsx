@@ -101,7 +101,7 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
           </fieldset>
 
           <fieldset className="grid gap-2 rounded-xl border border-border bg-secondary/20 p-3">
-            <legend className="px-1 text-sm font-semibold">{t("question.hints")} *</legend>
+            <legend className="px-1 text-sm font-semibold">{t("question.hints")}</legend>
             <p className="text-xs text-muted-foreground">{t("question.hintsDescription")}</p>
             {hints.map((hint, index) => (
               <div key={index} className="grid gap-1.5">
@@ -113,7 +113,6 @@ export function HomeworkQuestionForm({ assignmentId, nextOrder }: Props) {
                   name={`hint_${index}`}
                   value={hint}
                   onChange={(event) => setHints((current) => current.map((value, hintIndex) => hintIndex === index ? event.target.value : value))}
-                  required
                   maxLength={500}
                   rows={2}
                   placeholder={t("question.hintPlaceholder", { number: index + 1 })}

@@ -12,8 +12,12 @@ Desktop reference for **E1 Teacher Homework** — the full edit page where a tea
 **Implemented and live (2026-09-22).** Corresponds to route `/teacher/homework/{assignmentId}/edit`.
 
 **2026-09-29 approved extension:** Homework is a teacher-authored assessment,
-not a chat surface. Each question requires exactly three teacher-written static
+not a chat surface. Each question carries up to three teacher-written static
 hints. This extends the fields below.
+
+**2026-09-29 approved correction:** three hints is the **maximum**, not a
+requirement. A teacher may author fewer; a student can never reveal more than
+three. The earlier "exactly three" wording is superseded.
 
 ## Required UI
 
@@ -37,7 +41,8 @@ Fields:
 - Option A, B, C, D — one text input each.
 - `correct_answer` — radio or select (A/B/C/D).
 - `concept_ref` — the mastery concept this question maps to (for gap-digest aggregation).
-- `hints` — exactly three required static hints, entered and ordered by the teacher.
+- `hints` — up to three static hints, entered and ordered by the teacher from
+  least to most revealing. Fewer than three is valid; more is rejected.
 - **Add question** submit button.
 
 ### Distribute dialog

@@ -80,7 +80,10 @@ export async function addQuestionAction(_prev: HomeworkActionState | null, form:
   }
   const parsed = questionSchema.safeParse({
     question_text: form.get("question_text"), format, options, correct_answer: format === "mcq" ? form.get("correct_answer") || null : null,
-    hints: [form.get("hint_0"), form.get("hint_1"), form.get("hint_2")],
+    // Three hints is the ceiling, not a quota — drop the slots the teacher left blank.
+    hints: [form.get("hint_0"), form.get("hint_1"), form.get("hint_2")]
+      .map((hint) => (typeof hint === "string" ? hint.trim() : ""))
+      .filter((hint) => hint.length > 0),
     concept_ref: form.get("concept_ref") || undefined, order: Number(form.get("order")),
   })
   if (!id.success || !parsed.success) return { error: "validation" }
