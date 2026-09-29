@@ -56,7 +56,6 @@
     "verificationFailed": "Verification link invalid",
     "verificationFailedDescription": "This link is invalid or has expired. Request a new verification email.",
     "pleaseWait": "Please wait…",
-    "mockHint": "Local preview: use any email and password123.",
     "errors": {
       "invalidEmail": "Enter a valid email address.",
       "passwordRequired": "Enter your password.",

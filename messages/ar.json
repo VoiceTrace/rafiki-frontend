@@ -56,7 +56,6 @@
     "verificationFailed": "رابط التأكيد غير صالح",
     "verificationFailedDescription": "هذا الرابط غير صالح أو انتهت صلاحيته. اطلب رسالة تأكيد جديدة.",
     "pleaseWait": "يرجى الانتظار…",
-    "mockHint": "للمعاينة المحلية: استخدم أي بريد وكلمة المرور password123.",
     "errors": {
       "invalidEmail": "أدخل بريدًا إلكترونيًا صالحًا.",
       "passwordRequired": "أدخل كلمة المرور.",
