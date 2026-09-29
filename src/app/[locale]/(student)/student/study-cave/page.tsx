@@ -2,6 +2,7 @@ import { StudyCavePage } from "@/features/study-cave/components/study-cave-page"
 import { parseStudyCaveRouteState, type StudyCaveSearchParams } from "@/features/study-cave/types";
 import { loadReview } from "@/features/study-cave/server/review-api";
 import { verifySession } from "@/features/auth/server/dal";
+import { loadStudentMaterials } from "@/features/teacher-resources/server/resource-api";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<StudyCaveSearchParams> }) {
   const { locale } = await params;
@@ -10,5 +11,6 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   const query = await searchParams;
   const routeState = parseStudyCaveRouteState(query);
   const review = await loadReview(safeLocale, typeof query.lesson_id === "string" ? query.lesson_id : undefined, typeof query.subject_id === "string" ? query.subject_id : undefined, typeof query.chapter_id === "string" ? query.chapter_id : undefined);
-  return <StudyCavePage key={`${review.subjectId}:${review.chapterId}:${review.lesson?.id}:${routeState.initialPhase}`} {...routeState} review={review} />;
+  const materials = review.lesson ? await loadStudentMaterials(review.lesson.id, safeLocale).catch(() => []) : [];
+  return <StudyCavePage key={`${review.subjectId}:${review.chapterId}:${review.lesson?.id}:${routeState.initialPhase}`} {...routeState} review={review} materials={materials} />;
 }

@@ -11,15 +11,15 @@ The teacher Resources page is the reusable library: **Your Library — everythin
 The supplied resource-library image is the visual reference for this route. It replaces the page composition in the original [T08 wireframe](wireframes/T08.svg), while the T08 resource-management flow and [T-US-20](../docs/RAFIQI_PRODUCT_AND_DESIGN_REFERENCE.md) acceptance criteria remain applicable.
 
 - A page title and short description sit beside a prominent **Add material** action.
-- Search and Grade, Subject, and Lesson filters share a panel above the content.
+- Search and class filters share a panel. The class selects the authoritative grade, while the target lesson list is filtered to lessons mapped to that grade.
 - Type filters cover All materials, Questions, Articles, Links, Images, Videos, and Files.
-- The content area places the matching material list beside a selected-resource preview. The list includes type, lesson context, date, and required/optional status, with a sort control and per-item actions.
-- The preview shows resource type, requirement status, title, source or content preview, target audience, lesson context, date, teacher, and an edit action.
+- The content area places the matching library material list beside a selected-resource preview. Required or optional is set on each class/lesson assignment, not on the reusable library record.
+- The preview supports attaching an existing resource to the selected class and lesson. Add to library can also create a new record and assign it directly to a selected lesson as required or optional.
 - The layout stacks the list and preview on narrow screens. Both English LTR and Arabic RTL are supported.
 
 ## Add to library
 
-The supplied **Add to library** image is the reference for adding and editing a resource. The dialog supports Question, Article, Link, Image, Video, and File types, and changes its content fields with the selected type. Targeting includes grade, subject, chapter, and lesson. Visibility can be set to optional or required for all students. Saving adds the resource to the teacher's library; lesson attachment is a separate action in the lesson's Materials from your library section.
+The supplied **Add to library** image is the reference for adding a resource. The dialog supports Question, Article, Link, Image, Video, and File types, and changes its content fields with the selected type. A class determines the grade and the grade-specific lesson list. Visibility is required or optional for that class and lesson. A resource can also be saved to the library without assignment.
 
 ## Superseded T08 composition
 
@@ -27,4 +27,4 @@ The T08 wireframe's tabs-first page, filter/library split, and selected-material
 
 ## Implementation boundary
 
-The initial route work is a frontend UI. Sample materials and add/edit interactions are local demo state; server persistence, student completion, and the lesson attachment flow require their own integration work.
+The frontend uses the school-scoped resources API. Library records are separate from class/lesson assignments; completion is stored for the student and assignment, independent of review-session state. File uploads use a private storage path and authenticated download proxy.
