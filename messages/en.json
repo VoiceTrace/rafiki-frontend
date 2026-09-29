@@ -1057,6 +1057,7 @@
     "createClass": "Create a class",
     "className": "Class name",
     "classLabel": "Class",
+    "allClasses": "All classes",
     "chooseClass": "Choose a class",
     "chooseLesson": "Choose a lesson",
     "createClassFirst": "Create or choose a class to see lessons for its grade.",
