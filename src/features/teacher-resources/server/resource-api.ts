@@ -2,7 +2,7 @@ import "server-only";
 import { getBackendAccessToken, getSessionUser } from "@/features/auth/server/dal";
 
 export type ResourceType = "question" | "article" | "link" | "image" | "video" | "file";
-export type LibraryResource = { id: string; type: ResourceType; title: string; description: string; question: string | null; answer: string | null; source_url: string | null; original_filename: string | null; media_type: string | null; byte_size: number | null; created_at: string };
+export type LibraryResource = { id: string; type: ResourceType; title: string; description: string; question: string | null; answer: string | null; source_url: string | null; original_filename: string | null; media_type: string | null; byte_size: number | null; created_at: string; download_url?: string | null };
 export type ResourceClass = { id: string; name: string; grade_id: string; grade_title: string; student_count: number };
 export type Grade = { id: string; title: string };
 export type CurriculumLesson = { id: string; title: string; chapter_id: string; chapter: string; subject_id: string; subject: string; grade_id: string };
@@ -26,7 +26,7 @@ export async function loadTeacherResources(locale: string) {
     request<SchoolStudent[]>("/users?role=student"),
   ]);
   const gradeLessons = await Promise.all(grades.map(async (grade) => [grade.id, await request<CurriculumLesson[]>(`/teacher/resource-grades/${grade.id}/lessons?locale=${locale}`)] as const));
-  return { resources, classes, grades, students: students.map(({ id, full_name, email }) => ({ id, full_name, email })), curriculum: Object.fromEntries(gradeLessons) as Record<string, CurriculumLesson[]> };
+  return { resources: resources.map((item) => ({ ...item, download_url: item.original_filename ? `/api/teacher/resources/${encodeURIComponent(item.id)}/download` : null })), classes, grades, students: students.map(({ id, full_name, email }) => ({ id, full_name, email })), curriculum: Object.fromEntries(gradeLessons) as Record<string, CurriculumLesson[]> };
 }
 
 export async function saveLibraryResource(input: { type: ResourceType; title: string; description: string; question?: string; answer?: string; source_url?: string }) {
@@ -64,7 +64,7 @@ export async function loadStudentMaterials(lessonId: string, locale: string) {
   return materials.map((item) => ({ ...item, download_url: item.download_url ? `/api/study-materials/${item.id}/download` : null }));
 }
 
-export type StudentMaterial = { id: string; lesson_id: string; type: ResourceType; title: string; description: string; source_url: string | null; download_url: string | null; required: boolean; completed: boolean };
+export type StudentMaterial = { id: string; lesson_id: string; type: ResourceType; title: string; description: string; question: string | null; source_url: string | null; download_url: string | null; original_filename: string | null; media_type: string | null; byte_size: number | null; required: boolean; completed: boolean };
 
 export async function setStudentMaterialCompletion(lessonId: string, assignmentId: string, completed: boolean) {
   const user = await getSessionUser();

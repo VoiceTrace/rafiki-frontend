@@ -903,6 +903,10 @@
         "helper": "اختر مادة لمعاينة محتواها أو حدّدها كمكتملة.",
         "closePreview": "إغلاق معاينة المادة",
         "attachmentPending": "ستُفتح ملفات المعلم والفيديو هنا عند ربطها بالدرس.",
+        "questionLabel": "السؤال",
+        "openLink": "فتح المورد",
+        "download": "تنزيل",
+        "types": { "question": "سؤال", "article": "مقال", "link": "رابط", "image": "صورة", "video": "فيديو", "file": "ملف" },
         "markComplete": "تحديد كمكتمل",
         "markIncomplete": "تحديد كغير مكتمل"
       },
@@ -981,6 +985,7 @@
     "noResults": "لم يتم العثور على مواد",
     "noResultsHelp": "جرّب بحثًا أو نوع مادة مختلفًا.",
     "preview": "معاينة المصدر",
+    "downloadMaterial": "تنزيل الملف",
     "previewIllustration": "رسم توضيحي لمتزلجين يدفع كل منهما الآخر",
     "source": "المصدر",
     "targetAudience": "الفئة المستهدفة",
