@@ -1,256 +1,99 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import {
-  ArrowUpDown,
-  BookOpenText,
-  Check,
-  ChevronDown,
-  ExternalLink,
-  File,
-  FileText,
-  Image as ImageIcon,
-  Link as LinkIcon,
-  MoreHorizontal,
-  Plus,
-  Search,
-  Video,
-  X,
-} from "lucide-react";
+import { ArrowUpDown, BookOpenText, Check, ChevronDown, ExternalLink, File, FileText, Image as ImageIcon, Link as LinkIcon, Plus, Search, Video, X } from "lucide-react";
+import type { CurriculumLesson, Grade, LibraryResource, ResourceClass, ResourceType, SchoolStudent } from "../server/resource-api";
+import { addClassStudentAction, assignResourceAction, createClassAction, createResourceAction, loadClassRosterAction } from "../actions/resource-actions";
 
-type MaterialType = "question" | "article" | "link" | "image" | "video" | "file";
-type FilterType = "all" | MaterialType;
-type Material = {
-  id: number;
-  key: "newtonsArticle" | "actionVideo" | "practiceQuestions" | "realWorldLink" | "rocketImage" | "worksheet";
-  type: MaterialType;
-  date: string;
-  required: boolean;
-  customTitle?: string;
-  customDescription?: string;
-};
-
-const initialMaterials: Material[] = [
-  { id: 1, key: "newtonsArticle", type: "article", date: "2026-09-12", required: true },
-  { id: 2, key: "actionVideo", type: "video", date: "2026-09-11", required: true },
-  { id: 3, key: "practiceQuestions", type: "question", date: "2026-09-10", required: false },
-  { id: 4, key: "realWorldLink", type: "link", date: "2026-09-08", required: false },
-  { id: 5, key: "rocketImage", type: "image", date: "2026-09-06", required: false },
-  { id: 6, key: "worksheet", type: "file", date: "2026-09-05", required: true },
-];
-
-const typeIcons = {
-  question: BookOpenText,
-  article: FileText,
-  link: LinkIcon,
-  image: ImageIcon,
-  video: Video,
-  file: File,
-} satisfies Record<MaterialType, typeof File>;
+type Props = { resources: LibraryResource[]; classes: ResourceClass[]; grades: Grade[]; students: SchoolStudent[]; curriculum: Record<string, CurriculumLesson[]>; locale: string };
+type FilterType = "all" | ResourceType;
+const typeIcons = { question: BookOpenText, article: FileText, link: LinkIcon, image: ImageIcon, video: Video, file: File } satisfies Record<ResourceType, typeof File>;
 const typeOrder: FilterType[] = ["all", "question", "article", "link", "image", "video", "file"];
 
-export function TeacherResourcesPage() {
+export function TeacherResourcesPage({ resources: initialResources, classes: initialClasses, grades, students, curriculum, locale }: Props) {
   const t = useTranslations("teacherResources");
-  const [materials, setMaterials] = useState(initialMaterials);
-  const [selectedId, setSelectedId] = useState(1);
+  const [resources, setResources] = useState(initialResources);
+  const [classes, setClasses] = useState(initialClasses);
+  const [selectedId, setSelectedId] = useState(initialResources[0]?.id ?? "");
   const [filter, setFilter] = useState<FilterType>("all");
   const [search, setSearch] = useState("");
-  const gradeOptions = [t("grade10"), t("grade9"), t("grade11")];
-  const subjectOptions = [t("physics"), t("mathematics"), t("biology")];
-  const lessonOptions = [t("allLessons"), t("newtonsLaw"), t("forcesMotion")];
-  const [grade, setGrade] = useState(t("grade10"));
-  const [subject, setSubject] = useState(t("physics"));
-  const [lesson, setLesson] = useState(t("allLessons"));
-  const [sortNewest, setSortNewest] = useState(true);
+  const [classId, setClassId] = useState(initialClasses[0]?.id ?? "");
+  const [lessonId, setLessonId] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [activeType, setActiveType] = useState<MaterialType>("question");
+  const [classDialogOpen, setClassDialogOpen] = useState(false);
+  const [rosterOpen, setRosterOpen] = useState(false);
+  const [roster, setRoster] = useState<SchoolStudent[]>([]);
+  const [activeType, setActiveType] = useState<ResourceType>("question");
   const [required, setRequired] = useState(false);
   const [draftTitle, setDraftTitle] = useState("");
   const [draftBody, setDraftBody] = useState("");
   const [draftSource, setDraftSource] = useState("");
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [saveMessage, setSaveMessage] = useState(false);
-
-  const visibleMaterials = useMemo(() => {
-    const query = search.trim().toLocaleLowerCase();
-    return materials
-      .filter((material) => filter === "all" || material.type === filter)
-      .filter((material) => !query || `${material.customTitle ?? t(`items.${material.key}.title`)} ${t(`items.${material.key}.chapter`)}`.toLocaleLowerCase().includes(query))
-      .sort((a, b) => sortNewest ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
-  }, [filter, materials, search, sortNewest, t]);
-  const selected = materials.find((material) => material.id === selectedId) ?? visibleMaterials[0];
+  const [file, setFile] = useState<File | null>(null);
+  const [newClassName, setNewClassName] = useState("");
+  const [newClassGrade, setNewClassGrade] = useState(grades[0]?.id ?? "");
+  const [pending, startTransition] = useTransition();
+  const [message, setMessage] = useState("");
+  const targetClass = classes.find((item) => item.id === classId);
+  const lessons = targetClass ? curriculum[targetClass.grade_id] ?? [] : [];
+  const selected = resources.find((item) => item.id === selectedId) ?? resources[0];
   const Icon = selected ? typeIcons[selected.type] : FileText;
+  const visibleResources = useMemo(() => resources.filter((item) => (filter === "all" || item.type === filter) && (!search || `${item.title} ${item.description}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()))), [filter, resources, search]);
 
   function openDialog() {
-    setActiveType("question");
-    setDraftTitle("");
-    setDraftBody("");
-    setDraftSource("");
-    setEditingId(null);
-    setRequired(false);
-    setSaveMessage(false);
-    setDialogOpen(true);
+    setActiveType("question"); setDraftTitle(""); setDraftBody(""); setDraftSource(""); setFile(null); setRequired(false); setMessage(""); setLessonId(""); setDialogOpen(true);
   }
 
   function saveMaterial(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (editingId !== null) {
-      setMaterials((current) => current.map((material) => material.id === editingId ? { ...material, type: activeType, required, customTitle: draftTitle, customDescription: draftBody } : material));
-      setDialogOpen(false);
-      setSaveMessage(true);
-      return;
-    }
-    const newMaterial: Material = {
-      id: Date.now(),
-      key: "practiceQuestions",
-      type: activeType,
-      date: new Date().toISOString().slice(0, 10),
-      required,
-      customTitle: draftTitle,
-      customDescription: draftBody,
-    };
-    setMaterials((current) => [newMaterial, ...current]);
-    setSelectedId(newMaterial.id);
-    setFilter("all");
-    setSearch("");
-    setDialogOpen(false);
-    setSaveMessage(true);
+    const upload = file;
+    const title = draftTitle.trim();
+    const description = draftBody.trim();
+    const type = activeType;
+    const source = draftSource.trim();
+    startTransition(async () => {
+      try {
+        const resource = upload ? await (async () => { const body = new FormData(); body.set("title", title); body.set("description", description); body.set("file", upload); const response = await fetch("/api/teacher/resources/upload", { method: "POST", body }); if (!response.ok) throw new Error("upload_failed"); return response.json() as Promise<LibraryResource>; })() : await createResourceAction({ type, title, description: type === "question" ? "" : description, ...(type === "question" ? { question: title, answer: description } : {}), ...(type === "link" ? { source_url: source } : {}), ...(type !== "question" && type !== "link" && source ? { source_url: source } : {}) });
+        if (classId && lessonId) await assignResourceAction({ class_id: classId, lesson_id: lessonId, resource_id: resource.id, required });
+        setResources((current) => [resource, ...current.filter((item) => item.id !== resource.id)]);
+        setSelectedId(resource.id); setDialogOpen(false); setMessage(t("saved"));
+      } catch { setMessage(t("saveError")); }
+    });
   }
 
-  return (
-    <main className="mx-auto flex w-full max-w-300 flex-col gap-4 pb-20" data-testid="teacher-resources-page">
-      <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="font-heading text-page font-bold">{t("title")}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
-        </div>
-        <button type="button" onClick={openDialog} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-surface transition hover:opacity-90">
-          <Plus className="size-4" />{t("addMaterial")}
-        </button>
-      </header>
+  function addClass(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    startTransition(async () => {
+      try { const updated = await createClassAction({ name: newClassName.trim(), grade_id: newClassGrade }); setClasses(updated); const created = updated.find((item) => !classes.some((old) => old.id === item.id)); if (created) setClassId(created.id); setNewClassName(""); setClassDialogOpen(false); setMessage(t("classSaved")); }
+      catch { setMessage(t("saveError")); }
+    });
+  }
 
-      {saveMessage && <p role="status" className="flex items-center gap-2 rounded-xl border border-success bg-success px-4 py-3 text-sm text-success-foreground"><Check className="size-4" />{t("saved")}</p>}
+  function manageStudents() {
+    if (!classId) return;
+    startTransition(async () => { try { setRoster(await loadClassRosterAction(classId)); setRosterOpen(true); } catch { setMessage(t("saveError")); } });
+  }
 
-      <section aria-label={t("filtersLabel")} className="rounded-2xl border bg-card p-3 shadow-surface sm:p-4">
-        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-[minmax(220px,1.7fr)_repeat(3,minmax(130px,1fr))]">
-          <label className="flex min-h-11 items-center gap-2 rounded-xl border bg-background px-3 text-muted-foreground focus-within:ring-2 focus-within:ring-ring">
-            <Search className="size-4 shrink-0" />
-            <span className="sr-only">{t("search")}</span>
-            <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t("searchPlaceholder")} className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
-          </label>
-          <FilterSelect label={t("grade")} value={grade} options={gradeOptions} onChange={setGrade} />
-          <FilterSelect label={t("subject")} value={subject} options={subjectOptions} onChange={setSubject} />
-          <FilterSelect label={t("lesson")} value={lesson} options={lessonOptions} onChange={setLesson} />
-        </div>
-        <div className="mt-3 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label={t("typesLabel")}>
-          {typeOrder.map((type) => {
-            const active = filter === type;
-            const ItemIcon = type === "all" ? null : typeIcons[type];
-            return <button key={type} type="button" role="tab" aria-selected={active} onClick={() => setFilter(type)} className={`inline-flex min-h-9 shrink-0 items-center gap-2 rounded-xl border px-3 text-sm font-semibold transition ${active ? "border-secondary bg-secondary text-secondary-foreground" : "bg-card hover:bg-muted"}`}>
-              {ItemIcon && <ItemIcon className="size-4" />}{t(`types.${type}`)}
-            </button>;
-          })}
-        </div>
-      </section>
+  function enrollStudent(studentId: string) {
+    startTransition(async () => { try { const updated = await addClassStudentAction(classId, studentId); setRoster(updated); setClasses((current) => current.map((item) => item.id === classId ? { ...item, student_count: updated.length } : item)); } catch { setMessage(t("saveError")); } });
+  }
 
-      <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.9fr)]">
-        <section aria-labelledby="materials-heading" className="min-w-0 overflow-hidden rounded-2xl border bg-card shadow-surface">
-          <div className="flex min-h-12 items-center justify-between gap-2 border-b px-4">
-            <h2 id="materials-heading" className="text-sm font-bold">{t("materialCount", { count: visibleMaterials.length })}</h2>
-            <button type="button" onClick={() => setSortNewest((value) => !value)} className="inline-flex items-center gap-2 rounded-lg px-2 py-2 text-xs font-medium text-muted-foreground hover:bg-muted" aria-label={t("sortByDate")}>
-              <ArrowUpDown className="size-4" /><span>{sortNewest ? t("mostRecent") : t("oldest")}</span><ChevronDown className="size-4" />
-            </button>
-          </div>
-          {visibleMaterials.length ? <ul className="divide-y px-2">
-            {visibleMaterials.map((material) => {
-              const RowIcon = typeIcons[material.type];
-              const active = selected?.id === material.id;
-              return <li key={material.id}>
-                <button type="button" onClick={() => setSelectedId(material.id)} aria-pressed={active} className={`flex w-full items-center gap-3 rounded-xl px-2 py-3 text-start transition sm:px-3 ${active ? "bg-secondary/70" : "hover:bg-muted/70"}`}>
-                  <span className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${active ? "bg-card text-primary" : "bg-muted text-primary"}`}><RowIcon className="size-5" /></span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold">{material.customTitle ?? t(`items.${material.key}.title`)}</span>
-                    <span className="mt-1 block truncate text-xs text-muted-foreground">{t(`types.${material.type}`)} <span aria-hidden="true">·</span> {t(`items.${material.key}.chapter`)}</span>
-                  </span>
-                  <span className="hidden min-w-20 flex-col items-end gap-1 sm:flex">
-                    <StatusPill required={material.required} label={t(material.required ? "required" : "optional")} />
-                    <span className="text-[11px] text-muted-foreground">{formatDate(material.date, t("locale"))}</span>
-                  </span>
-                  <span aria-label={t("moreActions", { title: material.customTitle ?? t(`items.${material.key}.title`) })} className="rounded-lg p-2 text-muted-foreground"><MoreHorizontal className="size-4" /></span>
-                </button>
-              </li>;
-            })}
-          </ul> : <div className="flex min-h-56 flex-col items-center justify-center gap-2 px-6 text-center"><span className="rounded-full bg-muted p-3 text-muted-foreground"><Search className="size-5" /></span><p className="font-semibold">{t("noResults")}</p><p className="text-sm text-muted-foreground">{t("noResultsHelp")}</p></div>}
-        </section>
+  function attachSelectedResource() {
+    if (!selected || !classId || !lessonId) return;
+    startTransition(async () => { try { await assignResourceAction({ class_id: classId, lesson_id: lessonId, resource_id: selected.id, required }); setMessage(t("attached")); } catch { setMessage(t("saveError")); } });
+  }
 
-        <section aria-labelledby="preview-heading" className="rounded-2xl border bg-card p-4 shadow-surface sm:p-5">
-          <div className="flex items-center justify-between gap-3"><h2 id="preview-heading" className="text-sm font-bold">{t("preview")}</h2><button type="button" aria-label={t("morePreviewActions")} className="rounded-lg p-2 text-muted-foreground hover:bg-muted"><MoreHorizontal className="size-4" /></button></div>
-          {selected ? <>
-            <div className="mt-3 rounded-xl border p-3 sm:p-4">
-              <div className="flex items-center justify-between gap-2"><span className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground"><Icon className="size-4 text-primary" />{t(`types.${selected.type}`)}</span><StatusPill required={selected.required} label={t(selected.required ? "required" : "optional")} /></div>
-              <h3 className="mt-3 font-heading text-lg font-bold leading-snug">{selected.customTitle ?? t(`items.${selected.key}.title`)}</h3>
-              {selected.type === "article" || selected.type === "video" || selected.type === "image" ? <div className="resource-art mt-3 flex min-h-28 items-center justify-center overflow-hidden rounded-lg border bg-muted p-3" aria-label={t("previewIllustration")}>
-                <div className="flex w-full items-center justify-center gap-4 rounded-lg bg-card/80 p-4 text-center">
-                  <span className="text-3xl" aria-hidden="true">🛹</span><span className="text-2xl font-bold text-primary" aria-hidden="true">←</span><span className="text-3xl" aria-hidden="true">🛹</span><span className="text-2xl font-bold text-info-foreground" aria-hidden="true">→</span>
-                </div>
-              </div> : null}
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">{selected.customDescription ?? t(`items.${selected.key}.description`)}</p>
-              {(selected.type === "article" || selected.type === "video") && <div className="mt-3 flex items-center gap-2 border-t pt-3 text-sm"><span className="text-muted-foreground">{t("source")}</span><span className="font-semibold">{selected.type === "article" ? "Khan Academy" : "Rafiqi classroom"}</span><ExternalLink className="size-3 text-muted-foreground" /></div>}
-              <dl className="mt-3 grid gap-3 border-t pt-3 text-xs sm:grid-cols-[100px_1fr]">
-                <dt className="text-muted-foreground">{t("targetAudience")}</dt><dd className="flex flex-wrap gap-2"><span className="rounded-full bg-muted px-2.5 py-1">{grade}</span><span className="rounded-full bg-muted px-2.5 py-1">{subject}</span></dd>
-                <dt className="text-muted-foreground">{t("lessonContext")}</dt><dd className="text-muted-foreground">{t("chapterContext")} <span aria-hidden="true">›</span> {t(`items.${selected.key}.chapter`)}</dd>
-                <dt className="text-muted-foreground">{t("added")}</dt><dd>{formatDate(selected.date, t("locale"))}</dd>
-                <dt className="text-muted-foreground">{t("addedBy")}</dt><dd>{t("teacherName")}</dd>
-              </dl>
-            </div>
-          <button type="button" onClick={() => { setActiveType(selected.type); setDraftTitle(selected.customTitle ?? t(`items.${selected.key}.title`)); setDraftBody(selected.customDescription ?? t(`items.${selected.key}.description`)); setDraftSource(""); setRequired(selected.required); setEditingId(selected.id); setDialogOpen(true); }} className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border text-sm font-semibold hover:bg-muted"><FileText className="size-4" />{t("editMaterial")}</button>
-          </> : <div className="py-12 text-center text-sm text-muted-foreground">{t("selectMaterial")}</div>}
-        </section>
-      </div>
-
-      {dialogOpen && <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/45 p-3 sm:p-6" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDialogOpen(false); }}>
-        <section role="dialog" aria-modal="true" aria-labelledby="resource-dialog-title" className="flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border bg-card shadow-overlay">
-          <header className="flex items-center justify-between border-b px-5 py-4 sm:px-8"><h2 id="resource-dialog-title" className="font-heading text-xl font-bold">{t("dialogTitle")}</h2><button type="button" onClick={() => setDialogOpen(false)} aria-label={t("closeDialog")} className="rounded-lg p-2 text-muted-foreground hover:bg-muted"><X className="size-5" /></button></header>
-          <form id="resource-form" onSubmit={saveMaterial} className="overflow-y-auto px-5 py-5 sm:px-8">
-            <fieldset><legend className="mb-3 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("typeLabel")}</legend><div className="flex flex-wrap gap-2">
-              {(["question", "article", "link", "image", "video", "file"] as MaterialType[]).map((type) => { const TypeIcon = typeIcons[type]; return <button type="button" key={type} onClick={() => setActiveType(type)} aria-pressed={activeType === type} className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 text-sm font-semibold ${activeType === type ? "border-info-foreground bg-info text-info-foreground" : "hover:bg-muted"}`}><TypeIcon className="size-4" />{t(`types.${type}`)}</button>; })}
-            </div></fieldset>
-            <div className="mt-4 grid gap-4">
-              <label className="grid gap-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t(activeType === "question" ? "questionField" : "titleField")}<input required value={draftTitle} onChange={(event) => setDraftTitle(event.target.value)} placeholder={t(activeType === "question" ? "questionPlaceholder" : "titlePlaceholder")} className="min-h-11 rounded-xl border bg-background px-3 text-base font-normal normal-case tracking-normal text-foreground outline-none focus:ring-2 focus:ring-ring" /></label>
-              <label className="grid gap-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t(activeType === "question" ? "answerField" : "descriptionField")}<textarea required value={draftBody} onChange={(event) => setDraftBody(event.target.value)} placeholder={t(activeType === "question" ? "answerPlaceholder" : "descriptionPlaceholder")} rows={activeType === "question" ? 3 : 2} className="rounded-xl border bg-background px-3 py-3 text-base font-normal normal-case tracking-normal text-foreground outline-none focus:ring-2 focus:ring-ring" /></label>
-              {(["article", "link", "image", "video", "file"] as MaterialType[]).includes(activeType) && <label className="grid gap-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("sourceOrUrl")}<input value={draftSource} onChange={(event) => setDraftSource(event.target.value)} placeholder={t("urlPlaceholder")} className="min-h-11 rounded-xl border bg-background px-3 text-base font-normal normal-case tracking-normal text-foreground outline-none focus:ring-2 focus:ring-ring" /></label>}
-            </div>
-            <div className="my-5 border-t" />
-            <fieldset><legend className="mb-3 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("targetLabel")}</legend><div className="grid gap-3 sm:grid-cols-2">
-              <FilterSelect label={t("grade")} value={grade} options={gradeOptions} onChange={setGrade} />
-              <FilterSelect label={t("subject")} value={subject} options={subjectOptions} onChange={setSubject} />
-              <FilterSelect label={t("chapter")} value={t("chapterValue")} options={[t("chapterValue"), t("chapterTwo"), t("chapterFour")]} onChange={() => undefined} />
-              <FilterSelect label={t("lesson")} value={lesson === t("allLessons") ? lessonOptions[1] : lesson} options={lessonOptions.slice(1)} onChange={setLesson} />
-            </div></fieldset>
-            <fieldset className="mt-4"><legend className="mb-3 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("visibilityLabel")}</legend><div className="grid gap-3 sm:grid-cols-2">
-              <ChoiceButton active={!required} onClick={() => setRequired(false)}>{t("optionalChoice")}</ChoiceButton><ChoiceButton active={required} onClick={() => setRequired(true)}>{t("requiredChoice")}</ChoiceButton>
-            </div></fieldset>
-          </form>
-          <footer className="flex justify-end gap-2 border-t px-5 py-4 sm:px-8"><button type="button" onClick={() => setDialogOpen(false)} className="min-h-10 rounded-xl bg-muted px-4 text-sm font-semibold text-muted-foreground">{t("cancel")}</button><button type="submit" form="resource-form" className="min-h-10 rounded-xl bg-info-foreground px-5 text-sm font-semibold text-white">{t(editingId === null ? "saveToLibrary" : "saveChanges")}</button></footer>
-        </section>
-      </div>}
-    </main>
-  );
+  return <main className="mx-auto flex w-full max-w-300 flex-col gap-4 pb-20" data-testid="teacher-resources-page">
+    <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><h1 className="font-heading text-page font-bold">{t("title")}</h1><p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p></div><div className="flex flex-wrap gap-2"><button type="button" onClick={() => setClassDialogOpen(true)} className="min-h-11 rounded-xl border px-4 text-sm font-semibold">{t("createClass")}</button>{classId && <button type="button" onClick={manageStudents} className="min-h-11 rounded-xl border px-4 text-sm font-semibold">{t("manageStudents")}</button>}<button type="button" onClick={openDialog} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground"><Plus className="size-4" />{t("addMaterial")}</button></div></header>
+    {message && <p role="status" className="flex items-center gap-2 rounded-xl border bg-card px-4 py-3 text-sm"><Check className="size-4" />{message}</p>}
+    <section aria-label={t("filtersLabel")} className="rounded-2xl border bg-card p-3 shadow-surface sm:p-4"><div className="grid gap-2 sm:grid-cols-2"><label className="flex min-h-11 items-center gap-2 rounded-xl border bg-background px-3"><Search className="size-4" /><span className="sr-only">{t("search")}</span><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("searchPlaceholder")} className="min-w-0 flex-1 bg-transparent text-sm outline-none" /></label><label className="flex min-h-11 items-center rounded-xl border px-3 text-xs text-muted-foreground">{t("classLabel")}<select value={classId} onChange={(e) => { setClassId(e.target.value); setLessonId(""); }} className="ms-2 min-w-0 flex-1 bg-transparent text-sm font-semibold text-foreground"><option value="">{t("chooseClass")}</option>{classes.map((item) => <option key={item.id} value={item.id}>{item.name} · {item.grade_title}</option>)}</select></label></div><div className="mt-3 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label={t("typesLabel")}>{typeOrder.map((type) => { const TypeIcon = type === "all" ? null : typeIcons[type]; return <button key={type} type="button" role="tab" aria-selected={filter === type} onClick={() => setFilter(type)} className={`inline-flex min-h-9 shrink-0 items-center gap-2 rounded-xl border px-3 text-sm font-semibold ${filter === type ? "border-secondary bg-secondary text-secondary-foreground" : "bg-card hover:bg-muted"}`}>{TypeIcon && <TypeIcon className="size-4" />}{t(`types.${type}`)}</button>; })}</div></section>
+    <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.9fr)]"><section aria-labelledby="materials-heading" className="min-w-0 overflow-hidden rounded-2xl border bg-card shadow-surface"><div className="flex min-h-12 items-center justify-between border-b px-4"><h2 id="materials-heading" className="text-sm font-bold">{t("materialCount", { count: visibleResources.length })}</h2><ArrowUpDown className="size-4 text-muted-foreground" /></div>{visibleResources.length ? <ul className="divide-y px-2">{visibleResources.map((resource) => { const RowIcon = typeIcons[resource.type]; return <li key={resource.id}><button type="button" onClick={() => setSelectedId(resource.id)} aria-pressed={selected?.id === resource.id} className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-start ${selected?.id === resource.id ? "bg-secondary/70" : "hover:bg-muted/70"}`}><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-muted text-primary"><RowIcon className="size-5" /></span><span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold">{resource.title}</span><span className="mt-1 block truncate text-xs text-muted-foreground">{t(`types.${resource.type}`)} · {resource.original_filename ?? resource.description}</span></span><span className="rounded-full bg-success px-2.5 py-1 text-[10px] font-semibold text-success-foreground">{t("inLibrary")}</span></button></li>; })}</ul> : <div className="px-5 py-12 text-center text-sm text-muted-foreground">{t("noResults")}</div>}</section>
+      <section aria-labelledby="preview-heading" className="rounded-2xl border bg-card p-4 shadow-surface sm:p-5"><h2 id="preview-heading" className="text-sm font-bold">{t("preview")}</h2>{selected ? <div className="mt-3 rounded-xl border p-3 sm:p-4"><div className="flex items-center gap-2 text-xs text-muted-foreground"><Icon className="size-4 text-primary" />{t(`types.${selected.type}`)}</div><h3 className="mt-3 font-heading text-lg font-bold">{selected.title}</h3><p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">{selected.description || selected.question || selected.original_filename}</p>{selected.source_url && <a className="mt-3 inline-flex items-center gap-2 text-sm text-primary underline" href={selected.source_url} target="_blank" rel="noreferrer">{t("source")}<ExternalLink className="size-3" /></a>}<dl className="mt-3 grid gap-2 border-t pt-3 text-xs"><dt className="text-muted-foreground">{t("targetAudience")}</dt><dd>{targetClass ? `${targetClass.grade_title} · ${targetClass.name}` : t("libraryOnly")}</dd><dt className="text-muted-foreground">{t("lessonContext")}</dt><dd>{lessons.find((item) => item.id === lessonId)?.title ?? t("chooseLesson")}</dd><dt className="text-muted-foreground">{t("added")}</dt><dd>{new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(selected.created_at))}</dd></dl></div> : <p className="py-12 text-center text-sm text-muted-foreground">{t("selectMaterial")}</p>}{selected && <div className="mt-3 grid gap-3"><SelectField label={t("classLabel")} value={classId} onChange={(value) => { setClassId(value); setLessonId(""); }}><option value="">{t("chooseClass")}</option>{classes.map((item) => <option key={item.id} value={item.id}>{item.name} · {item.grade_title}</option>)}</SelectField><SelectField label={t("lesson")} value={lessonId} onChange={setLessonId}><option value="">{t("chooseLesson")}</option>{lessons.map((item) => <option key={item.id} value={item.id}>{item.subject} · {item.chapter} · {item.title}</option>)}</SelectField><div className="grid grid-cols-2 gap-2"><Choice active={!required} onClick={() => setRequired(false)}>{t("optionalChoice")}</Choice><Choice active={required} onClick={() => setRequired(true)}>{t("requiredChoice")}</Choice></div><button type="button" disabled={pending || !classId || !lessonId} onClick={attachSelectedResource} className="min-h-10 rounded-xl border text-sm font-semibold disabled:opacity-50">{t("attachExisting")}</button></div>}</section></div>
+    {dialogOpen && <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/45 p-3 sm:p-6" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setDialogOpen(false); }}><section role="dialog" aria-modal="true" aria-labelledby="resource-dialog-title" className="flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border bg-card shadow-overlay"><header className="flex items-center justify-between border-b px-5 py-4 sm:px-8"><h2 id="resource-dialog-title" className="font-heading text-xl font-bold">{t("dialogTitle")}</h2><button type="button" onClick={() => setDialogOpen(false)} aria-label={t("closeDialog")}><X className="size-5" /></button></header><form id="resource-form" onSubmit={saveMaterial} className="overflow-y-auto px-5 py-5 sm:px-8"><fieldset><legend className="mb-3 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("typeLabel")}</legend><div className="flex flex-wrap gap-2">{(["question", "article", "link", "image", "video", "file"] as ResourceType[]).map((type) => { const TypeIcon = typeIcons[type]; return <button type="button" key={type} onClick={() => setActiveType(type)} aria-pressed={activeType === type} className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 text-sm font-semibold ${activeType === type ? "border-info-foreground bg-info text-info-foreground" : "hover:bg-muted"}`}><TypeIcon className="size-4" />{t(`types.${type}`)}</button>; })}</div></fieldset><div className="mt-4 grid gap-4"><label className="grid gap-2 text-xs font-bold uppercase text-muted-foreground">{t("titleField")}<input required value={draftTitle} onChange={(e) => setDraftTitle(e.target.value)} placeholder={t("titlePlaceholder")} className="min-h-11 rounded-xl border bg-background px-3 text-base font-normal normal-case text-foreground" /></label><label className="grid gap-2 text-xs font-bold uppercase text-muted-foreground">{t(activeType === "question" ? "answerField" : "descriptionField")}<textarea required value={draftBody} onChange={(e) => setDraftBody(e.target.value)} placeholder={t(activeType === "question" ? "answerPlaceholder" : "descriptionPlaceholder")} rows={3} className="rounded-xl border bg-background px-3 py-3 text-base font-normal normal-case text-foreground" /></label>{activeType === "link" && <label className="grid gap-2 text-xs font-bold uppercase text-muted-foreground">{t("sourceOrUrl")}<input required type="url" value={draftSource} onChange={(e) => setDraftSource(e.target.value)} placeholder={t("urlPlaceholder")} className="min-h-11 rounded-xl border bg-background px-3 text-base font-normal normal-case text-foreground" /></label>}{["image", "video", "file"].includes(activeType) && <label className="grid gap-2 text-xs font-bold text-muted-foreground">{t("uploadLabel")}<input required type="file" accept={activeType === "image" ? "image/png,image/jpeg,image/webp" : activeType === "video" ? "video/mp4,video/webm" : "application/pdf"} onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="rounded-xl border p-3" /><span className="text-xs">{t("uploadHelp")}</span></label>}</div><div className="my-5 border-t" /><fieldset><legend className="mb-3 text-xs font-bold uppercase text-muted-foreground">{t("targetLabel")}</legend><div className="grid gap-3 sm:grid-cols-2"><SelectField label={t("classLabel")} value={classId} onChange={(value) => { setClassId(value); setLessonId(""); }}><option value="">{t("chooseClass")}</option>{classes.map((item) => <option key={item.id} value={item.id}>{item.name} · {item.grade_title}</option>)}</SelectField><SelectField label={t("lesson")} value={lessonId} onChange={setLessonId}><option value="">{t("chooseLesson")}</option>{lessons.map((item) => <option key={item.id} value={item.id}>{item.subject} · {item.chapter} · {item.title}</option>)}</SelectField></div><p className="mt-2 text-xs text-muted-foreground">{targetClass ? `${t("grade")}: ${targetClass.grade_title}` : t("createClassFirst")}</p></fieldset><fieldset className="mt-4"><legend className="mb-3 text-xs font-bold uppercase text-muted-foreground">{t("visibilityLabel")}</legend><div className="grid gap-3 sm:grid-cols-2"><Choice active={!required} onClick={() => setRequired(false)}>{t("optionalChoice")}</Choice><Choice active={required} onClick={() => setRequired(true)}>{t("requiredChoice")}</Choice></div></fieldset></form><footer className="flex justify-end gap-2 border-t px-5 py-4 sm:px-8"><button type="button" onClick={() => setDialogOpen(false)} className="min-h-10 rounded-xl bg-muted px-4 text-sm font-semibold">{t("cancel")}</button><button type="submit" form="resource-form" disabled={pending} className="min-h-10 rounded-xl bg-info-foreground px-5 text-sm font-semibold text-white">{t("saveToLibrary")}</button></footer></section></div>}
+    {classDialogOpen && <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/45 p-3" role="presentation"><form onSubmit={addClass} role="dialog" aria-modal="true" aria-labelledby="class-dialog-title" className="grid w-full max-w-md gap-4 rounded-2xl bg-card p-6"><h2 id="class-dialog-title" className="text-lg font-bold">{t("createClass")}</h2><label className="grid gap-2 text-sm">{t("className")}<input required value={newClassName} onChange={(e) => setNewClassName(e.target.value)} className="h-11 rounded-xl border px-3" /></label><SelectField label={t("grade")} value={newClassGrade} onChange={setNewClassGrade}>{grades.map((grade) => <option key={grade.id} value={grade.id}>{grade.title}</option>)}</SelectField><div className="flex justify-end gap-2"><button type="button" onClick={() => setClassDialogOpen(false)} className="rounded-xl bg-muted px-4 py-2">{t("cancel")}</button><button disabled={pending} className="rounded-xl bg-primary px-4 py-2 text-primary-foreground">{t("createClass")}</button></div></form></div>}
+    {rosterOpen && <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/45 p-3" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setRosterOpen(false); }}><section role="dialog" aria-modal="true" aria-labelledby="roster-title" className="grid max-h-[85dvh] w-full max-w-xl gap-4 overflow-y-auto rounded-2xl bg-card p-5"><div className="flex items-center justify-between"><h2 id="roster-title" className="text-lg font-bold">{t("manageStudents")} · {targetClass?.name}</h2><button type="button" onClick={() => setRosterOpen(false)} aria-label={t("closeDialog")}><X className="size-5" /></button></div><p className="text-sm text-muted-foreground">{t("enrolledStudents", { count: roster.length })}</p>{roster.map((student) => <div key={student.id} className="rounded-xl border px-3 py-2"><strong className="block text-sm">{student.full_name}</strong><span className="text-xs text-muted-foreground">{student.email}</span></div>)}<h3 className="font-semibold">{t("addStudent")}</h3>{students.filter((student) => !roster.some((item) => item.id === student.id)).map((student) => <div key={student.id} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2"><span className="min-w-0"><strong className="block truncate text-sm">{student.full_name}</strong><span className="text-xs text-muted-foreground">{student.email}</span></span><button type="button" disabled={pending} onClick={() => enrollStudent(student.id)} className="rounded-lg border px-3 py-2 text-sm font-semibold">{t("enrollStudent")}</button></div>)}</section></div>}
+  </main>;
 }
 
-function FilterSelect({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (value: string) => void }) {
-  return <label className="relative flex min-h-11 min-w-0 flex-col justify-center rounded-xl border bg-background px-3 py-1 focus-within:ring-2 focus-within:ring-ring"><span className="text-[10px] leading-3 text-muted-foreground">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="w-full appearance-none bg-transparent pe-5 text-sm font-semibold outline-none"><option value={value}>{value}</option>{options.filter((option) => option !== value).map((option) => <option key={option} value={option}>{option}</option>)}</select><ChevronDown className="pointer-events-none absolute end-3 top-1/2 size-4 translate-y-0.5 text-muted-foreground" /></label>;
-}
-
-function StatusPill({ required, label }: { required: boolean; label: string }) {
-  return <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${required ? "bg-destructive/10 text-destructive" : "bg-success text-success-foreground"}`}>{label}</span>;
-}
-
-function ChoiceButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return <button type="button" aria-pressed={active} onClick={onClick} className={`min-h-12 rounded-xl border px-3 text-sm font-semibold transition ${active ? "border-info-foreground bg-info text-info-foreground" : "hover:bg-muted"}`}>{children}</button>;
-}
-
-function formatDate(date: string, locale: string) {
-  return new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric" }).format(new Date(`${date}T12:00:00`));
-}
+function SelectField({ label, value, onChange, children }: { label: string; value: string; onChange: (value: string) => void; children: React.ReactNode }) { return <label className="relative flex min-h-11 min-w-0 flex-col justify-center rounded-xl border bg-background px-3 py-1"><span className="text-[10px] text-muted-foreground">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="w-full appearance-none bg-transparent pe-5 text-sm font-semibold outline-none">{children}</select><ChevronDown className="pointer-events-none absolute end-3 top-1/2 size-4 translate-y-0.5 text-muted-foreground" /></label>; }
+function Choice({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) { return <button type="button" aria-pressed={active} onClick={onClick} className={`min-h-12 rounded-xl border px-3 text-sm font-semibold ${active ? "border-info-foreground bg-info text-info-foreground" : "hover:bg-muted"}`}>{children}</button>; }

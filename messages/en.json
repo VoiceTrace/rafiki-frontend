@@ -962,7 +962,15 @@
     "newtonsLaw": "Newton’s Third Law",
     "forcesMotion": "Forces and motion",
     "typesLabel": "Filter by material type",
-    "types": { "all": "All materials", "question": "Questions", "article": "Articles", "link": "Links", "image": "Images", "video": "Videos", "file": "Files" },
+    "types": {
+      "all": "All materials",
+      "question": "Questions",
+      "article": "Articles",
+      "link": "Links",
+      "image": "Images",
+      "video": "Videos",
+      "file": "Files"
+    },
     "materialCount": "{count, plural, =1 {# material} other {# materials}}",
     "sortByDate": "Sort materials by date added",
     "mostRecent": "Most recent",
@@ -1009,13 +1017,55 @@
     "saveToLibrary": "Save to library",
     "saveChanges": "Save changes",
     "items": {
-      "newtonsArticle": { "title": "Newton’s Third Law Explained", "chapter": "Chapter 2.3", "description": "A clear and concise explanation of Newton’s Third Law with everyday examples, diagrams and practice questions." },
-      "actionVideo": { "title": "Action–Reaction Examples (Video)", "chapter": "Chapter 2.3", "description": "Watch action–reaction force pairs in familiar situations and classroom demonstrations." },
-      "practiceQuestions": { "title": "Newton’s Third Law – Practice Questions", "chapter": "Chapter 2.3", "description": "Check your understanding by identifying the two objects and the forces they exert on each other." },
-      "realWorldLink": { "title": "Real-world Applications of Newton’s Third Law", "chapter": "Chapter 2.3", "description": "Explore how action and reaction forces appear in sports, transport and everyday life." },
-      "rocketImage": { "title": "Rocket Launch Diagram", "chapter": "Chapter 2.3", "description": "A labelled diagram showing how expelled gases create an upward force on a rocket." },
-      "worksheet": { "title": "Worksheet – Action and Reaction", "chapter": "Chapter 2.3", "description": "A printable worksheet for practicing force pairs and explaining their direction." }
-    }
+      "newtonsArticle": {
+        "title": "Newton’s Third Law Explained",
+        "chapter": "Chapter 2.3",
+        "description": "A clear and concise explanation of Newton’s Third Law with everyday examples, diagrams and practice questions."
+      },
+      "actionVideo": {
+        "title": "Action–Reaction Examples (Video)",
+        "chapter": "Chapter 2.3",
+        "description": "Watch action–reaction force pairs in familiar situations and classroom demonstrations."
+      },
+      "practiceQuestions": {
+        "title": "Newton’s Third Law – Practice Questions",
+        "chapter": "Chapter 2.3",
+        "description": "Check your understanding by identifying the two objects and the forces they exert on each other."
+      },
+      "realWorldLink": {
+        "title": "Real-world Applications of Newton’s Third Law",
+        "chapter": "Chapter 2.3",
+        "description": "Explore how action and reaction forces appear in sports, transport and everyday life."
+      },
+      "rocketImage": {
+        "title": "Rocket Launch Diagram",
+        "chapter": "Chapter 2.3",
+        "description": "A labelled diagram showing how expelled gases create an upward force on a rocket."
+      },
+      "worksheet": {
+        "title": "Worksheet – Action and Reaction",
+        "chapter": "Chapter 2.3",
+        "description": "A printable worksheet for practicing force pairs and explaining their direction."
+      }
+    },
+    "saveError": "We could not save this material. Check the details and try again.",
+    "classSaved": "Class created.",
+    "createClass": "Create a class",
+    "className": "Class name",
+    "classLabel": "Class",
+    "chooseClass": "Choose a class",
+    "chooseLesson": "Choose a lesson",
+    "createClassFirst": "Create or choose a class to see lessons for its grade.",
+    "inLibrary": "In your library",
+    "libraryOnly": "Available in your library",
+    "uploadLabel": "Choose a file",
+    "uploadHelp": "PDF, JPG, PNG, WebP, MP4 or WebM · up to 20 MB",
+    "manageStudents": "Manage students",
+    "enrolledStudents": "{count, plural, =0 {No students enrolled yet} =1 {# student enrolled} other {# students enrolled}}",
+    "addStudent": "Add students",
+    "enrollStudent": "Add to class",
+    "attachExisting": "Add selected material to this lesson",
+    "attached": "Material added to the lesson."
   },
   "emptyStates": {
     "notFound": {
