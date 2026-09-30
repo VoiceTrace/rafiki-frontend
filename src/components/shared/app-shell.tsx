@@ -51,6 +51,7 @@ const navigation: Record<Role, Item[]> = {
     { path: "today", label: "today", icon: Home },
     { path: "learn", label: "learn", icon: BookOpen },
     { path: "study-cave", label: "studyCave", icon: Sparkles },
+    { path: "homework", label: "homework", icon: CalendarDays },
     { path: "progress", label: "progress", icon: ChartNoAxesCombined },
     { path: "resources", label: "resources", icon: LibraryBig },
     { path: "connect", label: "connect", icon: MessageCircleMore },
@@ -309,7 +310,12 @@ export function AppShell({
               </DialogContent>
             </Dialog>
             <a
-              href={"/" + (locale === "ar" ? "en" : "ar") + pathname + (searchParams.size ? `?${searchParams}` : "")}
+              href={
+                "/" +
+                (locale === "ar" ? "en" : "ar") +
+                pathname +
+                (searchParams.size ? `?${searchParams.toString()}` : "")
+              }
               data-testid="locale-switch"
               className="flex min-h-10 items-center gap-1 rounded-lg px-2 text-xs text-muted-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
               aria-label={

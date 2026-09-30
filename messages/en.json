@@ -499,6 +499,12 @@
       "title": "Homework",
       "description": "Choose an assignment to work on.",
       "label": "Current homework assignments",
+      "help": {
+        "title": "Rafiqi is here to help",
+        "description": "Hints without the answer",
+        "text": "Open an assignment whenever you need a nudge, a place to explain your thinking, or a quick review.",
+        "note": "Your progress is saved as you work"
+      },
       "empty": "No homework assigned yet.",
       "questions": "questions"
     },
@@ -607,111 +613,7 @@
       "awaitingReview": "Awaiting your teacher's review."
     }
   },
-  "teacherHomework": {
-    "back": "Back",
-    "status": {
-      "draft": "Draft",
-      "distributed": "Distributed",
-      "closed": "Closed"
-    },
-    "list": {
-      "eyebrow": "Homework",
-      "title": "Homework assignments",
-      "description": "Create assignments with MCQ questions and distribute them to your students.",
-      "new": "New assignment",
-      "questionCount": "{count} questions",
-      "empty": {
-        "title": "No assignments yet",
-        "description": "Create your first assignment to get started.",
-        "cta": "Create assignment"
-      }
-    },
-    "create": {
-      "title": "New assignment"
-    },
-    "edit": {
-      "title": "Edit assignment",
-      "questions": "Questions",
-      "noQuestions": "No questions added yet.",
-      "correct": "Correct",
-      "concept": "Concept",
-      "delete": "Delete assignment",
-      "deleteQuestion": "Delete question",
-      "confirmDelete": "Delete this assignment? This cannot be undone.",
-      "editDetails": "Edit details",
-      "cancel": "Cancel editing"
-    },
-    "form": {
-      "details": "Assignment details",
-      "subject": "Subject",
-      "subjectPlaceholder": "e.g. Physics",
-      "chapter": "Chapter",
-      "chapterPlaceholder": "e.g. Forces and motion",
-      "lessonId": "Lesson ID",
-      "lessonIdPlaceholder": "e.g. lesson-ch5-forces",
-      "title": "Title",
-      "titlePlaceholder": "e.g. Chapter 5 Review",
-      "description": "Description",
-      "descriptionPlaceholder": "Optional description for students",
-      "dueAt": "Due date",
-      "save": "Save changes",
-      "create": "Create assignment",
-      "saved": "Changes saved.",
-      "timeZone": "Riyadh time"
-    },
-    "question": {
-      "addTitle": "Add a question",
-      "text": "Question text",
-      "textPlaceholder": "Write your question here…",
-      "conceptRef": "Concept reference",
-      "conceptRefPlaceholder": "e.g. newton-third-law",
-      "hints": "Student hints (up to 3)",
-      "hintsDescription": "Write up to three short hints, least revealing first. Students reveal them one at a time before submitting. Leave a box empty to use fewer.",
-      "hintLabel": "Hint {number}",
-      "hintPlaceholder": "Write hint {number} (optional)",
-      "options": "Answer options",
-      "optionPlaceholder": "Option {id}",
-      "addOption": "Add option",
-      "removeOption": "Remove option",
-      "markCorrect": "Mark option {id} as correct",
-      "correctHint": "Select the radio button next to the correct answer.",
-      "add": "Add question",
-      "added": "Question added."
-    },
-    "distribute": {
-      "trigger": "Distribute",
-      "title": "Distribute assignment",
-      "description": "Select which students receive this assignment.",
-      "selected": "{count} of {total} selected",
-      "selectAll": "Select all",
-      "clearAll": "Clear",
-      "noStudents": "Please select at least one student.",
-      "noStudentsAvailable": "No students found.",
-      "dueAt": "Override due date (optional)",
-      "cancel": "Cancel",
-      "confirm": "Distribute to {count}"
-    },
-    "errors": {
-      "auth": "Your session has expired. Sign in again.",
-      "validation": "Check the required fields, answer options, and date.",
-      "create": "Could not create the assignment. Please try again.",
-      "update": "Could not save changes. Please try again.",
-      "delete": "Could not delete the assignment. Please try again.",
-      "addQuestion": "Could not add the question. Please try again.",
-      "deleteQuestion": "Could not delete the question. Please try again.",
-      "distribute": "Could not distribute. Check the selected students and try again."
-    }
-  },
   "studyCave": {
-    "homeworkWorkspace": {
-      "title": "Homework",
-      "description": "Choose an active lesson to complete your teacher-assigned assessment.",
-      "empty": "There are no active homework assessments right now.",
-      "subject": "Subject",
-      "chapter": "Chapter",
-      "lesson": "Lesson",
-      "chooseLesson": "Choose a lesson"
-    },
     "homeworkPanel": {
       "title": "Homework for this lesson",
       "description": "Your current assignment for Newton’s Third Law.",
@@ -1042,6 +944,15 @@
         "action": "Download summary",
         "documentTitle": "Newton’s Third Law — After-class review"
       }
+    },
+    "homeworkWorkspace": {
+      "title": "Homework",
+      "description": "Choose an active lesson to complete your teacher-assigned assessment.",
+      "empty": "There are no active homework assessments right now.",
+      "subject": "Subject",
+      "chapter": "Chapter",
+      "lesson": "Lesson",
+      "chooseLesson": "Choose a lesson"
     }
   },
   "emptyStates": {
@@ -1371,6 +1282,157 @@
       "dislikes": "Learning friction",
       "learning": "Explanation style",
       "empty": "Still forming"
+    }
+  },
+  "reviewChat": {
+    "title": "Rafiqi review companion",
+    "demo": "Demo responses",
+    "description": "Answer a question, ask for help, or explore a hint.",
+    "start": "Start review",
+    "history": "Review conversation",
+    "question": "Question {number}",
+    "check": "Check answer",
+    "written": "Write your answer below, or ask for help.",
+    "hint": "Need a hint?",
+    "anotherHint": "Show another hint",
+    "hintLevel": "Hint {level}",
+    "explain": "Explain this",
+    "next": "Next question",
+    "finish": "Finish review",
+    "complete": "Review complete. You can still ask for help.",
+    "summary": {
+      "title": "Your review summary",
+      "description": "Here is what your work on {lesson} shows right now.",
+      "attempts": "{count, plural, one {# attempt} other {# attempts}}",
+      "outcomes": {
+        "secure": "Secure",
+        "developing": "Developing",
+        "needs_support": "Needs practice"
+      },
+      "withSupport": "Completed with help from a hint or explanation",
+      "nextStep": "Your next step",
+      "notGrade": "This is a learning guide, not a grade. It can change as you practise."
+    },
+    "retry": "{attempts} of 3 attempts used. Edit your answer and try again.",
+    "composer": "Ask a question or write your answer…",
+    "send": "Send message",
+    "you": "You",
+    "assistant": "Rafiqi",
+    "retryRequest": "Retry sending",
+    "reload": "Reload saved review",
+    "loadError": "We could not load the lesson review. Please try again.",
+    "empty": "No review lessons are available yet.",
+    "errors": {
+      "request": "Your request could not be confirmed. Retry safely or reload the saved review.",
+      "conflict": "This review changed, or this action is no longer available. Reload to continue.",
+      "auth": "Please sign in with a student account to continue."
+    },
+    "actions": {
+      "hint": "Can you give me a hint?",
+      "help": "Please explain this.",
+      "next": "Let’s continue."
+    },
+    "selectSubject": "Select a subject",
+    "selectChapter": "Select a chapter",
+    "selectLesson": "Select a lesson",
+    "chooseLesson": "Choose a subject, then a chapter and lesson to open your review.",
+    "loadingCatalog": "Loading catalog…",
+    "beforeUnavailable": "Before-class activities are not available for this demo lesson. Open After class to review it.",
+    "homeworkUnavailable": "Homework is not available for this demo lesson."
+  },
+  "teacherHomework": {
+    "back": "Back",
+    "status": {
+      "draft": "Draft",
+      "distributed": "Distributed",
+      "closed": "Closed"
+    },
+    "list": {
+      "eyebrow": "Homework",
+      "title": "Homework assignments",
+      "description": "Create assignments with MCQ questions and distribute them to your students.",
+      "new": "New assignment",
+      "questionCount": "{count} questions",
+      "empty": {
+        "title": "No assignments yet",
+        "description": "Create your first assignment to get started.",
+        "cta": "Create assignment"
+      }
+    },
+    "create": {
+      "title": "New assignment"
+    },
+    "edit": {
+      "title": "Edit assignment",
+      "questions": "Questions",
+      "noQuestions": "No questions added yet.",
+      "correct": "Correct",
+      "concept": "Concept",
+      "delete": "Delete assignment",
+      "deleteQuestion": "Delete question",
+      "confirmDelete": "Delete this assignment? This cannot be undone.",
+      "editDetails": "Edit details",
+      "cancel": "Cancel editing"
+    },
+    "form": {
+      "details": "Assignment details",
+      "subject": "Subject",
+      "subjectPlaceholder": "e.g. Physics",
+      "chapter": "Chapter",
+      "chapterPlaceholder": "e.g. Forces and motion",
+      "lessonId": "Lesson ID",
+      "lessonIdPlaceholder": "e.g. lesson-ch5-forces",
+      "title": "Title",
+      "titlePlaceholder": "e.g. Chapter 5 Review",
+      "description": "Description",
+      "descriptionPlaceholder": "Optional description for students",
+      "dueAt": "Due date",
+      "save": "Save changes",
+      "create": "Create assignment",
+      "saved": "Changes saved.",
+      "timeZone": "Riyadh time"
+    },
+    "question": {
+      "addTitle": "Add a question",
+      "text": "Question text",
+      "textPlaceholder": "Write your question here…",
+      "conceptRef": "Concept reference",
+      "conceptRefPlaceholder": "e.g. newton-third-law",
+      "hints": "Student hints (up to 3)",
+      "hintsDescription": "Write up to three short hints, least revealing first. Students reveal them one at a time before submitting. Leave a box empty to use fewer.",
+      "hintLabel": "Hint {number}",
+      "hintPlaceholder": "Write hint {number} (optional)",
+      "options": "Answer options",
+      "optionPlaceholder": "Option {id}",
+      "addOption": "Add option",
+      "removeOption": "Remove option",
+      "markCorrect": "Mark option {id} as correct",
+      "correctHint": "Select the radio button next to the correct answer.",
+      "add": "Add question",
+      "added": "Question added."
+    },
+    "distribute": {
+      "trigger": "Distribute",
+      "title": "Distribute assignment",
+      "description": "Select which students receive this assignment.",
+      "selected": "{count} of {total} selected",
+      "selectAll": "Select all",
+      "clearAll": "Clear",
+      "noStudents": "Please select at least one student.",
+      "noStudentsAvailable": "No students found.",
+      "dueAt": "Override due date (optional)",
+      "cancel": "Cancel",
+      "confirm": "Distribute to {count}"
+    },
+    "errors": {
+      "auth": "Your session has expired. Sign in again.",
+      "validation": "Check the required fields, answer options, and date.",
+      "create": "Could not create the assignment. Please try again.",
+      "update": "Could not save changes. Please try again.",
+      "delete": "Could not delete the assignment. Please try again.",
+      "addQuestion": "Could not add the question. Please try again.",
+      "deleteQuestion": "Could not delete the question. Please try again.",
+      "distribute": "Could not distribute. Check the selected students and try again."
     }
   },
   "homeworkErrors": {
