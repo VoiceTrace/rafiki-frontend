@@ -69,7 +69,50 @@ export async function loadStudentMaterials(lessonId: string, locale: string) {
   return materials.map((item) => ({ ...item, download_url: item.download_url ? `/api/study-materials/${item.id}/download` : null }));
 }
 
-export type StudentMaterial = { id: string; lesson_id: string; type: ResourceType; title: string; description: string; question: string | null; source_url: string | null; download_url: string | null; original_filename: string | null; media_type: string | null; byte_size: number | null; required: boolean; completed: boolean };
+export async function loadStudentResourceLibrary(locale: string) {
+  const user = await getSessionUser();
+  const token = await getBackendAccessToken();
+  if (!token || user?.role !== "student") return null;
+  const origin = (process.env.API_URL ?? process.env.AUTH_API_URL)?.replace(/\/$/, "");
+  if (!origin) return null;
+  try {
+    const response = await fetch(`${origin}/student/resources?locale=${locale}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+      signal: AbortSignal.timeout(12000),
+    });
+    if (!response.ok) return null;
+    const materials = await response.json() as StudentMaterial[];
+    return materials.map((item) => ({ ...item, download_url: item.download_url ? `/api/study-materials/${item.id}/download` : null }));
+  } catch {
+    return null;
+  }
+}
+
+export type StudentMaterial = {
+  id: string;
+  lesson_id: string;
+  type: ResourceType;
+  title: string;
+  description: string;
+  question: string | null;
+  source_url: string | null;
+  download_url: string | null;
+  original_filename: string | null;
+  media_type: string | null;
+  byte_size: number | null;
+  required: boolean;
+  completed: boolean;
+  grade_id?: string;
+  grade_title?: string;
+  class_id?: string;
+  class_name?: string;
+  subject_id?: string;
+  subject_title?: string;
+  chapter_id?: string;
+  chapter_title?: string;
+  lesson_title?: string;
+};
 
 export async function setStudentMaterialCompletion(lessonId: string, assignmentId: string, completed: boolean) {
   const user = await getSessionUser();
