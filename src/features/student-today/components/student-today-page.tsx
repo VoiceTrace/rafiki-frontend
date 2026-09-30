@@ -90,7 +90,7 @@ export async function StudentTodayPage() {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[1fr_1fr]">
-        <DashboardSectionCard icon={ClipboardList} title={t("homework.title")} action={<Button render={<Link href="/student/homework" />} nativeButton={false} variant="link" size="sm">{t("viewAll")}<ActionArrow /></Button>}>
+        <DashboardSectionCard icon={ClipboardList} title={t("homework.title")} action={<Button render={<Link href="/student/study-cave?phase=homework" />} nativeButton={false} variant="link" size="sm">{t("viewAll")}<ActionArrow /></Button>}>
           <ul className="flex flex-col gap-2">
             {homework.map((item) => (
               <li key={item.title} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-lg border border-border px-3 py-3">

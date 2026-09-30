@@ -497,14 +497,16 @@
     "list": {
       "eyebrow": "Current homework",
       "title": "Homework",
-      "description": "Choose an assignment to continue with a guided workspace.",
+      "description": "Choose an assignment to work on.",
       "label": "Current homework assignments",
       "help": {
         "title": "Rafiqi is here to help",
         "description": "Hints without the answer",
         "text": "Open an assignment whenever you need a nudge, a place to explain your thinking, or a quick review.",
         "note": "Your progress is saved as you work"
-      }
+      },
+      "empty": "No homework assigned yet.",
+      "questions": "questions"
     },
     "assignments": {
       "action-reaction": {
@@ -592,6 +594,23 @@
       "description": "A short summary after you have attempted the question.",
       "answer": "Both the car and the motorbike exert the same force on each other. Their accelerations differ because their masses differ.",
       "next": "Return to Question to revise your answer or ask Rafiqi for another nudge."
+    },
+    "assignmentStatus": {
+      "assigned": "Not started",
+      "in_progress": "In progress",
+      "submitted": "Submitted"
+    },
+    "mcq": {
+      "submit": "Submit answers",
+      "submitted": "Submitted!",
+      "score": "{correct} / {total} correct · {percent}%",
+      "submitError": "Failed to submit. Please try again.",
+      "correctAnswer": "Correct answer",
+      "yourAnswer": "Your answer",
+      "hintsSummary": "Hints",
+      "revealHint": "Show hint {number}",
+      "hintLabel": "Hint {number}",
+      "awaitingReview": "Awaiting your teacher's review."
     }
   },
   "studyCave": {
@@ -925,6 +944,15 @@
         "action": "Download summary",
         "documentTitle": "Newton’s Third Law — After-class review"
       }
+    },
+    "homeworkWorkspace": {
+      "title": "Homework",
+      "description": "Choose an active lesson to complete your teacher-assigned assessment.",
+      "empty": "There are no active homework assessments right now.",
+      "subject": "Subject",
+      "chapter": "Chapter",
+      "lesson": "Lesson",
+      "chooseLesson": "Choose a lesson"
     }
   },
   "emptyStates": {
@@ -1311,5 +1339,104 @@
     "loadingCatalog": "Loading catalog…",
     "beforeUnavailable": "Before-class activities are not available for this demo lesson. Open After class to review it.",
     "homeworkUnavailable": "Homework is not available for this demo lesson."
+  },
+  "teacherHomework": {
+    "back": "Back",
+    "status": {
+      "draft": "Draft",
+      "distributed": "Distributed",
+      "closed": "Closed"
+    },
+    "list": {
+      "eyebrow": "Homework",
+      "title": "Homework assignments",
+      "description": "Create assignments with MCQ questions and distribute them to your students.",
+      "new": "New assignment",
+      "questionCount": "{count} questions",
+      "empty": {
+        "title": "No assignments yet",
+        "description": "Create your first assignment to get started.",
+        "cta": "Create assignment"
+      }
+    },
+    "create": {
+      "title": "New assignment"
+    },
+    "edit": {
+      "title": "Edit assignment",
+      "questions": "Questions",
+      "noQuestions": "No questions added yet.",
+      "correct": "Correct",
+      "concept": "Concept",
+      "delete": "Delete assignment",
+      "deleteQuestion": "Delete question",
+      "confirmDelete": "Delete this assignment? This cannot be undone.",
+      "editDetails": "Edit details",
+      "cancel": "Cancel editing"
+    },
+    "form": {
+      "details": "Assignment details",
+      "subject": "Subject",
+      "subjectPlaceholder": "e.g. Physics",
+      "chapter": "Chapter",
+      "chapterPlaceholder": "e.g. Forces and motion",
+      "lessonId": "Lesson ID",
+      "lessonIdPlaceholder": "e.g. lesson-ch5-forces",
+      "title": "Title",
+      "titlePlaceholder": "e.g. Chapter 5 Review",
+      "description": "Description",
+      "descriptionPlaceholder": "Optional description for students",
+      "dueAt": "Due date",
+      "save": "Save changes",
+      "create": "Create assignment",
+      "saved": "Changes saved.",
+      "timeZone": "Riyadh time"
+    },
+    "question": {
+      "addTitle": "Add a question",
+      "text": "Question text",
+      "textPlaceholder": "Write your question here…",
+      "conceptRef": "Concept reference",
+      "conceptRefPlaceholder": "e.g. newton-third-law",
+      "hints": "Student hints (up to 3)",
+      "hintsDescription": "Write up to three short hints, least revealing first. Students reveal them one at a time before submitting. Leave a box empty to use fewer.",
+      "hintLabel": "Hint {number}",
+      "hintPlaceholder": "Write hint {number} (optional)",
+      "options": "Answer options",
+      "optionPlaceholder": "Option {id}",
+      "addOption": "Add option",
+      "removeOption": "Remove option",
+      "markCorrect": "Mark option {id} as correct",
+      "correctHint": "Select the radio button next to the correct answer.",
+      "add": "Add question",
+      "added": "Question added."
+    },
+    "distribute": {
+      "trigger": "Distribute",
+      "title": "Distribute assignment",
+      "description": "Select which students receive this assignment.",
+      "selected": "{count} of {total} selected",
+      "selectAll": "Select all",
+      "clearAll": "Clear",
+      "noStudents": "Please select at least one student.",
+      "noStudentsAvailable": "No students found.",
+      "dueAt": "Override due date (optional)",
+      "cancel": "Cancel",
+      "confirm": "Distribute to {count}"
+    },
+    "errors": {
+      "auth": "Your session has expired. Sign in again.",
+      "validation": "Check the required fields, answer options, and date.",
+      "create": "Could not create the assignment. Please try again.",
+      "update": "Could not save changes. Please try again.",
+      "delete": "Could not delete the assignment. Please try again.",
+      "addQuestion": "Could not add the question. Please try again.",
+      "deleteQuestion": "Could not delete the question. Please try again.",
+      "distribute": "Could not distribute. Check the selected students and try again."
+    }
+  },
+  "homeworkErrors": {
+    "load": "Could not load homework. Try again or sign in again if your session has expired.",
+    "retry": "Try again"
   }
 }

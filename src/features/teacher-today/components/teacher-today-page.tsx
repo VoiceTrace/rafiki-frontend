@@ -20,7 +20,7 @@ export async function TeacherTodayPage() {
     { time: t("schedule.timeThree"), subject: t("schedule.physicsEleven"), detail: t("schedule.momentum") },
   ];
   const attention = [
-    { icon: FileCheck2, value: "6", title: t("attention.homework"), detail: t("attention.homeworkDetail"), href: "/teacher/teaching" },
+    { icon: FileCheck2, value: "6", title: t("attention.homework"), detail: t("attention.homeworkDetail"), href: "/teacher/homework" },
     { icon: MessageCircleQuestion, value: "4", title: t("attention.questions"), detail: t("attention.questionsDetail"), href: "/teacher/connect" },
     { icon: UsersRound, value: "3", title: t("attention.support"), detail: t("attention.supportDetail"), href: "/teacher/students" },
   ];

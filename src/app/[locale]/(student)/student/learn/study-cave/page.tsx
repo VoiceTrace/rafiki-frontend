@@ -1,14 +1,21 @@
-import { StudyCavePage } from "@/features/study-cave/components/study-cave-page";
-import { parseStudyCaveRouteState, type StudyCaveSearchParams } from "@/features/study-cave/types";
-import { loadReview } from "@/features/study-cave/server/review-api";
-import { verifySession } from "@/features/auth/server/dal";
+import { redirect } from "next/navigation";
+import type { StudyCaveSearchParams } from "@/features/study-cave/types";
 
-export default async function Page({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<StudyCaveSearchParams> }) {
-  const { locale } = await params;
-  const safeLocale = locale === "ar" ? "ar" : "en";
-  await verifySession(safeLocale, "student");
+/**
+ * Retired route. Study Cave is served from /student/study-cave; this redirect keeps
+ * older links working, including the subject/chapter/lesson deep links, rather than
+ * duplicating the page in two places.
+ */
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<StudyCaveSearchParams>;
+}) {
   const query = await searchParams;
-  const routeState = parseStudyCaveRouteState(query);
-  const review = await loadReview(safeLocale, typeof query.lesson_id === "string" ? query.lesson_id : undefined, typeof query.subject_id === "string" ? query.subject_id : undefined, typeof query.chapter_id === "string" ? query.chapter_id : undefined);
-  return <StudyCavePage key={`${review.subjectId}:${review.chapterId}:${review.lesson?.id}:${routeState.initialPhase}`} {...routeState} review={review} />;
+  const forwarded = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (typeof value === "string") forwarded.set(key, value);
+  }
+  const suffix = forwarded.size ? `?${forwarded.toString()}` : "";
+  redirect(`/student/study-cave${suffix}`);
 }

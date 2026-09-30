@@ -223,6 +223,34 @@ _Source: `design/WIREFRAMES.md`_
 
 ## Approved state extensions
 
+### Approved homework assessment scope — 2026-09-29
+
+Homework is a teacher-authored assessment. It contains no chat or AI interaction
+on the teacher or student homework screens. Each MCQ question has a teacher-written
+stem, answer options, one correct answer, and exactly three static hints. Students
+can reveal the hints progressively before submitting. The question, answers, and
+hints are persisted as homework data for later Rafiqi understanding analysis; no
+AI generation or validation happens in this flow.
+
+- The teacher question builder requires all three hints before a question can be saved.
+- Student homework shows only the question, options, and progressive hints before
+  submission. Correct answers remain hidden until submission.
+- This extends Boards 38 and 39 and supersedes any implication that homework has
+  a conversational assistant.
+
+### Approved Study Cave homework journey — 2026-09-29
+
+The student opens homework from the **Homework** phase inside Study Cave. That
+phase shows only active assigned assessments, with subject, chapter, and lesson
+selectors. Selecting a lesson opens its assigned MCQ in the same Study Cave
+context. Each question keeps its teacher-authored hints in an expandable panel.
+The mobile **More** menu does not contain a separate Homework destination;
+legacy homework links redirect to the Study Cave homework phase.
+
+This replaces the sample-only Study Cave homework panel and the separate student
+homework list/detail journey. Teacher-created assignment context is persisted as
+subject, chapter, and lesson data; no AI or chat is included in this flow.
+
 - [Board 29 — S11 first-open profile onboarding](../design/boards/29-s11-first-open-profile.md) extends S11 and S16 with a voluntary first-time conversation, live learner-profile updates, **Confident** / **Still forming** labels, correction controls, and a mobile Arabic RTL direction. It does not replace the canonical S11/S16 wireframes.
 
 - [Board 34 — Selected professional first-login onboarding](../design/boards/34-first-login-onboarding-selected.md) defines the welcome screen, overall visual language, routing, completion behavior, and the retained form-step rollback reference.
@@ -1172,6 +1200,32 @@ Completion placement revision: the user approved a separate, full-width summary 
 For the current MVP, completing a Review Companion session recomputes concept-level mastery and creates one immutable, idempotent session summary. The student sees friendly concept outcomes, supportive explanations, whether assistance was used, and a recommended next step inside the existing companion. Numeric grades, raw assessment taxonomy, confidence, and evidence-window policy are not student-facing. Profile extraction, homework generation, and class aggregation remain later work; the D6 handoff preserves a stable boundary for those consumers without starting them now.
 
 ## Epic E — Homework
+
+### Approved homework maintenance scope — 2026-09-27
+
+The owner approved preserving the current manual MCQ flow while fixing bugs.
+Boards 36–40 remain the reference for these routes. For this maintenance scope,
+the following supersedes conflicting descriptions of the current implementation;
+the fuller Epic E plan below remains future product work, not a claim of delivery.
+
+- Teachers author a shared question set and explicitly distribute it to selected
+  active students in their school. Class membership and mastery-generated,
+  differentiated question sets are outside this change.
+- Keep the existing two-to-six option authoring controls; four options is the
+  default, not a fixed count. Option IDs and the selected correct answer must stay
+  valid after removing or adding options.
+- Restore the metadata editor already specified by board 38, including clearing
+  an optional description/deadline. Keep the approved cards and visual language.
+- Persist submitted feedback across reloads and return visits. A separate
+  student-owned results endpoint can reveal answers only after submission;
+  pre-submission question responses must continue to omit the answer key.
+- Fix localized error handling, accessible control composition, narrow-screen
+  wrapping, and date/time conversion without introducing a new design system.
+- Keep backend bearer tokens server-only; student submission uses a Server Action.
+
+The owner also approved the built-in browser and seeded test-account login in
+place of `agent-browser` for this verification session. Retain Next.js MCP checks,
+English/Arabic checks, and desktop/mobile inspection.
 
 | ID | Ticket | User / type | Purpose |
 | --- | --- | --- | --- |
