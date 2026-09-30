@@ -35,11 +35,8 @@ export function ProfileForm({ user, avatarBaseUrl }: { user: User; avatarBaseUrl
   const [avatarState, avatarAction, avatarPending] = useActionState(uploadAvatarAction, idle)
   const [removeState, removeAction, removePending] = useActionState(removeAvatarAction, idle)
 
-  // Controlled value so the field reflects updated data after router.refresh()
+  // Controlled value; the profile page remounts this form when the server name changes.
   const [fullName, setFullName] = useState(user.full_name)
-  useEffect(() => {
-    setFullName(user.full_name)
-  }, [user.full_name])
 
   // Refresh server component data after any successful change so the layout
   // re-reads the updated JWT (name, avatar) and the navbar reflects it

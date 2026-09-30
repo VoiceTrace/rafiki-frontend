@@ -19,7 +19,7 @@ export default async function StudentProfilePage({
 
   return (
     <div className="py-4">
-      <ProfileForm user={user} avatarBaseUrl={avatarBaseUrl} />
+      <ProfileForm key={user.full_name} user={user} avatarBaseUrl={avatarBaseUrl} />
     </div>
   )
 }
