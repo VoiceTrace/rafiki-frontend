@@ -148,9 +148,14 @@ export function StudyCavePage({
       </section>}
       {review.error && <div role="alert" className="rounded-xl border border-destructive/30 bg-card p-4 text-sm"><p>{r("loadError")}</p><Button variant="outline" className="mt-2" onClick={() => router.refresh()}>{r("reload")}</Button></div>}
       {catalogPending && <p role="status" className="text-sm text-muted-foreground">{r("loadingCatalog")}</p>}
-      {!review.error && !review.lesson && <p className="rounded-xl bg-card p-4">{r((!review.subjects.length || (review.subjectId && !review.chapters.length) || (review.chapterId && !review.lessons.length)) ? "empty" : "chooseLesson")}</p>}
+      {phase !== "homework" && !review.error && !review.lesson && <p className="rounded-xl bg-card p-4">{r((!review.subjects.length || (review.subjectId && !review.chapters.length) || (review.chapterId && !review.lessons.length)) ? "empty" : "chooseLesson")}</p>}
       <StudyCavePhaseTabs phases={phases} activePhase={phase} lessonId={review.lesson?.id} subjectId={review.subjectId} chapterId={review.chapterId} onSelect={setPhase} t={t} />
-      {!review.lesson || catalogPending ? null : phase === "before" && review.lesson.id !== "newton-third-law" ? (
+      {/* Homework is keyed by its own assignment, not by a review lesson: opening one
+          navigates to ?homeworkId=… and drops lesson_id, so gating it on review.lesson
+          blanked the workspace the moment a student picked an assignment. */}
+      {phase === "homework" ? (
+        <StudyCaveHomeworkWorkspace assignments={homeworkAssignments} selectedAssignment={selectedHomework} initialResult={initialHomeworkResult} />
+      ) : !review.lesson || catalogPending ? null : phase === "before" && review.lesson.id !== "newton-third-law" ? (
         <p className="rounded-xl bg-card p-4">{r("beforeUnavailable")}</p>
       ) : phase === "before" ? (
         <section className="grid gap-4 lg:grid-cols-[minmax(0,.95fr)_minmax(20rem,1.05fr)]">
@@ -248,10 +253,8 @@ export function StudyCavePage({
             />
           </div>
         </section>
-      ) : phase === "after" ? (
-        <AfterClassReview key={review.lesson?.id ?? "empty"} notes={notes} onNotesChange={setNotes} review={review} />
       ) : (
-        <StudyCaveHomeworkWorkspace assignments={homeworkAssignments} selectedAssignment={selectedHomework} initialResult={initialHomeworkResult} />
+        <AfterClassReview key={review.lesson?.id ?? "empty"} notes={notes} onNotesChange={setNotes} review={review} />
       )}
     </div>
   );
