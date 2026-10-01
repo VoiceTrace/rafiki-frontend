@@ -57,7 +57,6 @@ export function HomeworkDistributeDialog({ assignmentId, students, disabled }: P
     startTransition(async () => {
       const result = await distributeAssignmentAction(
         assignmentId,
-        Array.from(selectedIds),
         dueAt ? new Date(dueAt).toISOString() : undefined,
         locale,
       )

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import type { ReactNode } from "react"
 
 import { routing } from "@/i18n/routing"
+import { Toaster } from "@/components/ui/sonner"
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -14,5 +15,5 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   if (!hasLocale(routing.locales, locale)) notFound()
   setRequestLocale(locale)
 
-  return <NextIntlClientProvider><div lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>{children}</div></NextIntlClientProvider>
+  return <NextIntlClientProvider><div lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>{children}<Toaster position={locale === "ar" ? "bottom-left" : "bottom-right"} /></div></NextIntlClientProvider>
 }

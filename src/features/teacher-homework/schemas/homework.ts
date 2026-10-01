@@ -19,10 +19,12 @@ export const questionSchema = z.object({
   options: z.array(z.object({ id: z.string().min(1).max(10), text: z.string().trim().min(1) })).max(6),
   correct_answer: z.string().min(1).max(10).nullable(),
   hints: z.array(z.string().trim().min(1).max(500)).max(3),
-  concept_ref: z.string().trim().max(200).optional(),
+  concept_ref: z.string().trim().min(1).max(200),
   order: z.number().int().nonnegative(),
 }).superRefine(({ format, options, correct_answer }, ctx) => {
   if (format === "mcq" && (options.length < 2 || !correct_answer || !options.some((option) => option.id === correct_answer))) ctx.addIssue({ code: "custom", message: "MCQ needs valid options and a correct answer" })
+  if (new Set(options.map((option) => option.id)).size !== options.length) ctx.addIssue({ code: "custom", message: "Option ids must be unique" })
+  if (new Set(options.map((option) => option.text.trim().toLocaleLowerCase())).size !== options.length) ctx.addIssue({ code: "custom", message: "Option text must be unique" })
   if (format === "short_note" && (options.length || correct_answer)) ctx.addIssue({ code: "custom", message: "Short note cannot have options" })
 })
 export const distributeSchema = z.object({

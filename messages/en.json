@@ -601,7 +601,8 @@
       "submitted": "Submitted"
     },
     "mcq": {
-      "submit": "Submit answers",
+      "back": "Back to homework",
+      "submit": "Submit homework",
       "submitted": "Submitted!",
       "score": "{correct} / {total} correct · {percent}%",
       "submitError": "Failed to submit. Please try again.",
@@ -610,7 +611,35 @@
       "hintsSummary": "Hints",
       "revealHint": "Show hint {number}",
       "hintLabel": "Hint {number}",
-      "awaitingReview": "Awaiting your teacher's review."
+      "awaitingReview": "Waiting for your teacher's review. Your answers are now read-only.",
+      "waitingTitle": "Homework submitted",
+      "approvedTitle": "Your teacher approved this homework",
+      "approvedDescription": "Your grade and teacher feedback are now available.",
+      "teacherScore": "Teacher score: {score}%",
+      "teacherComment": "Teacher comment",
+      "empty": "This homework has no questions yet.",
+      "overdue": "Overdue",
+      "lateNote": "This homework is overdue. You can still submit it, and the submission time will be shown to your teacher.",
+      "progressLabel": "Homework progress",
+      "questionProgress": "Question {current} of {total}",
+      "answered": "{count} of {total} answered",
+      "goToQuestion": "Go to question {number}",
+      "hintError": "The hint could not be revealed. Try again.",
+      "submittedToast": "Homework submitted",
+      "previous": "Previous",
+      "next": "Next",
+      "reviewAnswers": "Review answers",
+      "reviewTitle": "Review your answers",
+      "reviewDescription": "Open any question to change your answer before submitting.",
+      "answeredStatus": "Answered",
+      "unansweredStatus": "Unanswered",
+      "unansweredWarning": "{count, plural, one {# question is unanswered.} other {# questions are unanswered.}}",
+      "backToQuestions": "Back to questions",
+      "confirmTitle": "Submit this homework?",
+      "confirmDescription": "You cannot edit your answers after submission.",
+      "confirmUnanswered": "Answer the remaining {count, plural, one {# question} other {# questions}} before submitting.",
+      "cancel": "Keep reviewing",
+      "confirmSubmit": "Submit now"
     }
   },
   "studyCave": {
@@ -952,7 +981,18 @@
       "subject": "Subject",
       "chapter": "Chapter",
       "lesson": "Lesson",
-      "chooseLesson": "Choose a lesson"
+      "chooseLesson": "Choose a lesson",
+      "activeList": "Available homework",
+      "open": "Open",
+      "due": "Due {date}",
+      "status": {
+        "assigned": "Assigned",
+        "in_progress": "In progress",
+        "submitted": "Submitted",
+        "graded": "Under review",
+        "approved": "Approved",
+        "overdue": "Overdue"
+      }
     }
   },
   "emptyStates": {
@@ -1027,6 +1067,17 @@
   "teacherLesson": {
     "prepare": "Prepare for class",
     "back": "Back",
+    "lessonTitle": "Lesson — {lesson}",
+    "context": "{grade} · {subject} · everything for this lesson, stage by stage",
+    "noGrade": "No grade",
+    "noSubject": "No subject",
+    "grade": "Grade",
+    "subject": "Subject",
+    "chapter": "Chapter",
+    "lesson": "Lesson",
+    "selectorsLabel": "Lesson selection",
+    "chooseLesson": "Choose a lesson",
+    "loading": "Loading lesson…",
     "flow": {
       "step3": "Introduce the concept (10 min)",
       "detail1": "Show a short video of a rocket launch.",
@@ -1043,7 +1094,9 @@
     "tabs": {
       "before": "Before",
       "during": "During",
-      "after": "After"
+      "insights": "Class insights",
+      "after": "After",
+      "homework": "Homework"
     },
     "title": "Newton Third Law",
     "more": "More options",
@@ -1099,6 +1152,23 @@
       "testPermission": "Test permission",
       "retryPermission": "Try again",
       "consent": "Use only with school approval and consent."
+    },
+    "insights": {
+      "title": "Class insights",
+      "description": "Class-level lesson insights will appear here when evidence is available."
+    },
+    "after": {
+      "title": "After class",
+      "description": "Review your lesson notes and follow-up actions for this class."
+    },
+    "permission": {
+      "title": "You do not have access to this lesson workspace",
+      "description": "Sign in with a teacher account to continue."
+    },
+    "error": {
+      "title": "The lesson workspace could not be loaded",
+      "description": "Check the API connection and try again.",
+      "retry": "Try again"
     },
     "save": "Save draft",
     "stagesLabel": "Lesson stages",
@@ -1433,6 +1503,119 @@
       "addQuestion": "Could not add the question. Please try again.",
       "deleteQuestion": "Could not delete the question. Please try again.",
       "distribute": "Could not distribute. Check the selected students and try again."
+    },
+    "redesign": {
+      "chooseLesson": "Choose a lesson before creating homework.",
+      "empty": {
+        "title": "No homework for this lesson",
+        "description": "Create a draft, add MCQs and hints, preview it, then distribute it to the grade."
+      },
+      "details": {
+        "title": "Create homework",
+        "editTitle": "Homework details",
+        "homeworkTitle": "Title",
+        "description": "Description (optional)",
+        "due": "Due date"
+      },
+      "saveDraft": "Save draft",
+      "draftSaved": "Draft saved",
+      "saveError": "Could not save the homework. Check the fields and try again.",
+      "status": { "draft": "Draft" },
+      "questionCount": "{count, plural, one {# question} other {# questions}}",
+      "due": "Due {date}",
+      "chooseAssignment": "Choose homework",
+      "distribute": "Distribute to {count, plural, one {# student} other {# students}}",
+      "distributing": "Distributing…",
+      "distributed": "Homework distributed",
+      "distributeError": "Could not distribute the homework.",
+      "questionsTitle": "Questions",
+      "noQuestions": "No questions yet. Add the first MCQ below.",
+      "moveUp": "Move question up",
+      "moveDown": "Move question down",
+      "editQuestion": "Edit question",
+      "deleteQuestion": "Delete question",
+      "deleted": "Question deleted",
+      "deleteError": "Could not delete the question.",
+      "reordered": "Question order saved",
+      "reorderError": "Could not reorder the questions.",
+      "hint": "Hint {number}",
+      "addQuestion": "Add an MCQ",
+      "lockNote": "Distribution locks the homework so every student receives the same assessment.",
+      "preview": {
+        "trigger": "Preview as student",
+        "title": "Student preview",
+        "description": "This preview does not save answers or reveal the answer key.",
+        "empty": "Add a question to preview the homework.",
+        "progress": "Question {current} of {total}",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "builder": {
+        "question": "Question text",
+        "options": "Answer options",
+        "correctAnswer": "Correct answer",
+        "markCorrect": "Mark option {option} as correct",
+        "option": "Option {option}",
+        "removeOption": "Remove option {option}",
+        "addOption": "Add option",
+        "concept": "Concept tag",
+        "chooseConcept": "Choose a concept",
+        "hints": "Hints, gentle to most revealing",
+        "hintCount": "{count} of 3",
+        "hint": "Hint {number}",
+        "hintPlaceholder": "Write hint {number}",
+        "removeHint": "Remove hint {number}",
+        "addHint": "Add hint",
+        "cancel": "Cancel",
+        "save": "Save question",
+        "addQuestion": "Add question",
+        "added": "Question added",
+        "updated": "Question updated",
+        "errors": {
+          "question": "Enter the question text.",
+          "options": "Add at least two non-empty options.",
+          "duplicate": "Answer options must be unique.",
+          "correct": "Mark exactly one correct answer.",
+          "concept": "Choose a concept tag.",
+          "hint": "Remove empty hint fields or write the hint.",
+          "save": "Could not save the question."
+        }
+      },
+      "results": {
+        "status": { "distributed": "Distributed", "closed": "Closed" },
+        "due": "Due {date}",
+        "summaryTitle": "Results so far",
+        "submitted": "Submitted",
+        "average": "Average score",
+        "working": "Still working",
+        "submissionProgress": "Submission progress",
+        "strugglesTitle": "Where students struggled",
+        "strugglesDescription": "By concept — how many faced it and how many got it wrong. Most wrong first.",
+        "noStruggles": "Concept results will appear after students submit.",
+        "wrongCount": "{wrong} of {faced} wrong",
+        "studentsTitle": "Student submissions",
+        "noStudents": "No students received this homework.",
+        "student": "Student",
+        "statusLabel": "Status",
+        "scoreLabel": "Score",
+        "hintsLabel": "Hints used",
+        "submittedAt": "Submitted",
+        "review": "Review",
+        "reviewDescription": "Check each answer, record a score and optional comment, then approve the result.",
+        "studentStatus": { "assigned": "Assigned", "in_progress": "In progress", "submitted": "Submitted", "graded": "Graded", "approved": "Approved" },
+        "question": "Question {number}",
+        "studentPick": "Student's pick",
+        "correctAnswer": "Correct answer",
+        "hintsUsed": "{count, plural, one {# hint used} other {# hints used}}",
+        "score": "Score (0–1)",
+        "comment": "Comment (optional)",
+        "notSubmitted": "This student has not submitted yet.",
+        "saveGrade": "Save grade",
+        "approve": "Approve result",
+        "gradeError": "Could not save the grade.",
+        "savedToast": "Grade saved; it is still hidden from the student.",
+        "approvedToast": "Result approved and released to the student."
+      }
     }
   },
   "homeworkErrors": {

@@ -1,5 +1,6 @@
 import "server-only"
 import type { User } from "@/types/user"
+import type { ReviewChapter, ReviewLesson, ReviewSubject } from "@/features/study-cave/review-types"
 
 export class ApiError extends Error {
   constructor(public readonly status: number, message: string) {
@@ -72,6 +73,31 @@ export async function listUsers(
   const res = await fetch(url.toString(), { headers: authHeaders(accessToken), cache: "no-store" })
   if (!res.ok) throw new Error("Failed to list users")
   return res.json() as Promise<User[]>
+}
+
+export async function listStudySubjects(accessToken: string, locale: string): Promise<ReviewSubject[]> {
+  const res = await fetch(`${API_URL}/study-subjects?locale=${encodeURIComponent(locale)}`, {
+    headers: authHeaders(accessToken), cache: "no-store",
+  })
+  if (!res.ok) throw new ApiError(res.status, "Failed to list study subjects")
+  return res.json() as Promise<ReviewSubject[]>
+}
+
+export async function listStudyChapters(accessToken: string, subjectId: string, locale: string): Promise<ReviewChapter[]> {
+  const res = await fetch(`${API_URL}/study-subjects/${encodeURIComponent(subjectId)}/chapters?locale=${encodeURIComponent(locale)}`, {
+    headers: authHeaders(accessToken), cache: "no-store",
+  })
+  if (!res.ok) throw new ApiError(res.status, "Failed to list study chapters")
+  return res.json() as Promise<ReviewChapter[]>
+}
+
+export async function listStudyLessons(accessToken: string, chapterId: string, locale: string): Promise<ReviewLesson[]> {
+  const url = new URL(`${API_URL}/study-lessons`)
+  url.searchParams.set("chapter_id", chapterId)
+  url.searchParams.set("locale", locale)
+  const res = await fetch(url.toString(), { headers: authHeaders(accessToken), cache: "no-store" })
+  if (!res.ok) throw new ApiError(res.status, "Failed to list study lessons")
+  return res.json() as Promise<ReviewLesson[]>
 }
 
 // ── Homework API (Epic E) ─────────────────────────────────────────────────────
