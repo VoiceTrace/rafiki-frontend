@@ -639,7 +639,9 @@
       "confirmDescription": "You cannot edit your answers after submission.",
       "confirmUnanswered": "Answer the remaining {count, plural, one {# question} other {# questions}} before submitting.",
       "cancel": "Keep reviewing",
-      "confirmSubmit": "Submit now"
+      "confirmSubmit": "Submit now",
+      "shortNoteLabel": "Your answer",
+      "shortNotePlaceholder": "Write your answer in a few sentences."
     }
   },
   "studyCave": {
@@ -1520,7 +1522,9 @@
       "saveDraft": "Save draft",
       "draftSaved": "Draft saved",
       "saveError": "Could not save the homework. Check the fields and try again.",
-      "status": { "draft": "Draft" },
+      "status": {
+        "draft": "Draft"
+      },
       "questionCount": "{count, plural, one {# question} other {# questions}}",
       "due": "Due {date}",
       "chooseAssignment": "Choose homework",
@@ -1578,11 +1582,15 @@
           "correct": "Mark exactly one correct answer.",
           "concept": "Choose a concept tag.",
           "hint": "Remove empty hint fields or write the hint.",
-          "save": "Could not save the question."
+          "save": "Could not save the question.",
+          "emptyOption": "Fill in or remove the empty answer options."
         }
       },
       "results": {
-        "status": { "distributed": "Distributed", "closed": "Closed" },
+        "status": {
+          "distributed": "Distributed",
+          "closed": "Closed"
+        },
         "due": "Due {date}",
         "summaryTitle": "Results so far",
         "submitted": "Submitted",
@@ -1602,7 +1610,13 @@
         "submittedAt": "Submitted",
         "review": "Review",
         "reviewDescription": "Check each answer, record a score and optional comment, then approve the result.",
-        "studentStatus": { "assigned": "Assigned", "in_progress": "In progress", "submitted": "Submitted", "graded": "Graded", "approved": "Approved" },
+        "studentStatus": {
+          "assigned": "Assigned",
+          "in_progress": "In progress",
+          "submitted": "Submitted",
+          "graded": "Graded",
+          "approved": "Approved"
+        },
         "question": "Question {number}",
         "studentPick": "Student's pick",
         "correctAnswer": "Correct answer",
@@ -1614,7 +1628,14 @@
         "approve": "Approve result",
         "gradeError": "Could not save the grade.",
         "savedToast": "Grade saved; it is still hidden from the student.",
-        "approvedToast": "Result approved and released to the student."
+        "approvedToast": "Result approved and released to the student.",
+        "studentAnswer": "Student's answer"
+      },
+      "newHomework": "New homework",
+      "assignmentStatus": {
+        "draft": "Draft",
+        "distributed": "Distributed",
+        "closed": "Closed"
       }
     }
   },

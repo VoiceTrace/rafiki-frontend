@@ -1,7 +1,7 @@
 "use client"
 
 import { useActionState, useState, useTransition } from "react"
-import { ArrowDown, ArrowUp, CalendarDays, Eye, Loader2, Pencil, Send, Trash2 } from "lucide-react"
+import { ArrowDown, ArrowUp, CalendarDays, Eye, Loader2, Pencil, Plus, Send, Trash2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -94,9 +94,17 @@ export function TeacherHomeworkStage({ context, assignments, assignment, submiss
 
   if (!context.lessonId) return <div className="rounded-2xl border border-dashed p-10 text-center text-muted-foreground">{t("chooseLesson")}</div>
 
-  if (!assignment) return <section className="grid gap-4"><div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center"><h2 className="font-heading text-xl font-bold">{t("empty.title")}</h2><p className="mt-2 text-sm text-muted-foreground">{t("empty.description")}</p></div><AssignmentDetailsForm context={context} /></section>
+  const switcher = assignments.length > 0 && <div className="flex flex-wrap items-center justify-end gap-2">
+    <select value={assignment?.id ?? "new"} onChange={(event) => onSelectAssignment(event.target.value)} disabled={pending} className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm sm:flex-none" aria-label={t("chooseAssignment")}>
+      {!assignment && <option value="new">{t("newHomework")}</option>}
+      {assignments.map((item) => <option key={item.id} value={item.id}>{item.title} · {t(`assignmentStatus.${item.status}`)}</option>)}
+    </select>
+    {assignment && <Button variant="outline" onClick={() => onSelectAssignment("new")}><Plus className="size-4" />{t("newHomework")}</Button>}
+  </div>
 
-  if (assignment.status !== "draft") return <TeacherHomeworkResults assignment={assignment} submissions={submissions} />
+  if (!assignment) return <section className="grid gap-4">{switcher}<div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center"><h2 className="font-heading text-xl font-bold">{t("empty.title")}</h2><p className="mt-2 text-sm text-muted-foreground">{t("empty.description")}</p></div><AssignmentDetailsForm key="new" context={context} /></section>
+
+  if (assignment.status !== "draft") return <section className="grid gap-4">{switcher}<TeacherHomeworkResults assignment={assignment} submissions={submissions} conceptOptions={context.concepts} /></section>
 
   function moveQuestion(index: number, direction: -1 | 1) {
     if (!assignment) return
@@ -127,13 +135,13 @@ export function TeacherHomeworkStage({ context, assignments, assignment, submiss
   }
 
   return <section className="grid gap-5">
+    {switcher}
     <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card p-4">
       <div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h2 className="font-heading text-xl font-bold">{assignment.title}</h2><span className="rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold">{t("status.draft")}</span></div><p className="mt-1 text-sm text-muted-foreground">{t("questionCount", { count: assignment.question_count })}{assignment.due_at ? ` · ${t("due", { date: new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(assignment.due_at)) })}` : ""}</p></div>
-      {assignments.length > 1 && <select value={assignment.id} onChange={(event) => onSelectAssignment(event.target.value)} className="rounded-lg border border-border bg-background px-3 py-2 text-sm" aria-label={t("chooseAssignment")}>{assignments.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}</select>}
       <Dialog><DialogTrigger render={<Button variant="outline" disabled={assignment.questions.length === 0} />}><Eye className="size-4" />{t("preview.trigger")}</DialogTrigger><DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl"><DialogHeader><DialogTitle>{t("preview.title")}</DialogTitle><DialogDescription>{t("preview.description")}</DialogDescription></DialogHeader><StudentPreview assignment={assignment} /></DialogContent></Dialog>
       <Button disabled={pending || assignment.questions.length === 0 || activeStudentCount === 0} onClick={distribute}><Send className="size-4" />{pending ? t("distributing") : t("distribute", { count: activeStudentCount })}</Button>
     </div>
-    <AssignmentDetailsForm context={context} assignment={assignment} />
+    <AssignmentDetailsForm key={assignment.id} context={context} assignment={assignment} />
     <Card><CardHeader><CardTitle>{t("questionsTitle")}</CardTitle></CardHeader><CardContent className="grid gap-3">
       {assignment.questions.length === 0 && <p className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">{t("noQuestions")}</p>}
       {assignment.questions.map((question, index) => editingQuestion === question.id ? <HomeworkQuestionEditor key={question.id} assignmentId={assignment.id} question={question} order={index} concepts={context.concepts} onDone={() => setEditingQuestion(null)} /> : <div key={question.id} className="rounded-2xl border border-border p-4">

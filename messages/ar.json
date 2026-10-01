@@ -639,7 +639,9 @@
       "confirmDescription": "لن تتمكن من تعديل إجاباتك بعد التسليم.",
       "confirmUnanswered": "أجب عن {count, plural, one {السؤال المتبقي} two {السؤالين المتبقيين} few {الأسئلة الـ# المتبقية} other {# سؤالًا متبقيًا}} قبل التسليم.",
       "cancel": "متابعة المراجعة",
-      "confirmSubmit": "التسليم الآن"
+      "confirmSubmit": "التسليم الآن",
+      "shortNoteLabel": "إجابتك",
+      "shortNotePlaceholder": "اكتب إجابتك في بضع جمل."
     }
   },
   "studyCave": {
@@ -1520,7 +1522,9 @@
       "saveDraft": "حفظ المسودة",
       "draftSaved": "تم حفظ المسودة",
       "saveError": "تعذّر حفظ الواجب. تحقق من الحقول وحاول مرة أخرى.",
-      "status": { "draft": "مسودة" },
+      "status": {
+        "draft": "مسودة"
+      },
       "questionCount": "{count, plural, one {سؤال واحد} two {سؤالان} few {# أسئلة} other {# سؤالًا}}",
       "due": "موعد التسليم {date}",
       "chooseAssignment": "اختر الواجب",
@@ -1578,11 +1582,15 @@
           "correct": "حدد إجابة صحيحة واحدة فقط.",
           "concept": "اختر وسم المفهوم.",
           "hint": "احذف حقل التلميح الفارغ أو اكتب التلميح.",
-          "save": "تعذّر حفظ السؤال."
+          "save": "تعذّر حفظ السؤال.",
+          "emptyOption": "املأ خيارات الإجابة الفارغة أو احذفها."
         }
       },
       "results": {
-        "status": { "distributed": "موزّع", "closed": "مغلق" },
+        "status": {
+          "distributed": "موزّع",
+          "closed": "مغلق"
+        },
         "due": "موعد التسليم {date}",
         "summaryTitle": "النتائج حتى الآن",
         "submitted": "سلّموا",
@@ -1602,7 +1610,13 @@
         "submittedAt": "وقت التسليم",
         "review": "مراجعة",
         "reviewDescription": "راجع كل إجابة وسجّل الدرجة وتعليقًا اختياريًا ثم اعتمد النتيجة.",
-        "studentStatus": { "assigned": "مُسند", "in_progress": "قيد الحل", "submitted": "مُسلّم", "graded": "تم التصحيح", "approved": "معتمد" },
+        "studentStatus": {
+          "assigned": "مُسند",
+          "in_progress": "قيد الحل",
+          "submitted": "مُسلّم",
+          "graded": "تم التصحيح",
+          "approved": "معتمد"
+        },
         "question": "السؤال {number}",
         "studentPick": "اختيار الطالب",
         "correctAnswer": "الإجابة الصحيحة",
@@ -1614,7 +1628,14 @@
         "approve": "اعتماد النتيجة",
         "gradeError": "تعذّر حفظ الدرجة.",
         "savedToast": "تم حفظ الدرجة وما زالت مخفية عن الطالب.",
-        "approvedToast": "تم اعتماد النتيجة وإتاحتها للطالب."
+        "approvedToast": "تم اعتماد النتيجة وإتاحتها للطالب.",
+        "studentAnswer": "إجابة الطالب"
+      },
+      "newHomework": "واجب جديد",
+      "assignmentStatus": {
+        "draft": "مسودة",
+        "distributed": "تم التوزيع",
+        "closed": "مغلق"
       }
     }
   },

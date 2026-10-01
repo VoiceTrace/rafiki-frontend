@@ -47,7 +47,8 @@ export function HomeworkQuestionEditor({ assignmentId, question, order, concepts
   function submit() {
     const hasDuplicate = new Set(normalizedOptions).size !== normalizedOptions.length
     if (!questionText.trim()) return setError(t("errors.question"))
-    if (options.length < 2 || options.some((option) => !option.text.trim())) return setError(t("errors.options"))
+    if (options.length < 2) return setError(t("errors.options"))
+    if (options.some((option) => !option.text.trim())) return setError(t("errors.emptyOption"))
     if (hasDuplicate) return setError(t("errors.duplicate"))
     if (!correctAnswer || !options.some((option) => option.id === correctAnswer)) return setError(t("errors.correct"))
     if (!conceptRef) return setError(t("errors.concept"))

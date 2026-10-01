@@ -1,17 +1,23 @@
 "use client"
 
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress"
+import { useLocale } from "next-intl"
 import { cn } from "cn"
 
 function Progress({
   className,
   children,
   value,
+  locale,
   ...props
 }: ProgressPrimitive.Root.Props) {
+  // Format the value text in the app locale, not the runtime default, so the
+  // server and the browser render the same aria-valuetext.
+  const appLocale = useLocale()
   return (
     <ProgressPrimitive.Root
       value={value}
+      locale={locale ?? appLocale}
       data-slot="progress"
       className={cn("flex flex-wrap gap-3", className)}
       {...props}

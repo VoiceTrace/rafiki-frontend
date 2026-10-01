@@ -20,6 +20,8 @@ export function StudyCaveHomeworkWorkspace({ assignments, selectedAssignment, in
   const t = useTranslations("studyCave.homeworkWorkspace")
   const locale = useLocale()
   const router = useRouter()
+  // Read the clock once per mount; calling Date.now() during render is impure.
+  const [now] = useState(() => Date.now())
   const activeAssignments = assignments
   const [subject, setSubject] = useState(selectedAssignment?.subject ?? activeAssignments[0]?.subject ?? "")
   const chapters = useMemo(() => [...new Set(activeAssignments.filter((assignment) => assignment.subject === subject).map((assignment) => assignment.chapter))], [activeAssignments, subject])
@@ -78,7 +80,7 @@ export function StudyCaveHomeworkWorkspace({ assignments, selectedAssignment, in
           </label>
         </div><div className="grid gap-3" aria-label={t("activeList")}>
           {activeAssignments.map((assignment) => {
-            const overdue = Boolean(assignment.due_at && new Date(assignment.due_at).getTime() < Date.now() && !["submitted", "graded", "approved"].includes(assignment.status))
+            const overdue = Boolean(assignment.due_at && new Date(assignment.due_at).getTime() < now && !["submitted", "graded", "approved"].includes(assignment.status))
             return <Card key={assignment.id}><CardContent className="flex items-center gap-3 p-4"><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-secondary"><BookOpenCheck className="size-5" /></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="font-semibold">{assignment.title}</h3><span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${assignment.status === "approved" ? "bg-success/25 text-success-foreground" : overdue ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>{overdue ? t("status.overdue") : t(`status.${assignment.status}`)}</span></div><p className="mt-1 text-xs text-muted-foreground">{assignment.subject} · {assignment.chapter} · {assignment.lesson_id}</p>{assignment.due_at && <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><CalendarDays className="size-3.5" />{t("due", { date: new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(assignment.due_at)) })}</p>}</div><Button variant="ghost" size="sm" onClick={() => chooseLesson(assignment.id)}>{assignment.status === "approved" ? <CheckCircle2 className="size-4" /> : null}{t("open")}<ChevronRight className="size-4 rtl:-scale-x-100" /></Button></CardContent></Card>
           })}
         </div></>

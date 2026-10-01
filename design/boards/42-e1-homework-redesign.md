@@ -27,3 +27,12 @@ Approved 2026-10-01. This decision supersedes conflicting layout and interaction
 ## Shared requirements
 
 English and Arabic use next-intl, RTL uses logical layout and mirrored directional icons, student work is mobile-first, option selection uses an accessible radio group, hints use an announced live region, and every mutation disables controls while saving and reports success or failure.
+
+## 2026-10-01 QA corrections
+
+These supersede the wording above where they differ.
+
+- The lesson workspace shows a homework switcher and a **New homework** action on every view, so a lesson that already has homework (draft or distributed) can still get another one. `assignment_id=new` opens the create form.
+- The student flow also renders **short-note** questions with a text answer, because the E1 ticket requires MCQ and short note and the API and the legacy teacher form create them. A whitespace-only note counts as unanswered. The lesson-workspace builder itself is still MCQ-only, pending a product decision.
+- Teacher review shows a short-note answer as written, with no correct-answer box, and "Where students struggled" counts only MCQs, labelled with the concept title.
+- The average score reads "—" until at least one submission is graded.
