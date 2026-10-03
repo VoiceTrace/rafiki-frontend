@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Bell,
   BookOpen,
   CalendarDays,
   ChartNoAxesCombined,
@@ -22,7 +21,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { cn } from "cn";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -33,6 +32,7 @@ import {
 } from "@/components/ui/dialog";
 import { Link, usePathname } from "@/i18n/navigation";
 import { UserMenu } from "@/components/shared/user-menu";
+import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 type Role = "teacher" | "student";
 type Item = { path: string; label: string; icon: LucideIcon };
@@ -340,16 +340,7 @@ export function AppShell({
                 EN
               </span>
             </a>
-            <Link
-              href={"/" + role + "/notifications"}
-              aria-label={t("notifications")}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon" }),
-                "size-10",
-              )}
-            >
-              <Bell aria-hidden="true" />
-            </Link>
+            <NotificationBell role={role} />
             <UserMenu user={user} role={role} />
           </div>
         </header>

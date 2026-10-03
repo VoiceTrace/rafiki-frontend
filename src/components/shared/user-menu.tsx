@@ -5,6 +5,7 @@ import { LogOut, UserRound } from "lucide-react"
 import { signOut } from "next-auth/react"
 import { useLocale, useTranslations } from "next-intl"
 import { Link } from "@/i18n/navigation"
+import { preparePushLogout } from "@/features/notifications/firebase-client"
 
 interface UserMenuProps {
   user: {
@@ -59,7 +60,7 @@ export function UserMenu({ user, role }: UserMenuProps) {
             </Menu.Item>
             <Menu.Item
               className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm text-destructive outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
-              onClick={() => signOut({ redirectTo: "/" + locale + "/login" })}
+              onClick={async () => { await preparePushLogout(); await signOut({ redirectTo: "/" + locale + "/login" }) }}
             >
               <LogOut className="size-4 shrink-0" aria-hidden="true" />
               {t("signOut")}
