@@ -906,7 +906,14 @@
         "questionLabel": "Question",
         "openLink": "Open resource",
         "download": "Download",
-        "types": { "question": "Question", "article": "Article", "link": "Link", "image": "Image", "video": "Video", "file": "File" },
+        "types": {
+          "question": "Question",
+          "article": "Article",
+          "link": "Link",
+          "image": "Image",
+          "video": "Video",
+          "file": "File"
+        },
         "markComplete": "Mark complete",
         "markIncomplete": "Mark incomplete"
       },
@@ -951,10 +958,29 @@
     "search": "Search resources",
     "searchPlaceholder": "Search resources…",
     "categoriesLabel": "Filter by resource type",
-    "categories": { "all": "All", "article": "Articles", "video": "Videos", "image": "Diagrams", "question": "Practice", "link": "Links", "file": "Files" },
+    "categories": {
+      "all": "All",
+      "article": "Articles",
+      "video": "Videos",
+      "image": "Diagrams",
+      "question": "Practice",
+      "link": "Links",
+      "file": "Files"
+    },
     "audienceLabel": "Filter by assignment status",
-    "audiences": { "all": "All", "required": "Required", "optional": "Optional" },
-    "types": { "question": "Practice", "article": "Article", "link": "Link", "image": "Diagram", "video": "Video", "file": "File" },
+    "audiences": {
+      "all": "All",
+      "required": "Required",
+      "optional": "Optional"
+    },
+    "types": {
+      "question": "Practice",
+      "article": "Article",
+      "link": "Link",
+      "image": "Diagram",
+      "video": "Video",
+      "file": "File"
+    },
     "required": "Required",
     "optional": "Optional",
     "materialCount": "{count, plural, =1 {# resource} other {# resources}}",
@@ -1500,5 +1526,40 @@
     "loadingCatalog": "Loading catalog…",
     "beforeUnavailable": "Before-class activities are not available for this demo lesson. Open After class to review it.",
     "homeworkUnavailable": "Homework is not available for this demo lesson."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Your updates, all in one place.",
+    "badge": "Notifications: {count} unread",
+    "newUpdate": "You have a new update in Rafiqi.",
+    "view": "View",
+    "dismiss": "Dismiss",
+    "readAll": "Mark all as read",
+    "browserTitle": "Browser notifications",
+    "filters": "Filter notifications",
+    "all": "All",
+    "unread": "Unread",
+    "loading": "Loading notifications…",
+    "saving": "Saving…",
+    "empty": "You are all caught up.",
+    "noUnread": "No unread notifications.",
+    "error": "We could not load this update. It may no longer be available.",
+    "retry": "Try again",
+    "more": "Load more",
+    "enable": "Enable notifications",
+    "disable": "Disable on this device",
+    "materialAssigned": "New lesson resource: {title}",
+    "push": {
+      "disabled": "Get alerts on this device, even when Rafiqi is in the background.",
+      "enabled": "Notifications are enabled on this device.",
+      "denied": "Notifications are blocked. Allow them in your browser settings to enable alerts.",
+      "unsupported": "This browser does not support push notifications. Your inbox still works.",
+      "unavailable": "Browser notifications are being configured. Your inbox still works.",
+      "failed": "Device registration failed. Try again.",
+      "disabledDevice": "Notifications are disabled on this device."
+    },
+    "recent": "Your latest updates",
+    "viewAll": "View all notifications",
+    "markedRead": "Notifications marked as read."
   }
 }
