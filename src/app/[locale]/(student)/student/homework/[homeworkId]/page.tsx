@@ -1,13 +1,10 @@
-import { notFound } from "next/navigation";
-import { StudentHomeworkDetail } from "@/features/student-homework/components/student-homework-page";
-import { isHomeworkId } from "@/features/student-homework/homework-data";
+import { redirect } from "next/navigation"
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ homeworkId: string }>;
-}) {
-  const { homeworkId } = await params;
-  if (!isHomeworkId(homeworkId)) notFound();
-  return <StudentHomeworkDetail homeworkId={homeworkId} />;
+interface Props {
+  params: Promise<{ homeworkId: string }>
+}
+
+export default async function Page({ params }: Props) {
+  const { homeworkId } = await params
+  redirect(`/student/study-cave?phase=homework&homeworkId=${encodeURIComponent(homeworkId)}`)
 }

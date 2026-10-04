@@ -4,6 +4,7 @@ export interface User {
   email: string
   full_name: string
   role: string
+  grade_level: string | null
   is_active: boolean
   avatar_url: string | null
   created_at: string

@@ -89,6 +89,10 @@ The project already has the primitives needed for its current interface: buttons
 
 No shadcn registry components should be installed or copied automatically. Each candidate requires approval after checking dependencies, accessibility behavior, RTL support, and visual compatibility.
 
+### Homework redesign registry decision — 2026-10-01
+
+The owner approved the official base-nova `radio-group`, `alert-dialog`, `progress`, `table`, and `sonner` items after a read-only registry audit. They are installed for the E1 homework redesign: radio-group supplies keyboard option selection, alert-dialog confirms irreversible submission, progress exposes lesson and submission completion, table structures teacher results, and Sonner provides mutation feedback. The existing `LessonStageTabs` remains the lesson-stage control because it is already shared and matches the current application visual language.
+
 ## Architecture rules
 
 - Prefer Server Components and add `"use client"` only for actual client behavior.

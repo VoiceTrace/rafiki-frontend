@@ -21,7 +21,7 @@ import {
 import type { ReviewData } from "../review-types";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { AfterClassReview } from "./after-class-review";
-import { StudyCaveHomeworkPanel } from "./study-cave-homework-panel";
+import { StudyCaveHomeworkWorkspace } from "./study-cave-homework-workspace";
 import { StudyCaveCardTitle } from "./study-cave-card-title";
 import { StudyCavePhaseTabs } from "./study-cave-phase-tabs";
 import { StudyCaveQuestionCard, type StudyCaveQuestion } from "./study-cave-question-card";
@@ -30,15 +30,22 @@ import {
   studyCavePhases,
   type StudyCavePhase,
 } from "@/features/study-cave/types";
+import type { StudentAssignmentRead, StudentAssignmentWithQuestions, SubmissionResult } from "@/types/homework";
 
 const phases = studyCavePhases;
 
 export function StudyCavePage({
   initialPhase = "before",
   review,
+  homeworkAssignments = [],
+  selectedHomework = null,
+  initialHomeworkResult = null,
 }: {
   initialPhase?: StudyCavePhase;
   review: ReviewData;
+  homeworkAssignments?: StudentAssignmentRead[];
+  selectedHomework?: StudentAssignmentWithQuestions | null;
+  initialHomeworkResult?: SubmissionResult | null;
 }) {
   const t = useTranslations("studyCave");
   const r = useTranslations("reviewChat");
@@ -111,7 +118,7 @@ export function StudyCavePage({
           {subtitles[phase]}
         </p>
       </header>
-      <section
+      {phase !== "homework" && <section
         className="grid gap-3 md:grid-cols-3"
         aria-label={t("selectorsLabel")}
       >
@@ -138,12 +145,17 @@ export function StudyCavePage({
             </Select>
           </label>;
         })}
-      </section>
+      </section>}
       {review.error && <div role="alert" className="rounded-xl border border-destructive/30 bg-card p-4 text-sm"><p>{r("loadError")}</p><Button variant="outline" className="mt-2" onClick={() => router.refresh()}>{r("reload")}</Button></div>}
       {catalogPending && <p role="status" className="text-sm text-muted-foreground">{r("loadingCatalog")}</p>}
-      {!review.error && !review.lesson && <p className="rounded-xl bg-card p-4">{r((!review.subjects.length || (review.subjectId && !review.chapters.length) || (review.chapterId && !review.lessons.length)) ? "empty" : "chooseLesson")}</p>}
+      {phase !== "homework" && !review.error && !review.lesson && <p className="rounded-xl bg-card p-4">{r((!review.subjects.length || (review.subjectId && !review.chapters.length) || (review.chapterId && !review.lessons.length)) ? "empty" : "chooseLesson")}</p>}
       <StudyCavePhaseTabs phases={phases} activePhase={phase} lessonId={review.lesson?.id} subjectId={review.subjectId} chapterId={review.chapterId} onSelect={setPhase} t={t} />
-      {!review.lesson || catalogPending ? null : phase === "before" && review.lesson.id !== "newton-third-law" ? (
+      {/* Homework is keyed by its own assignment, not by a review lesson: opening one
+          navigates to ?homeworkId=… and drops lesson_id, so gating it on review.lesson
+          blanked the workspace the moment a student picked an assignment. */}
+      {phase === "homework" ? (
+        <StudyCaveHomeworkWorkspace assignments={homeworkAssignments} selectedAssignment={selectedHomework} initialResult={initialHomeworkResult} />
+      ) : !review.lesson || catalogPending ? null : phase === "before" && review.lesson.id !== "newton-third-law" ? (
         <p className="rounded-xl bg-card p-4">{r("beforeUnavailable")}</p>
       ) : phase === "before" ? (
         <section className="grid gap-4 lg:grid-cols-[minmax(0,.95fr)_minmax(20rem,1.05fr)]">
@@ -241,12 +253,8 @@ export function StudyCavePage({
             />
           </div>
         </section>
-      ) : phase === "after" ? (
-        <AfterClassReview key={review.lesson?.id ?? "empty"} notes={notes} onNotesChange={setNotes} review={review} />
-      ) : review.lesson.id !== "newton-third-law" ? (
-        <p className="rounded-xl bg-card p-4">{r("homeworkUnavailable")}</p>
       ) : (
-        <StudyCaveHomeworkPanel />
+        <AfterClassReview key={review.lesson?.id ?? "empty"} notes={notes} onNotesChange={setNotes} review={review} />
       )}
     </div>
   );

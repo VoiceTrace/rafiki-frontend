@@ -497,14 +497,16 @@
     "list": {
       "eyebrow": "Current homework",
       "title": "Homework",
-      "description": "Choose an assignment to continue with a guided workspace.",
+      "description": "Choose an assignment to work on.",
       "label": "Current homework assignments",
       "help": {
         "title": "Rafiqi is here to help",
         "description": "Hints without the answer",
         "text": "Open an assignment whenever you need a nudge, a place to explain your thinking, or a quick review.",
         "note": "Your progress is saved as you work"
-      }
+      },
+      "empty": "No homework assigned yet.",
+      "questions": "questions"
     },
     "assignments": {
       "action-reaction": {
@@ -592,6 +594,54 @@
       "description": "A short summary after you have attempted the question.",
       "answer": "Both the car and the motorbike exert the same force on each other. Their accelerations differ because their masses differ.",
       "next": "Return to Question to revise your answer or ask Rafiqi for another nudge."
+    },
+    "assignmentStatus": {
+      "assigned": "Not started",
+      "in_progress": "In progress",
+      "submitted": "Submitted"
+    },
+    "mcq": {
+      "back": "Back to homework",
+      "submit": "Submit homework",
+      "submitted": "Submitted!",
+      "score": "{correct} / {total} correct · {percent}%",
+      "submitError": "Failed to submit. Please try again.",
+      "correctAnswer": "Correct answer",
+      "yourAnswer": "Your answer",
+      "hintsSummary": "Hints",
+      "revealHint": "Show hint {number}",
+      "hintLabel": "Hint {number}",
+      "awaitingReview": "Waiting for your teacher's review. Your answers are now read-only.",
+      "waitingTitle": "Homework submitted",
+      "approvedTitle": "Your teacher approved this homework",
+      "approvedDescription": "Your grade and teacher feedback are now available.",
+      "teacherScore": "Teacher score: {score}%",
+      "teacherComment": "Teacher comment",
+      "empty": "This homework has no questions yet.",
+      "overdue": "Overdue",
+      "lateNote": "This homework is overdue. You can still submit it, and the submission time will be shown to your teacher.",
+      "progressLabel": "Homework progress",
+      "questionProgress": "Question {current} of {total}",
+      "answered": "{count} of {total} answered",
+      "goToQuestion": "Go to question {number}",
+      "hintError": "The hint could not be revealed. Try again.",
+      "submittedToast": "Homework submitted",
+      "previous": "Previous",
+      "next": "Next",
+      "reviewAnswers": "Review answers",
+      "reviewTitle": "Review your answers",
+      "reviewDescription": "Open any question to change your answer before submitting.",
+      "answeredStatus": "Answered",
+      "unansweredStatus": "Unanswered",
+      "unansweredWarning": "{count, plural, one {# question is unanswered.} other {# questions are unanswered.}}",
+      "backToQuestions": "Back to questions",
+      "confirmTitle": "Submit this homework?",
+      "confirmDescription": "You cannot edit your answers after submission.",
+      "confirmUnanswered": "Answer the remaining {count, plural, one {# question} other {# questions}} before submitting.",
+      "cancel": "Keep reviewing",
+      "confirmSubmit": "Submit now",
+      "shortNoteLabel": "Your answer",
+      "shortNotePlaceholder": "Write your answer in a few sentences."
     }
   },
   "studyCave": {
@@ -925,6 +975,26 @@
         "action": "Download summary",
         "documentTitle": "Newton’s Third Law — After-class review"
       }
+    },
+    "homeworkWorkspace": {
+      "title": "Homework",
+      "description": "Choose an active lesson to complete your teacher-assigned assessment.",
+      "empty": "There are no active homework assessments right now.",
+      "subject": "Subject",
+      "chapter": "Chapter",
+      "lesson": "Lesson",
+      "chooseLesson": "Choose a lesson",
+      "activeList": "Available homework",
+      "open": "Open",
+      "due": "Due {date}",
+      "status": {
+        "assigned": "Assigned",
+        "in_progress": "In progress",
+        "submitted": "Submitted",
+        "graded": "Under review",
+        "approved": "Approved",
+        "overdue": "Overdue"
+      }
     }
   },
   "emptyStates": {
@@ -999,6 +1069,17 @@
   "teacherLesson": {
     "prepare": "Prepare for class",
     "back": "Back",
+    "lessonTitle": "Lesson — {lesson}",
+    "context": "{grade} · {subject} · everything for this lesson, stage by stage",
+    "noGrade": "No grade",
+    "noSubject": "No subject",
+    "grade": "Grade",
+    "subject": "Subject",
+    "chapter": "Chapter",
+    "lesson": "Lesson",
+    "selectorsLabel": "Lesson selection",
+    "chooseLesson": "Choose a lesson",
+    "loading": "Loading lesson…",
     "flow": {
       "step3": "Introduce the concept (10 min)",
       "detail1": "Show a short video of a rocket launch.",
@@ -1015,7 +1096,9 @@
     "tabs": {
       "before": "Before",
       "during": "During",
-      "after": "After"
+      "insights": "Class insights",
+      "after": "After",
+      "homework": "Homework"
     },
     "title": "Newton Third Law",
     "more": "More options",
@@ -1071,6 +1154,23 @@
       "testPermission": "Test permission",
       "retryPermission": "Try again",
       "consent": "Use only with school approval and consent."
+    },
+    "insights": {
+      "title": "Class insights",
+      "description": "Class-level lesson insights will appear here when evidence is available."
+    },
+    "after": {
+      "title": "After class",
+      "description": "Review your lesson notes and follow-up actions for this class."
+    },
+    "permission": {
+      "title": "You do not have access to this lesson workspace",
+      "description": "Sign in with a teacher account to continue."
+    },
+    "error": {
+      "title": "The lesson workspace could not be loaded",
+      "description": "Check the API connection and try again.",
+      "retry": "Try again"
     },
     "save": "Save draft",
     "stagesLabel": "Lesson stages",
@@ -1311,5 +1411,236 @@
     "loadingCatalog": "Loading catalog…",
     "beforeUnavailable": "Before-class activities are not available for this demo lesson. Open After class to review it.",
     "homeworkUnavailable": "Homework is not available for this demo lesson."
+  },
+  "teacherHomework": {
+    "back": "Back",
+    "status": {
+      "draft": "Draft",
+      "distributed": "Distributed",
+      "closed": "Closed"
+    },
+    "list": {
+      "eyebrow": "Homework",
+      "title": "Homework assignments",
+      "description": "Create assignments with MCQ questions and distribute them to your students.",
+      "new": "New assignment",
+      "questionCount": "{count} questions",
+      "empty": {
+        "title": "No assignments yet",
+        "description": "Create your first assignment to get started.",
+        "cta": "Create assignment"
+      }
+    },
+    "create": {
+      "title": "New assignment"
+    },
+    "edit": {
+      "title": "Edit assignment",
+      "questions": "Questions",
+      "noQuestions": "No questions added yet.",
+      "correct": "Correct",
+      "concept": "Concept",
+      "delete": "Delete assignment",
+      "deleteQuestion": "Delete question",
+      "confirmDelete": "Delete this assignment? This cannot be undone.",
+      "editDetails": "Edit details",
+      "cancel": "Cancel editing"
+    },
+    "form": {
+      "details": "Assignment details",
+      "subject": "Subject",
+      "subjectPlaceholder": "e.g. Physics",
+      "chapter": "Chapter",
+      "chapterPlaceholder": "e.g. Forces and motion",
+      "lessonId": "Lesson ID",
+      "lessonIdPlaceholder": "e.g. lesson-ch5-forces",
+      "title": "Title",
+      "titlePlaceholder": "e.g. Chapter 5 Review",
+      "description": "Description",
+      "descriptionPlaceholder": "Optional description for students",
+      "dueAt": "Due date",
+      "save": "Save changes",
+      "create": "Create assignment",
+      "saved": "Changes saved.",
+      "timeZone": "Riyadh time"
+    },
+    "question": {
+      "addTitle": "Add a question",
+      "text": "Question text",
+      "textPlaceholder": "Write your question here…",
+      "conceptRef": "Concept reference",
+      "conceptRefPlaceholder": "e.g. newton-third-law",
+      "hints": "Student hints (up to 3)",
+      "hintsDescription": "Write up to three short hints, least revealing first. Students reveal them one at a time before submitting. Leave a box empty to use fewer.",
+      "hintLabel": "Hint {number}",
+      "hintPlaceholder": "Write hint {number} (optional)",
+      "options": "Answer options",
+      "optionPlaceholder": "Option {id}",
+      "addOption": "Add option",
+      "removeOption": "Remove option",
+      "markCorrect": "Mark option {id} as correct",
+      "correctHint": "Select the radio button next to the correct answer.",
+      "add": "Add question",
+      "added": "Question added."
+    },
+    "distribute": {
+      "trigger": "Distribute",
+      "title": "Distribute assignment",
+      "description": "Select which students receive this assignment.",
+      "selected": "{count} of {total} selected",
+      "selectAll": "Select all",
+      "clearAll": "Clear",
+      "noStudents": "Please select at least one student.",
+      "noStudentsAvailable": "No students found.",
+      "dueAt": "Override due date (optional)",
+      "cancel": "Cancel",
+      "confirm": "Distribute to {count}"
+    },
+    "errors": {
+      "auth": "Your session has expired. Sign in again.",
+      "validation": "Check the required fields, answer options, and date.",
+      "create": "Could not create the assignment. Please try again.",
+      "update": "Could not save changes. Please try again.",
+      "delete": "Could not delete the assignment. Please try again.",
+      "addQuestion": "Could not add the question. Please try again.",
+      "deleteQuestion": "Could not delete the question. Please try again.",
+      "distribute": "Could not distribute. Check the selected students and try again."
+    },
+    "redesign": {
+      "chooseLesson": "Choose a lesson before creating homework.",
+      "empty": {
+        "title": "No homework for this lesson",
+        "description": "Create a draft, add MCQs and hints, preview it, then distribute it to the grade."
+      },
+      "details": {
+        "title": "Create homework",
+        "editTitle": "Homework details",
+        "homeworkTitle": "Title",
+        "description": "Description (optional)",
+        "due": "Due date"
+      },
+      "saveDraft": "Save draft",
+      "draftSaved": "Draft saved",
+      "saveError": "Could not save the homework. Check the fields and try again.",
+      "status": {
+        "draft": "Draft"
+      },
+      "questionCount": "{count, plural, one {# question} other {# questions}}",
+      "due": "Due {date}",
+      "chooseAssignment": "Choose homework",
+      "distribute": "Distribute to {count, plural, one {# student} other {# students}}",
+      "distributing": "Distributing…",
+      "distributed": "Homework distributed",
+      "distributeError": "Could not distribute the homework.",
+      "questionsTitle": "Questions",
+      "noQuestions": "No questions yet. Add the first MCQ below.",
+      "moveUp": "Move question up",
+      "moveDown": "Move question down",
+      "editQuestion": "Edit question",
+      "deleteQuestion": "Delete question",
+      "deleted": "Question deleted",
+      "deleteError": "Could not delete the question.",
+      "reordered": "Question order saved",
+      "reorderError": "Could not reorder the questions.",
+      "hint": "Hint {number}",
+      "addQuestion": "Add an MCQ",
+      "lockNote": "Distribution locks the homework so every student receives the same assessment.",
+      "preview": {
+        "trigger": "Preview as student",
+        "title": "Student preview",
+        "description": "This preview does not save answers or reveal the answer key.",
+        "empty": "Add a question to preview the homework.",
+        "progress": "Question {current} of {total}",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "builder": {
+        "question": "Question text",
+        "options": "Answer options",
+        "correctAnswer": "Correct answer",
+        "markCorrect": "Mark option {option} as correct",
+        "option": "Option {option}",
+        "removeOption": "Remove option {option}",
+        "addOption": "Add option",
+        "concept": "Concept tag",
+        "chooseConcept": "Choose a concept",
+        "hints": "Hints, gentle to most revealing",
+        "hintCount": "{count} of 3",
+        "hint": "Hint {number}",
+        "hintPlaceholder": "Write hint {number}",
+        "removeHint": "Remove hint {number}",
+        "addHint": "Add hint",
+        "cancel": "Cancel",
+        "save": "Save question",
+        "addQuestion": "Add question",
+        "added": "Question added",
+        "updated": "Question updated",
+        "errors": {
+          "question": "Enter the question text.",
+          "options": "Add at least two non-empty options.",
+          "duplicate": "Answer options must be unique.",
+          "correct": "Mark exactly one correct answer.",
+          "concept": "Choose a concept tag.",
+          "hint": "Remove empty hint fields or write the hint.",
+          "save": "Could not save the question.",
+          "emptyOption": "Fill in or remove the empty answer options."
+        }
+      },
+      "results": {
+        "status": {
+          "distributed": "Distributed",
+          "closed": "Closed"
+        },
+        "due": "Due {date}",
+        "summaryTitle": "Results so far",
+        "submitted": "Submitted",
+        "average": "Average score",
+        "working": "Still working",
+        "submissionProgress": "Submission progress",
+        "strugglesTitle": "Where students struggled",
+        "strugglesDescription": "By concept — how many faced it and how many got it wrong. Most wrong first.",
+        "noStruggles": "Concept results will appear after students submit.",
+        "wrongCount": "{wrong} of {faced} wrong",
+        "studentsTitle": "Student submissions",
+        "noStudents": "No students received this homework.",
+        "student": "Student",
+        "statusLabel": "Status",
+        "scoreLabel": "Score",
+        "hintsLabel": "Hints used",
+        "submittedAt": "Submitted",
+        "review": "Review",
+        "reviewDescription": "Check each answer, record a score and optional comment, then approve the result.",
+        "studentStatus": {
+          "assigned": "Assigned",
+          "in_progress": "In progress",
+          "submitted": "Submitted",
+          "graded": "Graded",
+          "approved": "Approved"
+        },
+        "question": "Question {number}",
+        "studentPick": "Student's pick",
+        "correctAnswer": "Correct answer",
+        "hintsUsed": "{count, plural, one {# hint used} other {# hints used}}",
+        "score": "Score (0–1)",
+        "comment": "Comment (optional)",
+        "notSubmitted": "This student has not submitted yet.",
+        "saveGrade": "Save grade",
+        "approve": "Approve result",
+        "gradeError": "Could not save the grade.",
+        "savedToast": "Grade saved; it is still hidden from the student.",
+        "approvedToast": "Result approved and released to the student.",
+        "studentAnswer": "Student's answer"
+      },
+      "newHomework": "New homework",
+      "assignmentStatus": {
+        "draft": "Draft",
+        "distributed": "Distributed",
+        "closed": "Closed"
+      }
+    }
+  },
+  "homeworkErrors": {
+    "load": "Could not load homework. Try again or sign in again if your session has expired.",
+    "retry": "Try again"
   }
 }

@@ -1,5 +1,5 @@
-import { StudentHomeworkList } from "@/features/student-homework/components/student-homework-list";
+import { redirect } from "next/navigation"
 
 export default function Page() {
-  return <StudentHomeworkList />;
+  redirect("/student/study-cave?phase=homework")
 }
