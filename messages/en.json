@@ -980,6 +980,10 @@
     "noResults": "No resources match these filters."
   },
   "teacherResources": {
+    "savedAssignmentError": "Saved to your library, but could not attach it. Select the saved material and use Attach existing to retry.",
+    "loadError": "Your resource library could not be loaded.",
+    "loadErrorHelp": "Your saved materials are still available. Try loading the library again.",
+    "retryLoad": "Try again",
     "title": "Resources library",
     "subtitle": "Your Library — everything you've added to Rafiqi's knowledge, in your words.",
     "locale": "en",

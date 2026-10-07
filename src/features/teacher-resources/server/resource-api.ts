@@ -46,8 +46,9 @@ export async function assignLibraryResource(input: { class_id: string; lesson_id
   return request("/teacher/lesson-materials", { method: "POST", body: JSON.stringify(input) });
 }
 
-export async function createTeacherClass(input: { name: string; grade_id: string }) {
-  return sortResourceClasses(await request<ResourceClass[]>("/teacher/classes", { method: "POST", body: JSON.stringify(input) }), "en");
+export async function createTeacherClass(input: { name: string; grade_id: string }, locale: string) {
+  const safeLocale = locale === "ar" ? "ar" : "en";
+  return sortResourceClasses(await request<ResourceClass[]>(`/teacher/classes?locale=${safeLocale}`, { method: "POST", body: JSON.stringify(input) }), safeLocale);
 }
 
 export async function loadClassRoster(classId: string) {

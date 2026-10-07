@@ -47,3 +47,7 @@ The supplied mobile screenshot showed the shared header and resource page shifte
 ## Drag-and-drop file uploads — 2026-09-29
 
 The user requested that the resource upload control accept PDF, JPG, PNG, WebP, MP4, and WebM files up to 20 MB and support drag and drop. Keep the existing T14 type-specific picker and server validation; add a keyboard-accessible drop target with early client-side type, MIME, empty-file, and size feedback. Server-side validation remains authoritative.
+
+## Review fixes — 2026-10-07
+
+Preserve the approved library and editor composition. Resource creation and assignment recover separately: a saved resource remains in the library if attachment fails, and the existing preview attachment action retries without creating duplicates. Selecting a newly created class clears the lesson from the previous grade. Class creation retains the active locale. Resource, class, and roster dialogs use the shared accessible Dialog primitive. Library load failures show translated error and retry controls instead of an empty library, following SYS-US-04.
