@@ -67,9 +67,6 @@ export function LoginForm({
         <FieldError errors={state.errors?.password} />
       </div>
       <SubmitButton label={t("signIn")} />
-      {process.env.NODE_ENV !== "production" ? (
-        <p className="text-center text-xs text-muted-foreground">{t("mockHint")}</p>
-      ) : null}
     </form>
   )
 }

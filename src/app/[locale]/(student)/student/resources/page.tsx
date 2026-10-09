@@ -1,24 +1,12 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { verifySession } from "@/features/auth/server/dal";
+import { StudentResourcesPage } from "@/features/student-resources/components/student-resources-page";
+import { loadStudentResourceLibrary } from "@/features/teacher-resources/server/resource-api";
 
-import { EmptyStatePage } from "@/components/shared/empty-state-page";
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const safeLocale = locale === "ar" ? "ar" : "en";
+  await verifySession(safeLocale, "student");
+  const materials = await loadStudentResourceLibrary(safeLocale);
 
-export default async function Page() {
-  const [locale, t] = await Promise.all([
-    getLocale(),
-    getTranslations("emptyStates.comingSoon"),
-  ]);
-
-  return (
-    <EmptyStatePage
-      kind="coming-soon"
-      locale={locale as "en" | "ar"}
-      appName={t("appName")}
-      title={t("title")}
-      description={t("description")}
-      primaryAction={t("primaryAction")}
-      primaryHref={`/${locale}/student/today`}
-      secondaryAction={t("secondaryAction")}
-      secondaryHref={`/${locale}/student/learn`}
-    />
-  );
+  return <StudentResourcesPage materials={materials ?? []} loadFailed={materials === null} />;
 }

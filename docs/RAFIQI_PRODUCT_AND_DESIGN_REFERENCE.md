@@ -1434,11 +1434,13 @@ Route: `/[locale]/student/progress`
 
 Displays a localized This space is almost ready state, with Back to today and Explore learning actions. The detailed progress dashboard from the prototype is not implemented yet.
 
-## 9. Resources — coming-soon page
+## 9. Resources — lesson-specific student library
 
 Route: `/[locale]/student/resources`
 
-Displays the same localized coming-soon experience. Curated lesson resources are not implemented yet.
+Shows resources assigned to the signed-in student, grouped by class and lesson. Students can filter by resource type and required/optional status, search titles and descriptions, open links or uploaded media, download files, and mark assigned resources complete. Lesson progress in the sidebar summarizes completed versus total resources. Individual resource cards show a completion state but do not show a progress bar.
+
+The student library uses the authenticated student assignments and their per-student completion records. It must not expose unassigned teacher library resources. English and Arabic are supported, including RTL layout.
 
 ## 10. Connect — partially represented
 
@@ -1503,7 +1505,7 @@ The following routes exist but return no UI:
 - Teaching overview
 - Students list
 - Individual student profile
-- Resources
+- Resources library — implemented as a bilingual frontend demo; see [Teacher resource library decision](../design/teacher-resource-library.md).
 - Connect overview
 - Connect Messages
 - Connect Companions

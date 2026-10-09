@@ -26,6 +26,7 @@ import { StudyCaveCardTitle } from "./study-cave-card-title";
 import { StudyCavePhaseTabs } from "./study-cave-phase-tabs";
 import { StudyCaveQuestionCard, type StudyCaveQuestion } from "./study-cave-question-card";
 import { StudyCaveWarmupPanel } from "./study-cave-warmup-panel";
+import type { StudentMaterial } from "@/features/teacher-resources/server/resource-api";
 import {
   studyCavePhases,
   type StudyCavePhase,
@@ -36,9 +37,11 @@ const phases = studyCavePhases;
 export function StudyCavePage({
   initialPhase = "before",
   review,
+  materials = [],
 }: {
   initialPhase?: StudyCavePhase;
   review: ReviewData;
+  materials?: StudentMaterial[];
 }) {
   const t = useTranslations("studyCave");
   const r = useTranslations("reviewChat");
@@ -242,7 +245,7 @@ export function StudyCavePage({
           </div>
         </section>
       ) : phase === "after" ? (
-        <AfterClassReview key={review.lesson?.id ?? "empty"} notes={notes} onNotesChange={setNotes} review={review} />
+        <AfterClassReview key={review.lesson?.id ?? "empty"} notes={notes} onNotesChange={setNotes} review={review} assignedMaterials={materials} />
       ) : review.lesson.id !== "newton-third-law" ? (
         <p className="rounded-xl bg-card p-4">{r("homeworkUnavailable")}</p>
       ) : (

@@ -1,0 +1,150 @@
+"use client";
+
+import { useMemo, useRef, useState, useTransition } from "react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { useTranslations } from "next-intl";
+import { ArrowUpDown, BookOpenText, Check, ChevronDown, ExternalLink, File, FileText, Image as ImageIcon, Link as LinkIcon, Plus, Search, UploadCloud, Video, X } from "lucide-react";
+import type { CurriculumLesson, Grade, LibraryResource, ResourceClass, ResourceType, SchoolStudent } from "../server/resource-api";
+import { addClassStudentAction, assignResourceAction, createClassAction, createResourceAction, loadClassRosterAction } from "../actions/resource-actions";
+
+type Props = { resources: LibraryResource[]; classes: ResourceClass[]; grades: Grade[]; students: SchoolStudent[]; curriculum: Record<string, CurriculumLesson[]>; locale: string };
+type FilterType = "all" | ResourceType;
+const typeIcons = { question: BookOpenText, article: FileText, link: LinkIcon, image: ImageIcon, video: Video, file: File } satisfies Record<ResourceType, typeof File>;
+const typeOrder: FilterType[] = ["all", "question", "article", "link", "image", "video", "file"];
+const maxUploadBytes = 20 * 1024 * 1024;
+const uploadMimeByExtension: Record<string, string> = { pdf: "application/pdf", jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", mp4: "video/mp4", webm: "video/webm" };
+const sortClasses = (items: ResourceClass[], locale: string) => [...items].sort((a, b) => {
+  const gradeNumber = (gradeId: string) => Number(gradeId.match(/\d+/)?.[0] ?? Number.MAX_SAFE_INTEGER);
+  return gradeNumber(a.grade_id) - gradeNumber(b.grade_id) || a.name.localeCompare(b.name, locale, { numeric: true, sensitivity: "base" });
+});
+
+export function TeacherResourcesPage({ resources: initialResources, classes: initialClasses, grades, students, curriculum, locale }: Props) {
+  const t = useTranslations("teacherResources");
+  const resourceTrigger = useRef<HTMLButtonElement>(null);
+  const classTrigger = useRef<HTMLButtonElement>(null);
+  const rosterTrigger = useRef<HTMLButtonElement>(null);
+  const [resources, setResources] = useState(initialResources);
+  const [classes, setClasses] = useState(() => sortClasses(initialClasses, locale));
+  const [selectedId, setSelectedId] = useState(initialResources[0]?.id ?? "");
+  const [filter, setFilter] = useState<FilterType>("all");
+  const [search, setSearch] = useState("");
+  const [filterClassId, setFilterClassId] = useState("");
+  const [classId, setClassId] = useState(() => sortClasses(initialClasses, locale)[0]?.id ?? "");
+  const [lessonId, setLessonId] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [classDialogOpen, setClassDialogOpen] = useState(false);
+  const [rosterOpen, setRosterOpen] = useState(false);
+  const [roster, setRoster] = useState<SchoolStudent[]>([]);
+  const [activeType, setActiveType] = useState<ResourceType>("question");
+  const [required, setRequired] = useState(false);
+  const [draftTitle, setDraftTitle] = useState("");
+  const [draftBody, setDraftBody] = useState("");
+  const [draftSource, setDraftSource] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [draggingFile, setDraggingFile] = useState(false);
+  const [newClassName, setNewClassName] = useState("");
+  const [newClassGrade, setNewClassGrade] = useState(grades[0]?.id ?? "");
+  const [pending, startTransition] = useTransition();
+  const [message, setMessage] = useState("");
+  const [uploadError, setUploadError] = useState("");
+  const orderedClasses = sortClasses(classes, locale);
+  const targetClass = classes.find((item) => item.id === classId);
+  const lessons = targetClass ? curriculum[targetClass.grade_id] ?? [] : [];
+  const visibleResources = useMemo(() => resources.filter((item) => (!filterClassId || item.assigned_class_ids?.includes(filterClassId)) && (filter === "all" || item.type === filter) && (!search || `${item.title} ${item.description}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()))), [filter, filterClassId, resources, search]);
+  const selected = visibleResources.find((item) => item.id === selectedId) ?? visibleResources[0];
+  const Icon = selected ? typeIcons[selected.type] : FileText;
+
+  function openDialog() {
+    setActiveType("question"); setDraftTitle(""); setDraftBody(""); setDraftSource(""); setFile(null); setDraggingFile(false); setUploadError(""); setRequired(false); setMessage(""); setLessonId(""); setDialogOpen(true);
+  }
+
+  function selectMaterialType(type: ResourceType) {
+    setActiveType(type);
+    setFile(null);
+    setDraggingFile(false);
+    setUploadError("");
+  }
+
+  function selectUpload(candidate: File | undefined) {
+    setFile(null);
+    setUploadError("");
+    if (!candidate) return;
+    const extension = candidate.name.split(".").pop()?.toLowerCase() ?? "";
+    const acceptedExtensions = activeType === "image" ? ["jpg", "jpeg", "png", "webp"] : activeType === "video" ? ["mp4", "webm"] : activeType === "file" ? ["pdf"] : [];
+    if (!acceptedExtensions.includes(extension)) { setUploadError(t("uploadTypeError")); return; }
+    if (candidate.size === 0) { setUploadError(t("uploadEmptyError")); return; }
+    if (candidate.size > maxUploadBytes) { setUploadError(t("uploadSizeError")); return; }
+    if (candidate.type !== uploadMimeByExtension[extension]) { setUploadError(t("uploadMimeError")); return; }
+    setFile(candidate);
+  }
+
+  function saveMaterial(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (["image", "video", "file"].includes(activeType) && !file) { setUploadError(t("uploadRequiredError")); return; }
+    const upload = file;
+    const title = draftTitle.trim();
+    const description = draftBody.trim();
+    const type = activeType;
+    const source = draftSource.trim();
+    startTransition(async () => {
+      try {
+        const saved = upload ? await (async () => { const body = new FormData(); body.set("title", title); body.set("description", description); body.set("file", upload); const response = await fetch("/api/teacher/resources/upload", { method: "POST", body }); if (!response.ok) throw new Error("upload_failed"); return response.json() as Promise<LibraryResource>; })() : await createResourceAction({ type, title, description: type === "question" ? "" : description, ...(type === "question" ? { question: title, answer: description } : {}), ...(type === "link" ? { source_url: source } : {}), ...(type !== "question" && type !== "link" && source ? { source_url: source } : {}) });
+        let resource: LibraryResource = { ...saved, assigned_class_ids: saved.assigned_class_ids ?? [], download_url: saved.original_filename ? `/api/teacher/resources/${encodeURIComponent(saved.id)}/download` : null };
+        setResources((current) => [resource, ...current.filter((item) => item.id !== resource.id)]);
+        setSelectedId(resource.id);
+        setFilter("all");
+        setSearch("");
+        setFilterClassId("");
+        setDialogOpen(false);
+        if (classId && lessonId) {
+          try {
+            await assignResourceAction({ class_id: classId, lesson_id: lessonId, resource_id: resource.id, required });
+            resource = { ...resource, assigned_class_ids: [...new Set([...resource.assigned_class_ids, classId])] };
+            setResources((current) => current.map((item) => item.id === resource.id ? resource : item));
+          } catch {
+            setMessage(t("savedAssignmentError"));
+            return;
+          }
+        }
+        setMessage(t("saved"));
+      } catch { setMessage(t("saveError")); }
+    });
+  }
+
+  function addClass(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    startTransition(async () => {
+      try { const updated = await createClassAction({ name: newClassName.trim(), grade_id: newClassGrade }, locale); setClasses(updated); const created = updated.find((item) => !classes.some((old) => old.id === item.id)); if (created) { setClassId(created.id); setLessonId(""); } setNewClassName(""); setClassDialogOpen(false); setMessage(t("classSaved")); }
+      catch { setMessage(t("saveError")); }
+    });
+  }
+
+  function manageStudents() {
+    if (!classId) return;
+    startTransition(async () => { try { setRoster(await loadClassRosterAction(classId)); setRosterOpen(true); } catch { setMessage(t("saveError")); } });
+  }
+
+  function enrollStudent(studentId: string) {
+    startTransition(async () => { try { const updated = await addClassStudentAction(classId, studentId); setRoster(updated); setClasses((current) => current.map((item) => item.id === classId ? { ...item, student_count: updated.length } : item)); } catch { setMessage(t("saveError")); } });
+  }
+
+  function attachSelectedResource() {
+    if (!selected || !classId || !lessonId) return;
+    startTransition(async () => { try { await assignResourceAction({ class_id: classId, lesson_id: lessonId, resource_id: selected.id, required }); setResources((current) => current.map((item) => item.id === selected.id ? { ...item, assigned_class_ids: [...new Set([...(item.assigned_class_ids ?? []), classId])] } : item)); setMessage(t("attached")); } catch { setMessage(t("saveError")); } });
+  }
+
+  return <main className="mx-auto flex w-full min-w-0 max-w-300 flex-col gap-4 overflow-x-clip pb-20" data-testid="teacher-resources-page">
+    <header className="flex min-w-0 flex-col justify-between gap-4 sm:flex-row sm:items-center"><div className="min-w-0"><h1 className="font-heading text-page font-bold">{t("title")}</h1><p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p></div><div className="grid w-full min-w-0 grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap"><button ref={classTrigger} type="button" onClick={() => setClassDialogOpen(true)} className="min-h-11 min-w-0 rounded-xl border px-3 text-sm font-semibold sm:px-4">{t("createClass")}</button>{classId && <button ref={rosterTrigger} type="button" onClick={manageStudents} className="min-h-11 min-w-0 rounded-xl border px-3 text-sm font-semibold sm:px-4">{t("manageStudents")}</button>}<button ref={resourceTrigger} type="button" onClick={openDialog} className="col-span-2 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground sm:col-span-1"><Plus className="size-4" />{t("addMaterial")}</button></div></header>
+    {message && <p role="status" className="flex items-center gap-2 rounded-xl border bg-card px-4 py-3 text-sm"><Check className="size-4" />{message}</p>}
+    <section aria-label={t("filtersLabel")} className="rounded-2xl border bg-card p-3 shadow-surface sm:p-4"><div className="grid gap-2 sm:grid-cols-2"><label className="flex min-h-11 items-center gap-2 rounded-xl border bg-background px-3"><Search className="size-4" /><span className="sr-only">{t("search")}</span><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("searchPlaceholder")} className="min-w-0 flex-1 bg-transparent text-sm outline-none" /></label><label className="flex min-h-11 items-center rounded-xl border px-3 text-xs text-muted-foreground">{t("classLabel")}<select value={filterClassId} onChange={(e) => setFilterClassId(e.target.value)} className="ms-2 min-w-0 flex-1 bg-transparent text-sm font-semibold text-foreground"><option value="">{t("allClasses")}</option>{orderedClasses.map((item) => <option key={item.id} value={item.id}>{item.name} · {item.grade_title}</option>)}</select></label></div><div className="mt-3 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label={t("typesLabel")}>{typeOrder.map((type) => { const TypeIcon = type === "all" ? null : typeIcons[type]; return <button key={type} type="button" role="tab" aria-selected={filter === type} onClick={() => setFilter(type)} className={`inline-flex min-h-9 shrink-0 items-center gap-2 rounded-xl border px-3 text-sm font-semibold ${filter === type ? "border-secondary bg-secondary text-secondary-foreground" : "bg-card hover:bg-muted"}`}>{TypeIcon && <TypeIcon className="size-4" />}{t(`types.${type}`)}</button>; })}</div></section>
+    <div className="grid min-w-0 items-start gap-4 xl:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.9fr)]"><section aria-labelledby="materials-heading" className="min-w-0 overflow-hidden rounded-2xl border bg-card shadow-surface"><div className="flex min-h-12 items-center justify-between border-b px-4"><h2 id="materials-heading" className="text-sm font-bold">{t("materialCount", { count: visibleResources.length })}</h2><ArrowUpDown className="size-4 text-muted-foreground" /></div>{visibleResources.length ? <ul className="divide-y px-2">{visibleResources.map((resource) => { const RowIcon = typeIcons[resource.type]; return <li key={resource.id}><button type="button" onClick={() => setSelectedId(resource.id)} aria-pressed={selected?.id === resource.id} className={`flex w-full min-w-0 items-center gap-3 rounded-xl px-3 py-3 text-start ${selected?.id === resource.id ? "bg-secondary/70" : "hover:bg-muted/70"}`}><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-muted text-primary"><RowIcon className="size-5" /></span><span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold">{resource.title}</span><span className="mt-1 block truncate text-xs text-muted-foreground">{t(`types.${resource.type}`)} · {resource.original_filename ?? resource.description}</span></span><span className="shrink-0 rounded-full bg-success px-2.5 py-1 text-[10px] font-semibold text-success-foreground">{t("inLibrary")}</span></button></li>; })}</ul> : <div className="px-5 py-12 text-center text-sm text-muted-foreground">{t("noResults")}</div>}</section>
+      <section aria-labelledby="preview-heading" className="rounded-2xl border bg-card p-4 shadow-surface sm:p-5"><h2 id="preview-heading" className="text-sm font-bold">{t("preview")}</h2>{selected ? <div className="mt-3 rounded-xl border p-3 sm:p-4"><div className="flex items-center gap-2 text-xs text-muted-foreground"><Icon className="size-4 text-primary" />{t(`types.${selected.type}`)}</div><h3 className="mt-3 font-heading text-lg font-bold">{selected.title}</h3>{selected.type === "question" ? <div className="mt-3 grid gap-2 rounded-xl bg-muted/50 p-3 text-sm"><div><strong>{t("questionField")}</strong><p className="mt-1 whitespace-pre-wrap">{selected.question}</p></div><div><strong>{t("answerField")}</strong><p className="mt-1 whitespace-pre-wrap text-muted-foreground">{selected.answer}</p></div></div> : <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">{selected.description || selected.original_filename}</p>}{selected.type === "image" && selected.download_url && <img src={`${selected.download_url}?inline=true`} alt={selected.title} className="mt-3 max-h-72 w-full rounded-xl border object-contain" />}{selected.type === "video" && selected.download_url && <video controls preload="metadata" src={`${selected.download_url}?inline=true`} className="mt-3 max-h-72 w-full rounded-xl bg-black" />}{selected.type === "file" && selected.download_url && selected.media_type === "application/pdf" && <iframe title={selected.title} src={`${selected.download_url}?inline=true`} className="mt-3 h-72 w-full rounded-xl border" />}{selected.original_filename && <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/50 p-3 text-sm"><span className="min-w-0 truncate">{selected.original_filename}{selected.byte_size ? ` · ${(selected.byte_size / 1024 / 1024).toFixed(2)} MB` : ""}</span><a className="inline-flex shrink-0 items-center gap-2 rounded-lg border bg-card px-3 py-2 font-semibold text-primary" href={selected.download_url ?? "#"} download>{t("downloadMaterial")}</a></div>}{selected.source_url && <a className="mt-3 inline-flex items-center gap-2 text-sm text-primary underline" href={selected.source_url} target="_blank" rel="noreferrer">{t("source")}<ExternalLink className="size-3" /></a>}<dl className="mt-3 grid gap-2 border-t pt-3 text-xs"><dt className="text-muted-foreground">{t("targetAudience")}</dt><dd>{targetClass ? `${targetClass.grade_title} · ${targetClass.name}` : t("libraryOnly")}</dd><dt className="text-muted-foreground">{t("lessonContext")}</dt><dd>{lessons.find((item) => item.id === lessonId)?.title ?? t("chooseLesson")}</dd><dt className="text-muted-foreground">{t("added")}</dt><dd>{new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(selected.created_at))}</dd></dl></div> : <p className="py-12 text-center text-sm text-muted-foreground">{t("selectMaterial")}</p>}{selected && <div className="mt-3 grid gap-3"><SelectField label={t("classLabel")} value={classId} onChange={(value) => { setClassId(value); setLessonId(""); }}><option value="">{t("chooseClass")}</option>{orderedClasses.map((item) => <option key={item.id} value={item.id}>{item.name} · {item.grade_title}</option>)}</SelectField><SelectField label={t("lesson")} value={lessonId} onChange={setLessonId}><option value="">{t("chooseLesson")}</option>{lessons.map((item) => <option key={item.id} value={item.id}>{item.subject} · {item.chapter} · {item.title}</option>)}</SelectField><div className="grid grid-cols-2 gap-2"><Choice active={!required} onClick={() => setRequired(false)}>{t("optionalChoice")}</Choice><Choice active={required} onClick={() => setRequired(true)}>{t("requiredChoice")}</Choice></div><button type="button" disabled={pending || !classId || !lessonId} onClick={attachSelectedResource} className="min-h-10 rounded-xl border text-sm font-semibold disabled:opacity-50">{t("attachExisting")}</button></div>}</section></div>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}><DialogContent showCloseButton={false} finalFocus={resourceTrigger} aria-labelledby="resource-dialog-title" className="flex max-h-[94dvh] w-[calc(100%-1.5rem)] max-w-3xl flex-col gap-0 overflow-hidden rounded-3xl border bg-card p-0 text-foreground shadow-overlay sm:max-w-3xl"><header className="flex items-center justify-between border-b px-5 py-4 sm:px-8"><DialogTitle id="resource-dialog-title" className="font-heading text-xl font-bold">{t("dialogTitle")}</DialogTitle><button type="button" onClick={() => setDialogOpen(false)} aria-label={t("closeDialog")}><X className="size-5" /></button></header><form id="resource-form" onSubmit={saveMaterial} className="overflow-y-auto px-5 py-5 sm:px-8"><fieldset><legend className="mb-3 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("typeLabel")}</legend><div className="flex flex-wrap gap-2">{(["question", "article", "link", "image", "video", "file"] as ResourceType[]).map((type) => { const TypeIcon = typeIcons[type]; return <button type="button" key={type} onClick={() => selectMaterialType(type)} aria-pressed={activeType === type} className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 text-sm font-semibold ${activeType === type ? "border-info-foreground bg-info text-info-foreground" : "hover:bg-muted"}`}><TypeIcon className="size-4" />{t(`types.${type}`)}</button>; })}</div></fieldset><div className="mt-4 grid gap-4"><label className="grid gap-2 text-xs font-bold uppercase text-muted-foreground">{t("titleField")}<input required value={draftTitle} onChange={(e) => setDraftTitle(e.target.value)} placeholder={t("titlePlaceholder")} className="min-h-11 rounded-xl border bg-background px-3 text-base font-normal normal-case text-foreground" /></label><label className="grid gap-2 text-xs font-bold uppercase text-muted-foreground">{t(activeType === "question" ? "answerField" : "descriptionField")}<textarea required value={draftBody} onChange={(e) => setDraftBody(e.target.value)} placeholder={t(activeType === "question" ? "answerPlaceholder" : "descriptionPlaceholder")} rows={3} className="rounded-xl border bg-background px-3 py-3 text-base font-normal normal-case text-foreground" /></label>{activeType === "link" && <label className="grid gap-2 text-xs font-bold uppercase text-muted-foreground">{t("sourceOrUrl")}<input required type="url" value={draftSource} onChange={(e) => setDraftSource(e.target.value)} placeholder={t("urlPlaceholder")} className="min-h-11 rounded-xl border bg-background px-3 text-base font-normal normal-case text-foreground" /></label>}{["image", "video", "file"].includes(activeType) && <div className="grid gap-2 text-xs font-bold text-muted-foreground"><span>{t("uploadLabel")}</span><label htmlFor="resource-file-input" onDragEnter={(event) => { event.preventDefault(); setDraggingFile(true); }} onDragOver={(event) => event.preventDefault()} onDragLeave={(event) => { const nextTarget = event.relatedTarget; if (!(nextTarget instanceof Node) || !event.currentTarget.contains(nextTarget)) setDraggingFile(false); }} onDrop={(event) => { event.preventDefault(); setDraggingFile(false); selectUpload(event.dataTransfer.files[0]); }} className={`grid min-h-32 cursor-pointer place-items-center rounded-xl border border-dashed p-4 text-center transition-colors focus-within:ring-2 focus-within:ring-ring ${draggingFile ? "border-primary bg-secondary/70" : "bg-background hover:bg-muted/50"}`}><span className="grid justify-items-center gap-2"><UploadCloud className="size-6 text-primary" aria-hidden="true" /><span className="min-w-0 break-all text-sm font-semibold text-foreground">{file ? file.name : t("dropFileHere")}</span><span className="text-xs font-normal">{t("uploadHelp")}</span></span><input id="resource-file-input" type="file" accept={activeType === "image" ? ".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" : activeType === "video" ? ".mp4,.webm,video/mp4,video/webm" : ".pdf,application/pdf"} onChange={(event) => { selectUpload(event.currentTarget.files?.[0]); event.currentTarget.value = ""; }} className="sr-only" aria-describedby={uploadError ? "resource-upload-error" : undefined} /></label>{file && <div className="flex min-w-0 items-center justify-between gap-3 rounded-lg border bg-background px-3 py-2 text-xs font-normal"><span className="min-w-0 truncate">{file.name} · {(file.size / (1024 * 1024)).toFixed(2)} MB</span><button type="button" onClick={() => setFile(null)} className="shrink-0 font-semibold text-primary underline">{t("removeFile")}</button></div>}{uploadError && <p id="resource-upload-error" role="alert" className="font-medium text-destructive">{uploadError}</p>}</div>}</div><div className="my-5 border-t" /><fieldset><legend className="mb-3 text-xs font-bold uppercase text-muted-foreground">{t("targetLabel")}</legend><div className="grid gap-3 sm:grid-cols-2"><SelectField label={t("classLabel")} value={classId} onChange={(value) => { setClassId(value); setLessonId(""); }}><option value="">{t("chooseClass")}</option>{orderedClasses.map((item) => <option key={item.id} value={item.id}>{item.name} · {item.grade_title}</option>)}</SelectField><SelectField label={t("lesson")} value={lessonId} onChange={setLessonId}><option value="">{t("chooseLesson")}</option>{lessons.map((item) => <option key={item.id} value={item.id}>{item.subject} · {item.chapter} · {item.title}</option>)}</SelectField></div><p className="mt-2 text-xs text-muted-foreground">{targetClass ? `${t("grade")}: ${targetClass.grade_title}` : t("createClassFirst")}</p></fieldset><fieldset className="mt-4"><legend className="mb-3 text-xs font-bold uppercase text-muted-foreground">{t("visibilityLabel")}</legend><div className="grid gap-3 sm:grid-cols-2"><Choice active={!required} onClick={() => setRequired(false)}>{t("optionalChoice")}</Choice><Choice active={required} onClick={() => setRequired(true)}>{t("requiredChoice")}</Choice></div></fieldset></form><footer className="flex justify-end gap-2 border-t px-5 py-4 sm:px-8"><button type="button" onClick={() => setDialogOpen(false)} className="min-h-10 rounded-xl bg-muted px-4 text-sm font-semibold">{t("cancel")}</button><button type="submit" form="resource-form" disabled={pending} className="min-h-10 rounded-xl bg-info-foreground px-5 text-sm font-semibold text-white">{t("saveToLibrary")}</button></footer></DialogContent></Dialog>
+    <Dialog open={classDialogOpen} onOpenChange={setClassDialogOpen}><DialogContent showCloseButton={false} finalFocus={classTrigger} aria-labelledby="class-dialog-title" className="max-w-md rounded-2xl bg-card p-6 text-foreground sm:max-w-md"><form onSubmit={addClass} className="grid gap-4"><DialogTitle id="class-dialog-title" className="text-lg font-bold">{t("createClass")}</DialogTitle><label className="grid gap-2 text-sm">{t("className")}<input required value={newClassName} onChange={(e) => setNewClassName(e.target.value)} className="h-11 rounded-xl border px-3" /></label><SelectField label={t("grade")} value={newClassGrade} onChange={setNewClassGrade}>{grades.map((grade) => <option key={grade.id} value={grade.id}>{grade.title}</option>)}</SelectField><div className="flex justify-end gap-2"><button type="button" onClick={() => setClassDialogOpen(false)} className="rounded-xl bg-muted px-4 py-2">{t("cancel")}</button><button disabled={pending} className="rounded-xl bg-primary px-4 py-2 text-primary-foreground">{t("createClass")}</button></div></form></DialogContent></Dialog>
+    <Dialog open={rosterOpen} onOpenChange={setRosterOpen}><DialogContent showCloseButton={false} finalFocus={rosterTrigger} aria-labelledby="roster-title" className="max-h-[85dvh] max-w-xl gap-4 overflow-y-auto rounded-2xl bg-card p-5 text-foreground sm:max-w-xl"><div className="flex items-center justify-between"><DialogTitle id="roster-title" className="text-lg font-bold">{t("manageStudents")} · {targetClass?.name}</DialogTitle><button type="button" onClick={() => setRosterOpen(false)} aria-label={t("closeDialog")}><X className="size-5" /></button></div><p className="text-sm text-muted-foreground">{t("enrolledStudents", { count: roster.length })}</p>{roster.map((student) => <div key={student.id} className="rounded-xl border px-3 py-2"><strong className="block text-sm">{student.full_name}</strong><span className="text-xs text-muted-foreground">{student.email}</span></div>)}<h3 className="font-semibold">{t("addStudent")}</h3>{students.filter((student) => !roster.some((item) => item.id === student.id)).map((student) => <div key={student.id} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2"><span className="min-w-0"><strong className="block truncate text-sm">{student.full_name}</strong><span className="text-xs text-muted-foreground">{student.email}</span></span><button type="button" disabled={pending} onClick={() => enrollStudent(student.id)} className="rounded-lg border px-3 py-2 text-sm font-semibold">{t("enrollStudent")}</button></div>)}</DialogContent></Dialog>
+  </main>;
+}
+
+function SelectField({ label, value, onChange, children }: { label: string; value: string; onChange: (value: string) => void; children: React.ReactNode }) { return <label className="relative flex min-h-11 min-w-0 flex-col justify-center rounded-xl border bg-background px-3 py-1"><span className="text-[10px] text-muted-foreground">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="w-full appearance-none bg-transparent pe-5 text-sm font-semibold outline-none">{children}</select><ChevronDown className="pointer-events-none absolute end-3 top-1/2 size-4 translate-y-0.5 text-muted-foreground" /></label>; }
+function Choice({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) { return <button type="button" aria-pressed={active} onClick={onClick} className={`min-h-12 rounded-xl border px-3 text-sm font-semibold ${active ? "border-info-foreground bg-info text-info-foreground" : "hover:bg-muted"}`}>{children}</button>; }
+
