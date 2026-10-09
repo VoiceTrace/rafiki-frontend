@@ -1,6 +1,6 @@
 # Rafiqi visual boards
 
-29 visual boards covering the full product structure and selected secondary states. See [the design kit overview](../docs/RAFIQI_PRODUCT_AND_DESIGN_REFERENCE.md#design-kit-overview) for scope and limitations.
+Visual boards covering the full product structure and selected secondary states. See [the design kit overview](../docs/RAFIQI_PRODUCT_AND_DESIGN_REFERENCE.md#design-kit-overview) for scope and limitations.
 
 ## Teacher · Today and schedule
 
@@ -219,3 +219,11 @@
 [Open selected image](boards/35-first-login-onboarding-chat-concept.png) · [Read implementation mapping](boards/35-first-login-onboarding-chat-concept.md)
 
 Board 35 is the active question-step reference. Board 34 remains the welcome-screen and rollback reference.
+
+## Selected · S07 simple chat and lesson summary
+
+![S07 simple chat and lesson summary](boards/42-s07-simple-chat-lesson-summary.png)
+
+[Open full image](boards/42-s07-simple-chat-lesson-summary.png) · [Read implementation mapping](boards/42-s07-simple-chat-lesson-summary.md)
+
+Board 42 is the active After-class layout reference. It keeps Board 41's continuous review interaction and completion handoff, while replacing the previous multi-card page composition with the original prototype's simple chat-and-summary structure.
