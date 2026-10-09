@@ -1,5 +1,17 @@
 # Authentication and profile integration contract
 
+## Notification integration (2026-10-03)
+
+Notification browser requests use the dedicated same-origin `/api/notifications`
+handlers and existing server-only DAL. Backend bearer tokens remain absent from
+client sessions and components. The app-shell logout unregisters push before
+Auth.js sign-out; failed cleanup never blocks logout. Notification destination
+requests are authorized by the backend before client navigation.
+
+The local backend now exposes `/auth/refresh` and `/auth/logout`; the historical
+contract below describes the earlier PR #2 snapshot, not the current OpenAPI.
+Notification implementation does not modify the existing auth callbacks.
+
 This document records the frontend/backend contract established while resolving PR #2. Read it before changing authentication, protected layouts, the app-shell user menu, or profile code.
 
 The backend OpenAPI document is the source of truth. For local development it is currently available at `http://127.0.0.1:8001/openapi.json`. Re-check it before changing this contract.
